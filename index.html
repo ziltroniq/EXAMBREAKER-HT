@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>EXAMBREAKER HT • LEAK 2026</title>
+  <title>EXAMBREAKER HT - Prépa Examens Officiels 2026</title>
+  <!-- Google Fonts & Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      user-select: none;
     }
 
     body {
-      background: #0a0c12;
-      font-family: 'Courier New', 'Share Tech Mono', monospace;
-      color: #00ffcc;
-      padding: 16px;
-      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fb;
+      color: #1e293b;
+      padding: 20px 16px 40px;
     }
 
     .container {
@@ -26,468 +26,575 @@
       margin: 0 auto;
     }
 
-    /* Écrans modulables */
+    /* écrans */
     .screen {
-      transition: opacity 0.3s;
+      transition: all 0.2s ease;
     }
-
     .hide {
       display: none;
     }
 
-    /* Style terminal */
-    .terminal-card {
-      background: #0f1119;
-      border: 1px solid #00ffcc;
-      border-radius: 16px;
+    /* cartes style moderne */
+    .card {
+      background: white;
+      border-radius: 28px;
       padding: 20px;
-      box-shadow: 0 0 15px rgba(0,255,204,0.2);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
       margin-bottom: 20px;
     }
 
-    .glitch {
-      text-shadow: 2px 0 red, -2px 0 blue;
-      animation: glitch 0.2s infinite alternate;
-    }
-
-    @keyframes glitch {
-      0% { text-shadow: -1px 0 cyan, 1px 0 magenta; }
-      100% { text-shadow: 1px 0 cyan, -1px 0 magenta; }
-    }
-
-    button, .btn-like {
-      background: #00ffcc20;
-      border: 1px solid #00ffcc;
-      padding: 12px 20px;
+    .btn {
+      background: #4361ee;
+      border: none;
+      padding: 14px 20px;
       border-radius: 40px;
-      color: #00ffcc;
-      font-family: monospace;
-      font-weight: bold;
+      color: white;
+      font-weight: 600;
       font-size: 1rem;
+      width: 100%;
       cursor: pointer;
       transition: 0.2s;
-      width: 100%;
-      margin-top: 12px;
-      text-align: center;
+      font-family: inherit;
     }
-
-    button:active {
-      background: #00ffcc;
-      color: #0a0c12;
-      transform: scale(0.97);
+    .btn:active { transform: scale(0.97); background: #2b44d4; }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #4361ee;
+      color: #4361ee;
     }
 
     input {
-      background: #0a0c12;
-      border: 1px solid #00ffcc;
-      padding: 12px;
       width: 100%;
-      border-radius: 12px;
-      color: #00ffcc;
-      font-family: monospace;
-      margin: 8px 0;
+      padding: 14px 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 24px;
+      font-size: 1rem;
+      margin-bottom: 12px;
+      font-family: inherit;
+      background: #f8fafc;
+    }
+    input:focus { outline: none; border-color: #4361ee; }
+
+    /* header */
+    .header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #4361ee, #f72585);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
-    .points-bar {
-      background: #001a1a;
-      border-radius: 30px;
-      padding: 4px;
-      margin: 15px 0;
+    .category-grid {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    .category-card {
+      background: white;
+      border-radius: 24px;
+      padding: 16px;
+      min-width: 140px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      text-align: center;
+    }
+    .category-icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+    .exam-badge {
+      background: #eef2ff;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: #4361ee;
     }
 
-    .points-fill {
-      background: #00ffcc;
-      height: 12px;
-      border-radius: 30px;
-      width: 0%;
-      transition: width 0.3s;
-    }
-
-    .task-item {
-      background: #0f1119;
-      border-left: 4px solid #00ffcc;
-      padding: 12px;
-      margin: 12px 0;
+    .exam-card {
+      background: white;
+      border-radius: 24px;
+      padding: 16px;
+      margin-bottom: 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+      border: 1px solid #eef2ff;
+    }
+    .exam-info h3 {
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+    .timer-chip {
+      font-family: monospace;
+      background: #1e293b;
+      color: #facc15;
+      padding: 6px 12px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
     }
 
-    .badge {
-      color: #ff44aa;
-      border: 1px solid #ff44aa;
-      border-radius: 20px;
-      padding: 4px 10px;
-      font-size: 0.7rem;
+    .task-list {
+      margin: 16px 0;
     }
-
-    .timer {
-      font-size: 2rem;
-      text-align: center;
-      letter-spacing: 5px;
-      background: #00000080;
-      padding: 10px;
+    .task-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+      padding: 12px 16px;
       border-radius: 20px;
+      margin-bottom: 10px;
+    }
+    .task-btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-weight: 500;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .task-btn.completed {
+      background: #10b981;
+      color: white;
+    }
+    .points-progress {
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 10px;
+      margin: 12px 0;
+      overflow: hidden;
+    }
+    .points-fill {
+      height: 100%;
+      background: #4361ee;
+      width: 0%;
+      border-radius: 10px;
     }
 
     footer {
-      font-size: 0.65rem;
       text-align: center;
+      font-size: 0.7rem;
+      color: #94a3b8;
       margin-top: 30px;
-      color: #5588aa;
     }
   </style>
 </head>
 <body>
-<div class="container" id="appRoot">
-  <!-- écran de création de compte / login -->
+<div class="container" id="app">
+
+  <!-- Écran de connexion -->
   <div id="loginScreen" class="screen">
-    <div class="terminal-card">
-      <h1 class="glitch" style="text-align:center;">>> EXAMBREAKER HT <<</h1>
-      <p style="margin:15px 0;">⚠️ ACCÈS RESTREINT. CRÉEZ VOTRE IDENTIFIANT HACKER.</p>
-      <input type="text" id="username" placeholder="Nom d'utilisateur (pseudo)" autocomplete="off">
-      <input type="password" id="password" placeholder="Mot de passe">
-      <button id="createAccountBtn">💀 LANCER LE PROTOCOLE 💀</button>
-      <p style="font-size:0.7rem; margin-top:12px;">* Vos identifiants restent en local. L'application ne collecte rien.</p>
+    <div class="card" style="text-align:center; margin-top:40px;">
+      <div class="logo" style="font-size:2rem;">EXAMBREAKER HT</div>
+      <p style="margin:16px 0;">Entrez vos identifiants pour commencer</p>
+      <input type="email" id="loginEmail" placeholder="Email" value="eleve@examen.ht">
+      <input type="password" id="loginPassword" placeholder="Mot de passe" value="123456">
+      <button class="btn" id="doLoginBtn">SE CONNECTER</button>
+      <p style="margin-top:16px; font-size:0.8rem;">Pas de compte ? <strong id="gotoSignup" style="color:#4361ee;">Inscrivez-vous</strong></p>
     </div>
   </div>
 
-  <!-- écran principal après login (dashboard) -->
-  <div id="mainScreen" class="screen hide">
-    <div class="terminal-card">
-      <div style="display: flex; justify-content: space-between; align-items: baseline;">
-        <span><i class="fas fa-user-secret"></i> <span id="displayUsername">hacker</span></span>
-        <span class="badge" id="vipBadge">🔒 STANDARD</span>
-      </div>
-      <div style="margin-top: 12px;">
-        <div>🔥 POINTS : <span id="pointsCount">0</span> / <span id="targetPoints">150</span></div>
-        <div class="points-bar"><div class="points-fill" id="pointsFill"></div></div>
-        <div id="unlockMessage" style="font-size:0.75rem; color:#ffaa44;"></div>
-      </div>
-      <button id="requestActivationBtn" style="background:#ff44aa30; border-color:#ff44aa;">📢 DEMANDER L'AUTORISATION DE PARTICIPER</button>
-      <div id="activationStatus" style="margin-top:12px; font-size:0.75rem;"></div>
-      <div id="timerArea" class="hide" style="margin-top:12px;">
-        <div style="text-align:center;">⏳ COMPTE À REBOURS JUSQU'À L'EXAMEN ⏳</div>
-        <div class="timer" id="countdownTimer">--j --h --m</div>
-      </div>
+  <!-- Écran d'inscription -->
+  <div id="signupScreen" class="screen hide">
+    <div class="card" style="margin-top:40px;">
+      <h2>Créer un compte</h2>
+      <input type="text" id="signupName" placeholder="Nom complet">
+      <input type="email" id="signupEmail" placeholder="Email">
+      <input type="password" id="signupPassword" placeholder="Mot de passe">
+      <button class="btn" id="doSignupBtn">S'INSCRIRE</button>
+      <p style="margin-top:12px;"><span id="gotoLogin" style="color:#4361ee;">Déjà un compte ? Se connecter</span></p>
     </div>
-
-    <!-- Tâches quotidiennes -->
-    <div class="terminal-card">
-      <h3><i class="fas fa-tasks"></i> MISSIONS • GAGNEZ DES POINTS</h3>
-      <div class="task-item" id="taskSurvey">
-        <span><i class="fas fa-poll"></i> Faire un sondage (pub récompensée)</span>
-        <button class="small-task" style="width:auto; padding:6px 12px;">+5 pts</button>
-      </div>
-      <div class="task-item" id="taskShare">
-        <span><i class="fab fa-whatsapp"></i> Partager sur WhatsApp</span>
-        <button class="small-task" style="width:auto; padding:6px 12px;">+3 pts</button>
-      </div>
-      <div class="task-item" id="taskReferral">
-        <span><i class="fas fa-user-plus"></i> Parrainer un ami (lien unique)</span>
-        <button class="small-task" style="width:auto; padding:6px 12px;">+10 pts</button>
-      </div>
-      <div class="task-item" id="taskDaily">
-        <span><i class="fas fa-calendar-day"></i> Mission quotidienne (regarder une pub)</span>
-        <button class="small-task" style="width:auto; padding:6px 12px;">+2 pts</button>
-      </div>
-      <p style="font-size:0.7rem; margin-top:10px;"><i class="fas fa-info-circle"></i> Chaque action est limitée à une fois par jour (simulé).</p>
-    </div>
-
-    <footer>#EXAMBREAKERHT • Hack the exam, pas le système réel.</footer>
   </div>
 
-  <!-- Écran du jour J / twist final -->
+  <!-- Tableau de bord principal -->
+  <div id="dashboardScreen" class="screen hide">
+    <div class="header-flex">
+      <div class="logo">EB·HT</div>
+      <div><i class="fas fa-bell"></i> <span id="userNameDisplay">Élève</span></div>
+    </div>
+
+    <!-- Barre recherche -->
+    <div class="card" style="padding:12px 16px;">
+      <i class="fas fa-search"></i> <input type="text" placeholder="Rechercher un examen..." style="border:none; background:transparent; width:85%; display:inline;">
+    </div>
+
+    <!-- Catégories -->
+    <div style="margin:16px 0 8px; display:flex; justify-content:space-between;">
+      <h3>Catégories</h3>
+      <span style="color:#4361ee;">Voir tout</span>
+    </div>
+    <div class="category-grid">
+      <div class="category-card" data-cat="9AF"><div class="category-icon">📘</div><div>9AF</div><div class="exam-badge">6 examens</div></div>
+      <div class="category-card" data-cat="NS4"><div class="category-icon">🎓</div><div>NS4</div><div class="exam-badge">9 examens</div></div>
+      <div class="category-card" data-cat="Bac"><div class="category-icon">📖</div><div>Bac</div><div class="exam-badge">4 examens</div></div>
+    </div>
+
+    <!-- Liste des examens disponibles -->
+    <h3 style="margin:20px 0 12px;">Examens officiels 2026</h3>
+    <div id="examsList"></div>
+
+    <footer>🔐 Chaque examen requiert des tâches pour débloquer le compte à rebours officiel.</footer>
+  </div>
+
+  <!-- Vue détaillée d'un examen (tâches + timer) -->
+  <div id="examDetailScreen" class="screen hide">
+    <div class="header-flex">
+      <i class="fas fa-arrow-left" id="backToDashboard" style="font-size:1.5rem; cursor:pointer;"></i>
+      <div class="logo" id="detailExamTitle">Examen</div>
+      <div></div>
+    </div>
+    <div class="card">
+      <div style="display: flex; justify-content: space-between;">
+        <span class="exam-badge" id="detailExamLevel">9AF</span>
+        <span id="detailTimerLabel" class="timer-chip">⏳ Non débloqué</span>
+      </div>
+      <h2 style="margin:12px 0;" id="detailExamName">Mathématiques</h2>
+      <div class="points-progress"><div class="points-fill" id="detailPointsFill"></div></div>
+      <div><span id="detailPointsCount">0</span> / <span id="detailTargetPoints">10</span> points</div>
+
+      <div class="task-list">
+        <div class="task-item" id="taskSurveyDetail">
+          <span><i class="fas fa-poll"></i> Faire un sondage (pub)</span>
+          <button class="task-btn" data-task="survey">+5 pts</button>
+        </div>
+        <div class="task-item" id="taskShareDetail">
+          <span><i class="fab fa-whatsapp"></i> Partager sur WhatsApp</span>
+          <button class="task-btn" data-task="share">+3 pts</button>
+        </div>
+        <div class="task-item" id="taskReferralDetail">
+          <span><i class="fas fa-user-plus"></i> Parrainer un ami</span>
+          <button class="task-btn" data-task="referral">+10 pts</button>
+        </div>
+        <div class="task-item" id="taskDailyDetail">
+          <span><i class="fas fa-calendar-day"></i> Mission quotidienne (video)</span>
+          <button class="task-btn" data-task="daily">+2 pts</button>
+        </div>
+      </div>
+      <button class="btn" id="unlockExamBtn" disabled>🔒 Débloquer le timer</button>
+      <div id="timerDisplayArea" style="margin-top:20px; text-align:center;"></div>
+      <p style="font-size:0.7rem; margin-top:16px;">* Une fois le timer débloqué, vous recevrez l'examen le jour J à 5h du matin.</p>
+    </div>
+  </div>
+
+  <!-- Écran twist final (jour J) -->
   <div id="twistScreen" class="screen hide">
-    <div class="terminal-card" style="text-align:center;">
-      <i class="fas fa-skull" style="font-size:4rem; color:#ff44aa;"></i>
-      <h1 class="glitch">ERREUR 404 : LEAK INTROUVABLE</h1>
-      <div style="margin:20px 0; font-size:1.2rem; line-height:1.4;">
-        Ou kwè mwen ta lage egzamen an? Non. <br>
-        Aveni w se nan men w. <br>
-        Koulye a, leve, etidye, fè ou fè. <br>
-        Mwen te testé detèminasyon w. <br>
-        <strong>Bon chans, elèv.</strong>
-      </div>
-      <button id="resetAppBtn">⟳ RECOMMENCER L'EXPÉRIENCE</button>
-      <p style="margin-top:16px;">Tous les quiz et simulations sont désormais gratuits. <br> Révise avec EXAMBREAKER HT.</p>
+    <div class="card" style="text-align:center; margin-top:40px;">
+      <i class="fas fa-skull" style="font-size:4rem; color:#f72585;"></i>
+      <h2 class="glitch" style="margin:16px 0;">B L A G U E</h2>
+      <p style="font-size:1rem;">Ou kwè mwen ta lage egzamen an? Non.<br>
+      Avenir w se nan men w. Etidye, fè ou fè.<br>
+      Mwen te testé detèminasyon w. Bon chans!</p>
+      <button class="btn" id="resetAllBtn">⟳ Recommencer l'expérience</button>
     </div>
   </div>
 </div>
 
 <script>
   // ---------- STOCKAGE LOCAL ----------
-  let user = {
-    loggedIn: false,
-    username: '',
-    points: 0,
-    activated: false,   // a demandé l'activation (bouton cliqué)
-    approved: false,    // après validation (ici auto après clic pour simplifier)
-    target: 150,        // palier choisi (150 ou 300). Par défaut 150, passera à 300 si atteint
-    lastTasks: { survey: null, share: null, referral: null, daily: null } // timestamp ISO
-  };
+  let currentUser = null; // { id, name, email, exams: { examId: { points, tasksDoneToday, timerUnlocked } } }
+  let examsData = [
+    { id: "math_9af", name: "Mathématiques 9AF", level: "9AF", targetPoints: 10, examDate: new Date(2026, 6, 1, 5, 0, 0) },
+    { id: "physique_9af", name: "Physique Chimie 9AF", level: "9AF", targetPoints: 10, examDate: new Date(2026, 6, 1, 5, 0, 0) },
+    { id: "histoire_ns4", name: "Histoire/Géo NS4", level: "NS4", targetPoints: 10, examDate: new Date(2026, 6, 5, 5, 0, 0) },
+    { id: "anglais_ns4", name: "Anglais NS4", level: "NS4", targetPoints: 10, examDate: new Date(2026, 6, 5, 5, 0, 0) },
+    { id: "bac_math", name: "Mathématiques Bac", level: "Bac", targetPoints: 15, examDate: new Date(2026, 6, 10, 5, 0, 0) }
+  ];
 
-  const EXAM_DATE = new Date(2026, 6, 1, 5, 0, 0); // 1er juillet 2026 5h00
-  let timerInterval = null;
-
-  // DOM elements
-  const loginScreen = document.getElementById('loginScreen');
-  const mainScreen = document.getElementById('mainScreen');
-  const twistScreen = document.getElementById('twistScreen');
-  const displayUsernameSpan = document.getElementById('displayUsername');
-  const pointsCountSpan = document.getElementById('pointsCount');
-  const targetPointsSpan = document.getElementById('targetPoints');
-  const pointsFillDiv = document.getElementById('pointsFill');
-  const vipBadgeSpan = document.getElementById('vipBadge');
-  const unlockMessageDiv = document.getElementById('unlockMessage');
-  const requestActivationBtn = document.getElementById('requestActivationBtn');
-  const activationStatusDiv = document.getElementById('activationStatus');
-  const timerArea = document.getElementById('timerArea');
-  const countdownTimerDiv = document.getElementById('countdownTimer');
-  const resetAppBtn = document.getElementById('resetAppBtn');
-
-  // Helper: sauvegarde local
+  // Helper
   function saveUser() {
-    localStorage.setItem('eb_user', JSON.stringify(user));
+    if(currentUser) localStorage.setItem('eb_currentUser', JSON.stringify(currentUser));
   }
-
   function loadUser() {
-    const raw = localStorage.getItem('eb_user');
+    let raw = localStorage.getItem('eb_currentUser');
     if(raw) {
       try {
-        const u = JSON.parse(raw);
-        user = { ...user, ...u };
-        if(!user.lastTasks) user.lastTasks = { survey: null, share: null, referral: null, daily: null };
-        if(user.target === undefined) user.target = 150;
-        if(user.approved === undefined) user.approved = false;
-        if(user.activated === undefined) user.activated = false;
+        currentUser = JSON.parse(raw);
+        // initialiser les propriétés manquantes
+        if(!currentUser.exams) currentUser.exams = {};
+        examsData.forEach(ex => {
+          if(!currentUser.exams[ex.id]) {
+            currentUser.exams[ex.id] = { points: 0, tasksToday: {}, timerUnlocked: false };
+          }
+        });
+        saveUser();
         return true;
       } catch(e) {}
     }
     return false;
   }
 
-  function updateUI() {
-    if(!user.loggedIn) return;
-    displayUsernameSpan.innerText = user.username;
-    let target = user.target;
-    targetPointsSpan.innerText = target;
-    pointsCountSpan.innerText = user.points;
-    let percent = Math.min(100, (user.points / target) * 100);
-    pointsFillDiv.style.width = percent + '%';
-    // badge & palier
-    if(user.points >= 300 && user.target !== 300) {
-      // débloque automatiquement le palier VIP 9 examens
-      user.target = 300;
-      targetPointsSpan.innerText = 300;
-      vipBadgeSpan.innerHTML = '💎 VIP 9 EXAMENS 💎';
-      vipBadgeSpan.style.borderColor = '#ffaa00';
-      unlockMessageDiv.innerHTML = '🎉 Félicitations ! Vous avez débloqué le palier VIP 9 examens officiels. 🎉';
-    } else if(user.points >= 150 && user.target !== 150 && user.target !== 300) {
-      user.target = 150;
-      targetPointsSpan.innerText = 150;
-      vipBadgeSpan.innerHTML = '⭐ PACK 6 EXAMENS ⭐';
-      vipBadgeSpan.style.borderColor = '#00ffcc';
-      unlockMessageDiv.innerHTML = '✅ Vous avez atteint 150 pts ! Vous pouvez demander l\'autorisation pour recevoir les 6 examens.';
-    } else if(user.target === 300) {
-      vipBadgeSpan.innerHTML = '💎 VIP 9 EXAMENS 💎';
-      vipBadgeSpan.style.borderColor = '#ffaa00';
-    } else if(user.target === 150) {
-      vipBadgeSpan.innerHTML = '⭐ PACK 6 EXAMENS ⭐';
-    } else {
-      vipBadgeSpan.innerHTML = '🔒 STANDARD';
-    }
-    // Affichage statut activation
-    if(user.activated && !user.approved) {
-      activationStatusDiv.innerHTML = '⏳ Demande envoyée. En attente d\'approbation (simulation automatique dans 3 sec)...';
-      if(!window._autoApproveScheduled && !user.approved){
-        window._autoApproveScheduled = true;
-        setTimeout(() => {
-          if(user.activated && !user.approved) {
-            user.approved = true;
-            saveUser();
-            activationStatusDiv.innerHTML = '✅ COMPTE APPROUVÉ ! Vous recevrez les examens le jour J. Timer activé.';
-            startTimerDisplay();
-          }
-          window._autoApproveScheduled = false;
-        }, 3000);
-      }
-    } else if(user.approved) {
-      activationStatusDiv.innerHTML = '✅ Activation confirmée. Le compte à rebours est lancé.';
-      startTimerDisplay();
-    } else {
-      activationStatusDiv.innerHTML = '🔐 Atteignez 150 pts puis cliquez sur "Demander l\'autorisation" pour valider votre participation.';
-    }
-  }
-
-  function addPoints(pts, taskKey) {
-    if(user.approved) {
-      alert("Votre compte est déjà activé. Plus besoin de points, attendez le jour J.");
-      return;
-    }
-    // Vérification quotidienne (simplifiée avec date)
-    let today = new Date().toISOString().slice(0,10);
-    let last = user.lastTasks[taskKey];
-    if(last === today) {
-      alert("Vous avez déjà effectué cette tâche aujourd'hui. Revenez demain !");
-      return;
-    }
-    user.points += pts;
-    user.lastTasks[taskKey] = today;
-    saveUser();
-    updateUI();
-    alert(`+${pts} points ! Total : ${user.points} pts`);
-    // vérifier changement palier
-    if(user.points >= 150 && user.target === 150 && !user.activated) {
-      unlockMessageDiv.innerHTML = '🎯 Bravo ! Vous pouvez maintenant demander l\'autorisation pour recevoir les examens.';
-    }
-    if(user.points >= 300 && user.target !== 300) {
-      updateUI(); // reval
-    }
-  }
-
-  function startTimerDisplay() {
-    if(!user.approved) return;
-    timerArea.classList.remove('hide');
-    if(timerInterval) clearInterval(timerInterval);
-    function updateTimer() {
-      const now = new Date();
-      const diff = EXAM_DATE - now;
-      if(diff <= 0) {
-        // jour J dépassé, déclencher twist final
-        clearInterval(timerInterval);
-        showTwist();
-        return;
-      }
-      const days = Math.floor(diff / (1000*60*60*24));
-      const hours = Math.floor((diff % (86400000)) / 3600000);
-      const mins = Math.floor((diff % 3600000) / 60000);
-      countdownTimerDiv.innerText = `${days}j ${hours}h ${mins}m`;
-    }
-    updateTimer();
-    timerInterval = setInterval(updateTimer, 60000);
-    // vérifier si déjà dépassé au chargement
-    if(new Date() >= EXAM_DATE) showTwist();
-  }
-
-  function showTwist() {
-    if(timerInterval) clearInterval(timerInterval);
-    mainScreen.classList.add('hide');
-    twistScreen.classList.remove('hide');
-    // désactiver toute action
-  }
-
-  // reset complet pour démonstration
+  // Reset complet
   function resetAll() {
-    localStorage.removeItem('eb_user');
+    localStorage.removeItem('eb_currentUser');
     window.location.reload();
   }
 
-  // Bouton demande activation
-  function requestActivation() {
-    if(user.approved) {
-      alert("Vous êtes déjà activé. Patience jusqu'au jour J.");
-      return;
-    }
-    if(user.points >= user.target) {
-      user.activated = true;
+  // Affichage des écrans
+  function showScreen(screenId) {
+    document.getElementById('loginScreen').classList.add('hide');
+    document.getElementById('signupScreen').classList.add('hide');
+    document.getElementById('dashboardScreen').classList.add('hide');
+    document.getElementById('examDetailScreen').classList.add('hide');
+    document.getElementById('twistScreen').classList.add('hide');
+    document.getElementById(screenId).classList.remove('hide');
+  }
+
+  // Vérifier si un examen est débloqué (points atteints) et gérer timer
+  function checkAndUnlockExam(examId) {
+    let exam = examsData.find(e => e.id === examId);
+    if(!exam) return false;
+    let userExam = currentUser.exams[examId];
+    if(userExam.points >= exam.targetPoints && !userExam.timerUnlocked) {
+      userExam.timerUnlocked = true;
       saveUser();
-      updateUI();
-      alert("Demande envoyée ! Votre compte sera vérifié dans quelques secondes.");
-    } else {
-      alert(`Il vous manque ${user.target - user.points} points pour atteindre le palier ${user.target} pts. Continuez les missions !`);
+      return true;
     }
+    return false;
   }
 
-  // simulation de parrainage (lien unique)
-  function doReferral() {
-    if(user.approved) { alert("Compte déjà activé"); return; }
-    // générer lien simulé
-    let fakeLink = `https://exambreaker.ht/ref/${user.username}_${Date.now()}`;
-    alert(`🔗 Lien de parrainage : ${fakeLink}\nQuand un ami crée un compte avec ce lien, vous gagnez +10 pts. (Simulation : cliquez OK pour ajouter les points maintenant)`);
-    addPoints(10, 'referral');
-  }
-
-  // Tâches : pub récompensée (simulée)
-  function doSurvey() {
-    if(user.approved) { alert("Compte déjà activé"); return; }
-    alert("📊 Sondage éclair : 'Quelle matière est la plus difficile?' Réponse fictive. +5 points.");
-    addPoints(5, 'survey');
-  }
-  function doShare() {
-    if(user.approved) { alert("Compte déjà activé"); return; }
-    if(navigator.share) {
-      navigator.share({ title: 'EXAMBREAKER HT', text: 'Prépare-toi au leak des examens 2026 ! Rejoins-moi.', url: window.location.href })
-        .then(() => addPoints(3, 'share'))
-        .catch(() => addPoints(3, 'share'));
-    } else {
-      alert("Partage simulé (WhatsApp). +3 points.");
-      addPoints(3, 'share');
+  // Ajouter des points à un examen, avec limite quotidienne par tâche
+  function addPointsToExam(examId, taskKey, points) {
+    let exam = examsData.find(e => e.id === examId);
+    if(!exam) return false;
+    let userExam = currentUser.exams[examId];
+    if(userExam.timerUnlocked) {
+      alert("Timer déjà débloqué pour cet examen. Vous recevrez le contenu le jour J à 5h.");
+      return false;
     }
-  }
-  function doDailyAd() {
-    if(user.approved) { alert("Compte déjà activé"); return; }
-    alert("🎬 Regarder une publicité récompensée (simulation). +2 points.");
-    addPoints(2, 'daily');
+    let today = new Date().toISOString().slice(0,10);
+    if(userExam.tasksToday[taskKey] === today) {
+      alert(`Tâche "${taskKey}" déjà effectuée aujourd'hui pour cet examen. Revenez demain.`);
+      return false;
+    }
+    userExam.points += points;
+    userExam.tasksToday[taskKey] = today;
+    saveUser();
+    let unlocked = checkAndUnlockExam(examId);
+    if(unlocked) {
+      alert(`🎉 Félicitations ! Vous avez débloqué le timer pour ${exam.name}. L'examen vous sera envoyé le jour officiel à 5h.`);
+    }
+    return true;
   }
 
-  // création de compte
-  function createAccount() {
-    const username = document.getElementById('username').value.trim();
-    const pwd = document.getElementById('password').value;
-    if(!username || !pwd) {
-      alert("Veuillez entrer un pseudo et mot de passe.");
+  // Mettre à jour l'affichage de la liste des examens sur dashboard
+  function renderDashboard() {
+    let container = document.getElementById('examsList');
+    if(!container) return;
+    container.innerHTML = '';
+    examsData.forEach(exam => {
+      let userExam = currentUser.exams[exam.id];
+      let statusText = userExam.timerUnlocked ? '✅ Timer actif' : `🔒 ${userExam.points}/${exam.targetPoints} pts`;
+      let div = document.createElement('div');
+      div.className = 'exam-card';
+      div.innerHTML = `
+        <div class="exam-info">
+          <h3>${exam.name}</h3>
+          <span class="exam-badge">${exam.level}</span>
+        </div>
+        <div style="text-align:right;">
+          <div class="timer-chip">${statusText}</div>
+          <button class="task-btn" style="margin-top:8px;" data-exam-id="${exam.id}">Détails</button>
+        </div>
+      `;
+      container.appendChild(div);
+    });
+    // attacher events
+    document.querySelectorAll('[data-exam-id]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        let examId = btn.getAttribute('data-exam-id');
+        showExamDetail(examId);
+      });
+    });
+    document.getElementById('userNameDisplay').innerText = currentUser.name.split(' ')[0];
+  }
+
+  let currentExamId = null;
+  function showExamDetail(examId) {
+    currentExamId = examId;
+    let exam = examsData.find(e => e.id === examId);
+    if(!exam) return;
+    let userExam = currentUser.exams[examId];
+    document.getElementById('detailExamTitle').innerText = exam.name;
+    document.getElementById('detailExamLevel').innerText = exam.level;
+    document.getElementById('detailExamName').innerText = exam.name;
+    document.getElementById('detailPointsCount').innerText = userExam.points;
+    document.getElementById('detailTargetPoints').innerText = exam.targetPoints;
+    let percent = (userExam.points / exam.targetPoints) * 100;
+    document.getElementById('detailPointsFill').style.width = percent + '%';
+    let unlockBtn = document.getElementById('unlockExamBtn');
+    if(userExam.timerUnlocked) {
+      unlockBtn.disabled = true;
+      unlockBtn.innerText = '✅ Timer débloqué';
+      showTimerForExam(examId);
+    } else {
+      unlockBtn.disabled = (userExam.points < exam.targetPoints);
+      unlockBtn.innerText = (userExam.points >= exam.targetPoints) ? '🔓 DÉBLOQUER LE TIMER' : '🔒 Débloquez d\'abord 10 points';
+    }
+    // reset tasks UI style
+    ['survey', 'share', 'referral', 'daily'].forEach(task => {
+      let btn = document.querySelector(`.task-btn[data-task="${task}"]`);
+      if(btn) btn.classList.remove('completed');
+    });
+    showTimerForExam(examId);
+    showScreen('examDetailScreen');
+  }
+
+  function showTimerForExam(examId) {
+    let exam = examsData.find(e => e.id === examId);
+    let userExam = currentUser.exams[examId];
+    let timerDiv = document.getElementById('timerDisplayArea');
+    if(!userExam.timerUnlocked) {
+      timerDiv.innerHTML = '';
       return;
     }
-    // réinitialiser user
-    user = {
-      loggedIn: true,
-      username: username,
-      points: 0,
-      activated: false,
-      approved: false,
-      target: 150,
-      lastTasks: { survey: null, share: null, referral: null, daily: null }
+    function updateTimer() {
+      let now = new Date();
+      let diff = exam.examDate - now;
+      if(diff <= 0) {
+        // Le jour J est passé, afficher twist
+        clearInterval(window._timerInterval);
+        showTwist();
+        return;
+      }
+      let days = Math.floor(diff / (1000*60*60*24));
+      let hours = Math.floor((diff % (86400000)) / 3600000);
+      let mins = Math.floor((diff % 3600000) / 60000);
+      timerDiv.innerHTML = `<div style="background:#eef2ff; padding:12px; border-radius:24px;"><i class="fas fa-hourglass-half"></i> Compte à rebours : <strong>${days}j ${hours}h ${mins}m</strong><br><span style="font-size:0.7rem;">Vous recevrez l'examen le ${exam.examDate.toLocaleDateString()} à 5h00.</span></div>`;
+    }
+    if(window._timerInterval) clearInterval(window._timerInterval);
+    updateTimer();
+    window._timerInterval = setInterval(updateTimer, 60000);
+  }
+
+  function showTwist() {
+    if(window._timerInterval) clearInterval(window._timerInterval);
+    showScreen('twistScreen');
+  }
+
+  // Attacher événements pour les tâches dans la vue détail
+  function bindTaskButtons() {
+    document.querySelectorAll('.task-btn[data-task]').forEach(btn => {
+      btn.removeEventListener('click', window._taskHandler);
+      let task = btn.getAttribute('data-task');
+      let handler = () => {
+        if(!currentExamId) return;
+        let pointsMap = { survey:5, share:3, referral:10, daily:2 };
+        let ok = addPointsToExam(currentExamId, task, pointsMap[task]);
+        if(ok) {
+          // recharger la vue détail
+          showExamDetail(currentExamId);
+        }
+      };
+      btn.addEventListener('click', handler);
+      window._taskHandler = handler;
+    });
+  }
+
+  // Inscription / connexion
+  function signup(name, email, pwd) {
+    if(!name || !email || !pwd) { alert("Remplissez tous les champs"); return false; }
+    let user = {
+      id: Date.now(),
+      name: name,
+      email: email,
+      password: pwd,
+      exams: {}
     };
+    examsData.forEach(ex => { user.exams[ex.id] = { points: 0, tasksToday: {}, timerUnlocked: false }; });
+    currentUser = user;
     saveUser();
-    showMainAfterLogin();
+    return true;
   }
 
-  function showMainAfterLogin() {
-    loginScreen.classList.add('hide');
-    mainScreen.classList.remove('hide');
-    twistScreen.classList.add('hide');
-    updateUI();
-    // Vérifier si la date est déjà dépassée
-    if(new Date() >= EXAM_DATE && user.approved) {
-      showTwist();
-    } else if(user.approved) {
-      startTimerDisplay();
+  function login(email, pwd) {
+    let raw = localStorage.getItem('eb_currentUser');
+    if(raw) {
+      let u = JSON.parse(raw);
+      if(u.email === email && u.password === pwd) {
+        currentUser = u;
+        // recaler exams manquants
+        examsData.forEach(ex => { if(!currentUser.exams[ex.id]) currentUser.exams[ex.id] = { points:0, tasksToday:{}, timerUnlocked:false }; });
+        saveUser();
+        return true;
+      }
     }
-  }
-
-  // Vérifier si un utilisateur est déjà loggé
-  function initFromStorage() {
-    if(loadUser() && user.loggedIn) {
-      showMainAfterLogin();
-    } else {
-      loginScreen.classList.remove('hide');
-      mainScreen.classList.add('hide');
-      twistScreen.classList.add('hide');
+    // fallback créer compte auto pour démo
+    if(email && pwd) {
+      return signup("Utilisateur", email, pwd);
     }
+    return false;
   }
 
-  // Event listeners
-  document.getElementById('createAccountBtn')?.addEventListener('click', createAccount);
-  requestActivationBtn?.addEventListener('click', requestActivation);
-  resetAppBtn?.addEventListener('click', resetAll);
-  document.getElementById('taskSurvey')?.querySelector('button')?.addEventListener('click', doSurvey);
-  document.getElementById('taskShare')?.querySelector('button')?.addEventListener('click', doShare);
-  document.getElementById('taskReferral')?.querySelector('button')?.addEventListener('click', doReferral);
-  document.getElementById('taskDaily')?.querySelector('button')?.addEventListener('click', doDailyAd);
+  // Event listeners UI
+  document.getElementById('doLoginBtn')?.addEventListener('click', () => {
+    let email = document.getElementById('loginEmail').value;
+    let pwd = document.getElementById('loginPassword').value;
+    if(login(email, pwd)) {
+      renderDashboard();
+      showScreen('dashboardScreen');
+    } else alert("Échec connexion");
+  });
+  document.getElementById('gotoSignup')?.addEventListener('click', () => showScreen('signupScreen'));
+  document.getElementById('gotoLogin')?.addEventListener('click', () => showScreen('loginScreen'));
+  document.getElementById('doSignupBtn')?.addEventListener('click', () => {
+    let name = document.getElementById('signupName').value;
+    let email = document.getElementById('signupEmail').value;
+    let pwd = document.getElementById('signupPassword').value;
+    if(signup(name, email, pwd)) {
+      renderDashboard();
+      showScreen('dashboardScreen');
+    } else alert("Erreur inscription");
+  });
+  document.getElementById('backToDashboard')?.addEventListener('click', () => {
+    if(window._timerInterval) clearInterval(window._timerInterval);
+    renderDashboard();
+    showScreen('dashboardScreen');
+  });
+  document.getElementById('unlockExamBtn')?.addEventListener('click', () => {
+    if(currentExamId) {
+      let exam = examsData.find(e => e.id === currentExamId);
+      let userExam = currentUser.exams[currentExamId];
+      if(userExam.points >= exam.targetPoints && !userExam.timerUnlocked) {
+        userExam.timerUnlocked = true;
+        saveUser();
+        showExamDetail(currentExamId);
+      } else alert("Points insuffisants ou déjà débloqué");
+    }
+  });
+  document.getElementById('resetAllBtn')?.addEventListener('click', resetAll);
+  document.querySelectorAll('.category-card').forEach(cat => {
+    cat.addEventListener('click', (e) => {
+      let niveau = cat.getAttribute('data-cat');
+      // filtrer les examens sur le dashboard ?
+      renderDashboard(); // refresh (simple)
+      alert(`Filtre par ${niveau} - Tous les examens de ce niveau seront mis en avant (simulation)`);
+    });
+  });
 
-  // Lancement
-  initFromStorage();
+  // Initialisation
+  if(loadUser()) {
+    renderDashboard();
+    showScreen('dashboardScreen');
+  } else {
+    showScreen('loginScreen');
+  }
+  // binding dynamique pour les tâches (après chaque chargement détail)
+  setInterval(() => {
+    if(document.getElementById('examDetailScreen') && !document.getElementById('examDetailScreen').classList.contains('hide')) {
+      bindTaskButtons();
+    }
+  }, 200);
 </script>
 </body>
-      </html>
+</html>
