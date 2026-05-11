@@ -1,1476 +1,525 @@
 <!DOCTYPE html>
-<html lang="ht">
+<html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <meta name="theme-color" content="#0A0B12">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="EXAMBREAKER">
-  <meta name="description" content="Elite educational platform for exam preparation">
-  <meta name="keywords" content="education, exams, haiti">
-  <title>EXAMBREAKER HT | Elite Educational Platform</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,100..900&family=JetBrains+Mono:wght@100..800&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>EXAMBREAKER HT | J.P PHOENIX</title>
+  <link rel="manifest" href="data:application/manifest+json,{
+  \"name\": \"EXAMBREAKER HT\",
+  \"short_name\": \"EBHT\",
+  \"start_url\": \"/\",
+  \"display\": \"standalone\",
+  \"theme_color\": \"#0A0B12\",
+  \"background_color\": \"#0A0B12\",
+  \"icons\": [
+    {
+      \"src\": \"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%230A0B12' width='192' height='192'/%3E%3Ctext x='50%25' y='50%25' font-size='100' fill='%238B5CF6' text-anchor='middle' dominant-baseline='middle'%3EEB%3C/text%3E%3C/svg%3E\",
+      \"sizes\": \"192x192\",
+      \"type\": \"image/svg+xml\"
+    }
+  ]
+}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
-    /* ===== RESET & BASE ===== */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     :root {
       --bg-primary: #0A0B12;
       --bg-secondary: #121420;
-      --bg-tertiary: #1A1D2E;
       --card-bg: rgba(16, 19, 32, 0.9);
       --card-hover: rgba(24, 28, 44, 0.95);
       --text-primary: #E8EBF2;
       --text-secondary: #9CA3B8;
-      --text-tertiary: #6B7280;
       --accent-primary: #8B5CF6;
       --accent-secondary: #06B6D4;
       --accent-gold: #FBBF24;
-      --accent-red: #F87171;
-      --border-soft: rgba(139, 92, 246, 0.15);
+      --border-soft: rgba(139, 92, 246, 0.2);
       --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.3);
-      --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.5);
-      --font-mono: 'JetBrains Mono', monospace;
-      --font-sans: 'Inter', sans-serif;
-      --font-display: 'Space Grotesk', sans-serif;
-      --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
     body {
-      font-family: var(--font-sans);
+      font-family: 'Inter', sans-serif;
       background: linear-gradient(135deg, #0A0B12 0%, #1A1D2E 100%);
       color: var(--text-primary);
       min-height: 100vh;
-      overflow-x: hidden;
-      transition: var(--transition);
-      position: relative;
     }
-
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: 
-        radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: -1;
-      animation: bgFloat 20s ease-in-out infinite;
-    }
-
-    @keyframes bgFloat {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(15px, -15px); }
-    }
-
-    /* ===== SPLASH SCREEN ===== */
     #splashScreen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: linear-gradient(135deg, #0A0B12 0%, #1A1D2E 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-      opacity: 1;
-      transition: opacity 0.8s ease-out;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 9999; transition: opacity 0.8s ease; padding: 24px;
     }
-
-    #splashScreen.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .splash-container {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      overflow-y: auto;
-    }
-
+    #splashScreen.hidden { opacity: 0; pointer-events: none; }
     .glitch-title {
-      font-family: var(--font-display);
-      font-size: 2.5rem;
-      font-weight: 700;
-      text-align: center;
-      letter-spacing: 2px;
-      color: var(--accent-primary);
-      margin-bottom: 40px;
-      position: relative;
-      animation: glitchAppear 1s ease-in-out;
+      font-family: 'Space Grotesk', sans-serif; font-size: 2.2rem; font-weight: 700;
+      background: linear-gradient(135deg, #8B5CF6, #06B6D4);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 40px; animation: glitchAppear 1s ease;
     }
-
     @keyframes glitchAppear {
-      0% {
-        opacity: 0;
-        text-shadow: -2px 0 #06B6D4, 2px 0 #F87171;
-        transform: translate(-4px, 0);
-      }
-      50% {
-        text-shadow: -2px 0 #06B6D4, 2px 0 #F87171;
-        transform: translate(4px, 0);
-      }
-      100% {
-        opacity: 1;
-        text-shadow: none;
-        transform: translate(0, 0);
-      }
+      0% { opacity: 0; transform: translate(-4px, 0); text-shadow: -2px 0 #06B6D4, 2px 0 #F87171; }
+      50% { text-shadow: -2px 0 #06B6D4, 2px 0 #F87171; transform: translate(4px, 0); }
+      100% { opacity: 1; text-shadow: none; transform: translate(0, 0); }
     }
-
-    .typewriter-container {
-      max-width: 500px;
-      background: rgba(16, 19, 32, 0.8);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--border-soft);
-      border-radius: 12px;
-      padding: 32px;
-      font-family: var(--font-mono);
-      font-size: 0.95rem;
-      line-height: 1.8;
-      color: var(--accent-secondary);
-      min-height: 300px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      margin-bottom: 40px;
-      box-shadow: var(--shadow-soft);
+    .story-box {
+      background: rgba(16, 19, 32, 0.8); backdrop-filter: blur(16px);
+      border: 1px solid var(--border-soft); border-radius: 24px; padding: 28px;
+      max-width: 500px; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
+      line-height: 1.7; color: #06B6D4; margin-bottom: 40px; max-height: 380px; overflow-y: auto;
     }
-
-    .typewriter-text {
-      position: relative;
-      color: var(--accent-secondary);
-      word-break: break-word;
+    .splash-btn {
+      background: linear-gradient(135deg, #8B5CF6, #06B6D4); border: none;
+      padding: 14px 40px; border-radius: 60px; color: white; font-weight: bold;
+      font-size: 1rem; cursor: pointer;
     }
-
-    .typewriter-text::after {
-      content: '';
-      position: absolute;
-      bottom: -4px;
-      left: 0;
-      width: 2px;
-      height: 1.2em;
-      background: var(--accent-secondary);
-      animation: blink 1s infinite;
-    }
-
-    @keyframes blink {
-      0%, 49% { opacity: 1; }
-      50%, 100% { opacity: 0; }
-    }
-
-    .splash-button {
-      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-      border: none;
-      color: white;
-      padding: 16px 48px;
-      border-radius: 50px;
-      font-weight: 700;
-      font-family: var(--font-display);
-      font-size: 1rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
-      margin-top: auto;
-    }
-
-    .splash-button:active {
-      transform: scale(0.95);
-    }
-
-    /* ===== MAIN LAYOUT ===== */
-    #app {
-      max-width: 768px;
-      margin: 0 auto;
-      position: relative;
-      min-height: 100vh;
-      padding-bottom: 100px;
-      width: 100%;
-    }
-
-    .screen {
-      display: none;
-      padding: 16px;
-      padding-top: 20px;
-      animation: screenEnter 0.5s var(--ease-bounce);
-      min-height: 100vh;
-    }
-
-    .screen.active {
-      display: block;
-    }
-
-    @keyframes screenEnter {
-      from {
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* ===== CARDS ===== */
+    #app { max-width: 700px; margin: 0 auto; padding-bottom: 85px; }
+    .screen { display: none; padding: 16px; animation: fadeIn 0.4s ease; }
+    .screen.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     .card {
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      border: 1px solid var(--border-soft);
-      border-radius: 20px;
-      padding: 24px;
-      margin-bottom: 16px;
-      transition: var(--transition);
-      box-shadow: var(--shadow-soft);
-      position: relative;
-      overflow: hidden;
+      background: var(--card-bg); backdrop-filter: blur(16px);
+      border: 1px solid var(--border-soft); border-radius: 28px; padding: 20px;
+      margin-bottom: 16px; transition: 0.2s;
     }
-
-    .card:hover {
-      background: var(--card-hover);
-      border-color: var(--accent-primary);
-      box-shadow: 0 15px 40px rgba(139, 92, 246, 0.15);
-      transform: translateY(-2px);
-    }
-
-    .card-header {
-      font-size: 1.2rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: var(--font-display);
-    }
-
-    /* ===== BUTTONS ===== */
     .btn {
-      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-      border: none;
-      color: white;
-      padding: 14px 24px;
-      border-radius: 50px;
-      font-weight: 700;
-      font-family: var(--font-sans);
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      width: 100%;
-      cursor: pointer;
-      transition: var(--transition);
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2);
+      background: linear-gradient(135deg, #8B5CF6, #06B6D4); border: none;
+      padding: 14px; border-radius: 60px; color: white; font-weight: 600;
+      width: 100%; cursor: pointer; margin-bottom: 10px;
     }
-
-    .btn:active {
-      transform: scale(0.97);
+    .btn-secondary { background: transparent; border: 1px solid #8B5CF6; color: #8B5CF6; }
+    input {
+      width: 100%; padding: 14px; background: rgba(16, 19, 32, 0.9);
+      border: 1px solid var(--border-soft); border-radius: 40px; color: white; margin-bottom: 12px;
     }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .btn-secondary {
-      background: var(--card-bg);
-      border: 1px solid var(--border-soft);
-      color: var(--accent-primary);
-    }
-
-    .btn-secondary:hover {
-      background: var(--card-hover);
-      border-color: var(--accent-primary);
-    }
-
-    /* ===== FORM ELEMENTS ===== */
-    input[type="text"],
-    input[type="email"],
-    input[type="password"],
-    select {
-      width: 100%;
-      padding: 12px 16px;
-      background: var(--card-bg);
-      border: 1px solid var(--border-soft);
-      border-radius: 12px;
-      color: var(--text-primary);
-      font-family: var(--font-sans);
-      margin-bottom: 12px;
-      transition: var(--transition);
-    }
-
-    input[type="text"]:focus,
-    input[type="email"]:focus,
-    input[type="password"]:focus,
-    select:focus {
-      outline: none;
-      border-color: var(--accent-primary);
-      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-    }
-
-    /* ===== TOGGLE SWITCH ===== */
-    .toggle-switch {
-      position: relative;
-      display: inline-block;
-      width: 50px;
-      height: 28px;
-    }
-
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .toggle-slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: var(--text-tertiary);
-      transition: var(--transition);
-      border-radius: 28px;
-    }
-
-    .toggle-slider:before {
-      position: absolute;
-      content: "";
-      height: 20px;
-      width: 20px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: var(--transition);
-      border-radius: 50%;
-    }
-
-    input:checked + .toggle-slider {
-      background-color: var(--accent-primary);
-    }
-
-    input:checked + .toggle-slider:before {
-      transform: translateX(22px);
-    }
-
-    /* ===== TABS ===== */
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 24px;
-      border-bottom: 1px solid var(--border-soft);
-      padding-bottom: 16px;
-      overflow-x: auto;
-    }
-
-    .tab {
-      padding: 8px 16px;
-      background: transparent;
-      border: none;
-      border-bottom: 3px solid transparent;
-      color: var(--text-secondary);
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      white-space: nowrap;
-    }
-
-    .tab.active {
-      color: var(--accent-primary);
-      border-bottom-color: var(--accent-primary);
-    }
-
-    /* ===== BOTTOM NAVIGATION ===== */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--card-bg);
-      border-top: 1px solid var(--border-soft);
-      display: flex;
-      justify-content: space-around;
-      padding: 12px 0 20px 0;
-      max-width: 768px;
-      margin: 0 auto;
-      z-index: 100;
-      left: 50%;
-      transform: translateX(-50%);
-      backdrop-filter: blur(16px);
-    }
-
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      padding: 8px 16px;
-      background: none;
-      border: none;
-      color: var(--text-secondary);
-      cursor: pointer;
-      font-size: 0.7rem;
-      transition: var(--transition);
-      font-weight: 600;
-    }
-
-    .nav-item.active {
-      color: var(--accent-primary);
-    }
-
-    .nav-item i {
-      font-size: 1.4rem;
-    }
-
-    /* ===== TOAST NOTIFICATIONS ===== */
-    .toast {
-      position: fixed;
-      bottom: 100px;
-      left: 16px;
-      right: 16px;
-      background: var(--card-bg);
-      border: 1px solid var(--border-soft);
-      border-radius: 12px;
-      padding: 16px;
-      color: var(--text-primary);
-      animation: toastSlide 0.3s ease-out;
-      box-shadow: var(--shadow-soft);
-      z-index: 1000;
-    }
-
-    .toast.success {
-      border-color: rgba(34, 197, 94, 0.3);
-    }
-
-    .toast.error {
-      border-color: rgba(248, 113, 113, 0.3);
-    }
-
-    @keyframes toastSlide {
-      from {
-        transform: translateX(400px);
-      }
-      to {
-        transform: translateX(0);
-      }
-    }
-
-    /* ===== EXAM CARD ===== */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+    .stat-card { background: rgba(139, 92, 246, 0.1); border-radius: 20px; padding: 16px; text-align: center; }
+    .stat-value { font-size: 1.8rem; font-weight: 800; color: #8B5CF6; }
     .exam-item {
-      background: var(--card-bg);
-      border: 1px solid var(--border-soft);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: var(--transition);
+      background: rgba(16, 19, 32, 0.8); border-radius: 20px; padding: 16px;
+      margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center;
     }
-
-    .exam-item:hover {
-      background: var(--card-hover);
-      border-color: var(--accent-primary);
+    .exam-cost { color: #FBBF24; font-weight: 600; }
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; max-width: 700px;
+      margin: 0 auto; background: rgba(10, 11, 18, 0.95); display: flex;
+      justify-content: space-around; padding: 12px 0 20px; border-top: 1px solid var(--border-soft);
     }
-
-    .exam-info h3 {
-      font-size: 1.1rem;
-      margin-bottom: 4px;
+    .nav-item { text-align: center; color: #9CA3B8; cursor: pointer; transition: 0.2s; font-size: 0.7rem; }
+    .nav-item.active { color: #8B5CF6; }
+    .nav-item i { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+    .toast {
+      position: fixed; bottom: 100px; left: 20px; right: 20px;
+      background: #000000cc; backdrop-filter: blur(12px); border-radius: 40px;
+      padding: 14px; text-align: center; z-index: 2000; border-left: 3px solid #8B5CF6;
+      animation: slideUp 0.3s;
     }
-
-    .exam-cost {
-      color: var(--accent-gold);
-      font-weight: 600;
-      font-size: 0.9rem;
+    @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .tabs { display: flex; gap: 12px; margin-bottom: 16px; }
+    .tab {
+      flex: 1; background: rgba(16, 19, 32, 0.8); border: none; padding: 10px;
+      border-radius: 40px; color: #9CA3B8; font-weight: 600; cursor: pointer;
     }
-
-    .exam-countdown {
-      color: var(--text-secondary);
-      font-size: 0.85rem;
-      margin-top: 4px;
-    }
-
-    /* ===== DASHBOARD STATS ===== */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-
-    .stat-card {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(6, 182, 212, 0.1));
-      border: 1px solid var(--border-soft);
-      border-radius: 16px;
-      padding: 20px;
-      text-align: center;
-    }
-
-    .stat-value {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: var(--accent-primary);
-      margin-bottom: 4px;
-    }
-
-    .stat-label {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-    }
-
-    /* ===== ANIMATIONS ===== */
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
-      20%, 40%, 60%, 80% { transform: translateX(2px); }
-    }
-
-    /* ===== RESPONSIVE ===== */
-    @media (max-width: 480px) {
-      .glitch-title {
-        font-size: 1.8rem;
-      }
-
-      .typewriter-container {
-        padding: 20px;
-        font-size: 0.85rem;
-      }
-
-      .stats-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* ===== UTILITY ===== */
-    .text-center {
-      text-align: center;
-    }
-
-    .mb-16 {
-      margin-bottom: 16px;
-    }
-
-    .mt-20 {
-      margin-top: 20px;
-    }
-
-    .d-flex {
-      display: flex;
-      gap: 12px;
-    }
-
-    .flex-1 {
-      flex: 1;
-    }
-
-    .opacity-75 {
-      opacity: 0.75;
-    }
-
-    .loading {
-      animation: pulse 2s infinite;
-    }
-
-    .hidden {
-      display: none !important;
-    }
+    .tab.active { background: linear-gradient(135deg, #8B5CF6, #06B6D4); color: white; }
   </style>
 </head>
 <body>
-  <!-- SPLASH SCREEN -->
+  <!-- SPLASH + MONOLOGUE -->
   <div id="splashScreen">
-    <div class="splash-container">
-      <div class="glitch-title">J.P PHOENIX HAITI CORP</div>
-      <div class="typewriter-container">
-        <div class="typewriter-text" id="typewriterText"></div>
-      </div>
-      <button class="splash-button" onclick="AppCore.splash.hideSplash()">ENTRER DANS LE RÉSEAU</button>
-    </div>
+    <div class="glitch-title">J.P PHOENIX HAITI CORP</div>
+    <div class="story-box" id="storyText"></div>
+    <button class="splash-btn" id="nextStoryBtn">ENTRER DANS LE RÉSEAU</button>
   </div>
 
-  <!-- MAIN APP -->
   <div id="app">
-    <!-- AUTH SCREEN -->
+    <!-- TUTORIEL -->
+    <div id="tutoScreen" class="screen">
+      <div class="card" style="text-align: center;">
+        <h2 style="margin-bottom: 16px;">📘 COMMENT ÇA MARCHE ?</h2>
+        <p style="margin-bottom: 16px; color: #9CA3B8;">
+          🔹 Gagne des <strong>points</strong> avec les missions quotidiennes.<br>
+          🔹 Débloque les examens avec tes points.<br>
+          🔹 Une fois débloqué, un <strong>compte à rebours</strong> apparaît.<br>
+          🔹 Le <strong>jour officiel, à 5h du matin</strong>, l’examen sera disponible.<br>
+          🔹 Nous ne fuyons rien. C’est un <strong>défi d’étude</strong> pour gagner ta confiance.<br>
+          🔹 Deviens <strong>VIP</strong> pour avoir 3 jours d’avance.
+        </p>
+        <button class="btn" id="finishTutoBtn">J'AI COMPRIS, COMMENÇONS</button>
+      </div>
+    </div>
+
+    <!-- AUTHENTIFICATION -->
     <div id="authScreen" class="screen">
-      <div style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;">
-        <h1 style="font-family: var(--font-display); font-size: 2rem; margin-bottom: 30px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">EXAMBREAKER</h1>
-        
-        <div id="authForm" style="width: 100%; max-width: 300px;">
-          <input type="email" id="emailInput" placeholder="Email" style="margin-bottom: 12px;">
-          <input type="password" id="passwordInput" placeholder="Mot de passe" style="margin-bottom: 20px;">
-          <button class="btn" onclick="AppCore.auth.login()" style="margin-bottom: 12px;">Se connecter</button>
-          <button class="btn btn-secondary" onclick="AppCore.auth.signup()">Créer un compte</button>
-        </div>
-
-        <div id="referralForm" style="display:none; margin-top: 30px; width: 100%; max-width: 300px;">
-          <p style="margin-bottom: 15px; color: var(--text-secondary);">Code de parrainage</p>
-          <input type="text" id="referralInput" placeholder="Entrez un code (facultatif)">
-          <button class="btn" onclick="AppCore.auth.redeemReferral()" style="margin-top: 12px;">Utiliser le code</button>
+      <div style="height: 20vh;"></div>
+      <div class="card" style="text-align: center;">
+        <h2 style="margin-bottom: 20px;">ACCÈS RÉSEAU</h2>
+        <input type="email" id="loginEmail" placeholder="Email">
+        <input type="password" id="loginPass" placeholder="Mot de passe">
+        <button class="btn" id="doLoginBtn">SE CONNECTER</button>
+        <p style="margin: 16px 0;">ou</p>
+        <button class="btn btn-secondary" id="showSignupBtn">CRÉER UN COMPTE</button>
+      </div>
+      <div id="signupPanel" style="display: none;">
+        <div class="card" style="text-align: center;">
+          <input type="text" id="signupPseudo" placeholder="Pseudo">
+          <input type="email" id="signupEmail" placeholder="Email">
+          <input type="password" id="signupPass" placeholder="Mot de passe">
+          <input type="text" id="signupReferral" placeholder="Code parrainage (optionnel)">
+          <button class="btn" id="doSignupBtn">S'INSCRIRE</button>
+          <button class="btn btn-secondary" id="backToLoginBtn">← RETOUR</button>
         </div>
       </div>
     </div>
 
-    <!-- DASHBOARD SCREEN -->
+    <!-- TABLEAU DE BORD -->
     <div id="dashboardScreen" class="screen">
-      <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 24px;" id="dashboardTitle">Tableau de Bord</h2>
-
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2>Bonjour, <span id="dashboardUsername">Agent</span> <span id="vipBadge" style="color:#FBBF24; font-size:0.8rem;"></span></h2>
+        <div class="stat-card" style="padding: 8px 16px;"><span id="dashboardPoints">0</span> pts</div>
+      </div>
       <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-value" id="pointsDisplay">0</div>
-          <div class="stat-label" id="pointsLabel">Points</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value" id="streakDisplay">0</div>
-          <div class="stat-label" id="streakLabel">Série</div>
-        </div>
+        <div class="stat-card"><div class="stat-value" id="streakValue">0</div><div>🔥 Série jours</div></div>
+        <div class="stat-card"><div class="stat-value" id="unlockedCount">0</div><div>📘 Examens débloqués</div></div>
       </div>
-
       <div class="card">
-        <div class="card-header" id="missionsTitle">Missions</div>
-        <button class="btn" onclick="AppCore.missions.perform('daily')" id="dailyBtn" style="margin-bottom: 8px;">
-          <i class="fas fa-star"></i> <span id="dailyLabel">Défi Quotidien</span> (+5 XP)
-        </button>
-        <button class="btn" onclick="AppCore.missions.perform('share')" id="shareBtn" style="margin-bottom: 8px;">
-          <i class="fas fa-share"></i> <span id="shareLabel">Partager</span> (+10 XP)
-        </button>
-        <button class="btn" onclick="AppCore.missions.showReferral()" id="referralBtn">
-          <i class="fas fa-link"></i> <span id="referralLabel">Mon Code</span>
-        </button>
+        <h3>⚡ MISSIONS QUOTIDIENNES</h3>
+        <button class="btn" id="dailyMissionBtn"><i class="fas fa-calendar-day"></i> +5 pts</button>
+        <button class="btn" id="shareMissionBtn"><i class="fab fa-whatsapp"></i> Partager l'app (+10 pts)</button>
+        <button class="btn btn-secondary" id="showReferralCodeBtn"><i class="fas fa-link"></i> Mon code parrainage</button>
       </div>
-
       <div class="card">
-        <div class="card-header" id="vipTitle">Accès VIP</div>
-        <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 0.9rem;" id="vipDesc">Déverrouiller avec 500 points pour un accès 3 jours avant</p>
-        <button class="btn" onclick="AppCore.user.activateVIP()" id="vipBtn"><span id="vipLabel">Activer VIP</span> (500 pts)</button>
+        <h3>👑 PASSER VIP (500 pts)</h3>
+        <p style="font-size:0.8rem; margin-bottom: 12px;">Accès anticipé 3 jours avant les dates officielles</p>
+        <button class="btn" id="upgradeVipBtn">ACTIVER VIP</button>
       </div>
-    </div>
-
-    <!-- EXAMS SCREEN -->
-    <div id="examsScreen" class="screen">
-      <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 24px;" id="examsTitle">Examens</h2>
-      
       <div class="tabs">
-        <button class="tab active" data-level="9af" id="tab9af">9AF</button>
-        <button class="tab" data-level="ns4" id="tabNs4">NS4</button>
+        <button class="tab active" data-level="9af">🎓 9AF (7 examens)</button>
+        <button class="tab" data-level="ns4">⚛️ NS4 (12 examens)</button>
       </div>
-
       <div id="examsContainer"></div>
     </div>
 
-    <!-- PROFILE SCREEN -->
+    <!-- PROFIL -->
     <div id="profileScreen" class="screen">
-      <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 24px;" id="profileTitle">Profil</h2>
-
       <div class="card">
-        <div class="card-header" id="myProfileTitle">Mon Profil</div>
-        <p style="margin-bottom: 16px; color: var(--text-secondary);" id="emailDisplay">Email: ...</p>
-        <label style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 0.9rem;" id="pseudoLabel">Pseudo</label>
-        <input type="text" id="pseudoInput" placeholder="Changer votre pseudo" style="margin-bottom: 12px;">
-        <button class="btn" onclick="AppCore.user.updatePseudo()" id="updateBtn"><span id="updateLabel">Mettre à jour</span></button>
-      </div>
-
-      <div class="card">
-        <div class="card-header" id="achievementsTitle">Réalisations</div>
-        <div id="achievementsContainer" style="min-height: 100px;"></div>
-      </div>
-
-      <div class="card">
-        <button class="btn btn-secondary" onclick="AppCore.auth.logout()" style="margin-bottom: 8px;">
-          <i class="fas fa-sign-out-alt"></i> <span id="logoutLabel">Déconnexion</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- SETTINGS SCREEN -->
-    <div id="settingsScreen" class="screen">
-      <h2 style="font-family: var(--font-display); font-size: 1.8rem; margin-bottom: 24px;" id="settingsTitle">Paramètres</h2>
-
-      <div class="card">
-        <div class="card-header" id="appearanceTitle">Apparence</div>
-        <label style="display: block; margin-bottom: 12px; color: var(--text-secondary); font-size: 0.9rem;" id="themeLabel">Thème</label>
-        <select id="themeSelect" style="margin-bottom: 20px;">
-          <option value="dark" id="darkOpt">Sombre</option>
-          <option value="purple" id="purpleOpt">Violet</option>
-          <option value="matrix" id="matrixOpt">Matrix</option>
-        </select>
-
-        <label style="display: block; margin-bottom: 12px; color: var(--text-secondary); font-size: 0.9rem;" id="langLabel">Langue</label>
-        <select id="langSelect" style="margin-bottom: 20px;">
-          <option value="ht" id="kreyolOpt">Kreyòl Ayisyen</option>
-          <option value="fr" id="frenchOpt">Français</option>
-          <option value="en" id="englishOpt">English</option>
-        </select>
-      </div>
-
-      <div class="card">
-        <div class="card-header" id="notificationsTitle">Notifications</div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <label id="soundLabel">Sons</label>
-          <label class="toggle-switch">
-            <input type="checkbox" id="soundToggle" checked>
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <label id="vibrationLabel">Vibrations</label>
-          <label class="toggle-switch">
-            <input type="checkbox" id="vibrationToggle" checked>
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header" id="dataTitle">Données</div>
-        <button class="btn btn-secondary" onclick="AppCore.storage.clearCache()">
-          <i class="fas fa-trash"></i> <span id="clearCacheLabel">Vider le cache</span>
-        </button>
+        <h3>👤 MON PROFIL</h3>
+        <p>Email : <span id="profileEmail"></span></p>
+        <label>Pseudo</label>
+        <input type="text" id="profilePseudoInput" placeholder="Nouveau pseudo">
+        <button class="btn" id="updatePseudoBtn">MODIFIER</button>
+        <button class="btn btn-secondary" id="logoutBtn">DÉCONNEXION</button>
       </div>
     </div>
   </div>
 
-  <!-- BOTTOM NAVIGATION -->
   <div class="bottom-nav">
-    <button class="nav-item active" data-nav="dashboard" onclick="this.parentElement.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); this.classList.add('active');"><i class="fas fa-home"></i><span id="navDash">Accueil</span></button>
-    <button class="nav-item" data-nav="exams" onclick="this.parentElement.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); this.classList.add('active');"><i class="fas fa-book"></i><span id="navExams">Examens</span></button>
-    <button class="nav-item" data-nav="profile" onclick="this.parentElement.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); this.classList.add('active');"><i class="fas fa-user"></i><span id="navProfile">Profil</span></button>
-    <button class="nav-item" data-nav="settings" onclick="this.parentElement.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); this.classList.add('active');"><i class="fas fa-cog"></i><span id="navSettings">Params</span></button>
+    <div class="nav-item active" data-nav="dashboard"><i class="fas fa-home"></i><span>Accueil</span></div>
+    <div class="nav-item" data-nav="profile"><i class="fas fa-user"></i><span>Profil</span></div>
   </div>
-  <!-- FIREBASE CONFIG -->
-  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js"></script>
+
+  <!-- FIREBASE SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
   <script>
-    // Firebase Config
+    // ========== FIREBASE CONFIG (À REMPLACER PAR TES VRAIES CLÉS) ==========
     const firebaseConfig = {
-      apiKey: "AIzaSyDwlZAG6dUU0U_R5lw3Z8-N7_X8_Q2M1H4",
+      apiKey: "AIzaSyC81oECS6HWNhNQY0wkp5yEuKDjkD5w_uE",
       authDomain: "exambreaker-ht.firebaseapp.com",
       projectId: "exambreaker-ht",
-      storageBucket: "exambreaker-ht.appspot.com",
-      messagingSenderId: "123456789012",
-      appId: "1:123456789012:web:abcdef1234567890"
+      storageBucket: "exambreaker-ht.firebasestorage.app",
+      messagingSenderId: "155660696647",
+      appId: "1:155660696647:web:78b1fc14795227c5b08562"
     };
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // ===== TRANSLATIONS =====
-    const translations = {
-      ht: {
-        // Dashboard
-        dashboardTitle: "Tablyo Bò",
-        pointsLabel: "Pwen",
-        streakLabel: "Seri",
-        missionsTitle: "Misyon",
-        dailyLabel: "Defi Chak Jou",
-        shareLabel: "Pataje",
-        referralLabel: "Kòd Mwen",
-        vipTitle: "Aksè VIP",
-        vipDesc: "Devriye avèk 500 pwen pou aksè 3 jou anvan",
-        vipLabel: "Aktivé VIP",
-        // Exams
-        examsTitle: "Egzamen",
-        // Profile
-        profileTitle: "Pwofil",
-        myProfileTitle: "Pwofil Mwen",
-        pseudoLabel: "Alias",
-        updateLabel: "Mete Ajou",
-        achievementsTitle: "Rasanplis",
-        logoutLabel: "Dekonekte",
-        emailDisplay: "Email",
-        // Settings
-        settingsTitle: "Paramèt",
-        appearanceTitle: "Aparans",
-        themeLabel: "Tèm",
-        langLabel: "Lang",
-        darkOpt: "Fonse",
-        purpleOpt: "Violèt",
-        matrixOpt: "Matrix",
-        kreyolOpt: "Kreyòl Ayisyen",
-        frenchOpt: "Franse",
-        englishOpt: "English",
-        notificationsTitle: "Notifikasyon",
-        soundLabel: "Son",
-        vibrationLabel: "Vibrason",
-        dataTitle: "Done",
-        clearCacheLabel: "Efase Cache",
-        // Nav
-        navDash: "Akèy",
-        navExams: "Egzamen",
-        navProfile: "Pwofil",
-        navSettings: "Paramèt",
-      },
-      fr: {
-        dashboardTitle: "Tableau de Bord",
-        pointsLabel: "Points",
-        streakLabel: "Série",
-        missionsTitle: "Missions",
-        dailyLabel: "Défi Quotidien",
-        shareLabel: "Partager",
-        referralLabel: "Mon Code",
-        vipTitle: "Accès VIP",
-        vipDesc: "Déverrouiller avec 500 points pour un accès 3 jours avant",
-        vipLabel: "Activer VIP",
-        examsTitle: "Examens",
-        profileTitle: "Profil",
-        myProfileTitle: "Mon Profil",
-        pseudoLabel: "Pseudo",
-        updateLabel: "Mettre à jour",
-        achievementsTitle: "Réalisations",
-        logoutLabel: "Déconnexion",
-        emailDisplay: "Email",
-        settingsTitle: "Paramètres",
-        appearanceTitle: "Apparence",
-        themeLabel: "Thème",
-        langLabel: "Langue",
-        darkOpt: "Sombre",
-        purpleOpt: "Violet",
-        matrixOpt: "Matrix",
-        kreyolOpt: "Kreyòl Ayisyen",
-        frenchOpt: "Français",
-        englishOpt: "English",
-        notificationsTitle: "Notifications",
-        soundLabel: "Sons",
-        vibrationLabel: "Vibrations",
-        dataTitle: "Données",
-        clearCacheLabel: "Vider le cache",
-        navDash: "Accueil",
-        navExams: "Examens",
-        navProfile: "Profil",
-        navSettings: "Params",
-      },
-      en: {
-        dashboardTitle: "Dashboard",
-        pointsLabel: "Points",
-        streakLabel: "Streak",
-        missionsTitle: "Missions",
-        dailyLabel: "Daily Challenge",
-        shareLabel: "Share",
-        referralLabel: "My Code",
-        vipTitle: "VIP Access",
-        vipDesc: "Unlock with 500 points for 3-day early access",
-        vipLabel: "Activate VIP",
-        examsTitle: "Exams",
-        profileTitle: "Profile",
-        myProfileTitle: "My Profile",
-        pseudoLabel: "Nickname",
-        updateLabel: "Update",
-        achievementsTitle: "Achievements",
-        logoutLabel: "Logout",
-        emailDisplay: "Email",
-        settingsTitle: "Settings",
-        appearanceTitle: "Appearance",
-        themeLabel: "Theme",
-        langLabel: "Language",
-        darkOpt: "Dark",
-        purpleOpt: "Purple",
-        matrixOpt: "Matrix",
-        kreyolOpt: "Kreyòl Ayisyen",
-        frenchOpt: "Français",
-        englishOpt: "English",
-        notificationsTitle: "Notifications",
-        soundLabel: "Sound",
-        vibrationLabel: "Vibration",
-        dataTitle: "Data",
-        clearCacheLabel: "Clear Cache",
-        navDash: "Home",
-        navExams: "Exams",
-        navProfile: "Profile",
-        navSettings: "Settings",
-      }
+    // ========== DONNÉES EXAMENS ==========
+    const EXAMS_DATA = {
+      "9af": ["Anglais", "Kreyòl", "Espagnol", "Français", "Mathématiques", "Sciences Sociales", "Sciences Expérimentales"],
+      "ns4": ["Physiques", "Mathématiques", "Chimie", "Kreyòl", "Anglais", "Sciences Sociales", "Philosophie", "Informatiques", "Biologie/Géologie", "Economie", "Espagnol", "Art/Musique"]
     };
+    const EXAM_COST = { "9af": 10, "ns4": 15 };
+    const EXAM_DATE = new Date(2026, 6, 1, 5, 0, 0);
 
-    // ===== EXAMS DATA =====
-    const examData = {
-      "9af": [
-        { id: "9af-anglais", name: "Anglais", cost: 10, date: "2026-07-01" },
-        { id: "9af-kreyol", name: "Kreyòl", cost: 10, date: "2026-07-01" },
-        { id: "9af-espagnol", name: "Espagnol", cost: 10, date: "2026-07-01" },
-        { id: "9af-francais", name: "Français", cost: 10, date: "2026-07-01" },
-        { id: "9af-mathematiques", name: "Mathématiques", cost: 10, date: "2026-07-01" },
-        { id: "9af-sciences-sociales", name: "Sciences Sociales", cost: 10, date: "2026-07-01" },
-        { id: "9af-sciences-exp", name: "Sciences Expérimentales", cost: 10, date: "2026-07-01" }
-      ],
-      "ns4": [
-        { id: "ns4-physiques", name: "Physiques", cost: 15, date: "2026-07-05" },
-        { id: "ns4-mathematiques", name: "Mathématiques", cost: 15, date: "2026-07-05" },
-        { id: "ns4-chimie", name: "Chimie", cost: 15, date: "2026-07-05" },
-        { id: "ns4-kreyol", name: "Kreyòl", cost: 15, date: "2026-07-05" },
-        { id: "ns4-anglais", name: "Anglais", cost: 15, date: "2026-07-05" },
-        { id: "ns4-sciences-sociales", name: "Sciences Sociales", cost: 15, date: "2026-07-05" },
-        { id: "ns4-philosophie", name: "Philosophie", cost: 15, date: "2026-07-05" },
-        { id: "ns4-informatiques", name: "Informatiques", cost: 15, date: "2026-07-05" },
-        { id: "ns4-biologie", name: "Biologie/Géologie", cost: 15, date: "2026-07-05" },
-        { id: "ns4-economie", name: "Economie", cost: 15, date: "2026-07-05" },
-        { id: "ns4-espagnol", name: "Espagnol", cost: 15, date: "2026-07-05" },
-        { id: "ns4-art", name: "Art/Musique", cost: 15, date: "2026-07-05" }
-      ]
-    };
+    // ========== ÉTAT ==========
+    let currentUser = null;
+    let userData = { points: 0, streak: 0, unlockedExams: [], pseudo: "Agent", referralCode: "", referralCount: 0, isVip: false };
+    let currentLevel = "9af";
+    let timers = {};
 
-    // ===== APP STATE =====
-    const AppState = {
-      currentUser: null,
-      userData: null,
-      currentLanguage: localStorage.getItem('language') || 'ht',
-      currentLevel: '9af',
-      soundManager: null
-    };
-
-    // ===== SPLASH SCREEN MANAGER =====
-    class SplashManager {
-      constructor() {
-        this.narrativeText = `> SYSTEM INITIALIZATION
-> ANALYZING SUBJECT PROFILE
-> 
-> You tried the system
-> The system rejected you
-> They took your future
-> 
-> But in the darkness
-> A network awakens
-> A place where your mind is power
-> Where your dedication is wealth
-> 
-> EXAMBREAKER NETWORK ONLINE
-> Your revolution starts now`;
-      }
-
-      async typewrite() {
-        const element = document.getElementById('typewriterText');
-        const text = this.narrativeText;
-        
-        for (let i = 0; i < text.length; i++) {
-          element.textContent += text[i];
-          await new Promise(resolve => setTimeout(resolve, 30));
-        }
-      }
-
-      hideSplash() {
-        localStorage.setItem('splashSeen', 'true');
-        const splash = document.getElementById('splashScreen');
-        splash.classList.add('hidden');
-        AppCore.ui.navigate('dashboard');
-      }
-
-      show() {
-        if (!localStorage.getItem('splashSeen')) {
-          document.getElementById('splashScreen').classList.remove('hidden');
-          this.typewrite();
-        } else {
-          document.getElementById('splashScreen').classList.add('hidden');
-        }
-      }
+    function showToast(msg, isErr = false) {
+      const t = document.createElement('div');
+      t.className = 'toast';
+      t.innerHTML = msg;
+      if (isErr) t.style.borderLeftColor = '#F87171';
+      document.body.appendChild(t);
+      setTimeout(() => t.remove(), 3000);
     }
 
-    // ===== AUDIO MANAGER =====
-    class AudioManager {
-      constructor() {
-        this.enabled = localStorage.getItem('soundEnabled') !== 'false';
-      }
-
-      setEnabled(enabled) {
-        this.enabled = enabled;
-      }
-
-      play(type) {
-        if (!this.enabled) return;
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-        
-        oscillator.connect(gain);
-        gain.connect(audioContext.destination);
-
-        switch(type) {
-          case 'success':
-            oscillator.frequency.value = 800;
-            gain.gain.setValueAtTime(0.3, audioContext.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.3);
-            break;
-          case 'error':
-            oscillator.frequency.value = 300;
-            gain.gain.setValueAtTime(0.2, audioContext.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
-            oscillator.start(audioContext.currentTime);
-            oscillator.stop(audioContext.currentTime + 0.2);
-            break;
-        }
-      }
-    }
-
-    // ===== TRANSLATIONS MANAGER =====
-    class TranslationManager {
-      static translate(key) {
-        const trans = translations[AppState.currentLanguage] || translations.ht;
-        return trans[key] || key;
-      }
-
-      static updateUI() {
-        // Update all text elements with data-i18n
-        Object.keys(translations.ht).forEach(key => {
-          const element = document.getElementById(key);
-          if (element) {
-            element.textContent = TranslationManager.translate(key);
-          }
+    async function refreshUser() {
+      if (!currentUser) return;
+      const doc = await db.collection('users').doc(currentUser.uid).get();
+      if (doc.exists) {
+        userData = doc.data();
+      } else {
+        userData = { points: 0, streak: 0, unlockedExams: [], pseudo: "Agent", referralCode: currentUser.uid.slice(0,8), referralCount: 0, isVip: false };
+        await db.collection('users').doc(currentUser.uid).set(userData);
+        // Créer son code de parrainage dans la collection dédiée
+        await db.collection('referralCodes').doc(userData.referralCode).set({
+          ownerId: currentUser.uid,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
       }
+      document.getElementById('dashboardPoints').innerText = userData.points;
+      document.getElementById('streakValue').innerText = userData.streak || 0;
+      document.getElementById('unlockedCount').innerText = userData.unlockedExams?.length || 0;
+      document.getElementById('dashboardUsername').innerText = userData.pseudo;
+      document.getElementById('profileEmail').innerText = currentUser.email;
+      if (userData.isVip) document.getElementById('vipBadge').innerHTML = '👑 VIP';
+      else document.getElementById('vipBadge').innerHTML = '';
+      renderExams();
     }
 
-    // ===== UI MANAGER =====
-    class UIManager {
-      navigate(screen) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        const target = document.getElementById(screen + 'Screen');
-        if (target) {
-          target.classList.add('active');
-        }
-      }
+    function renderExams() {
+      const container = document.getElementById('examsContainer');
+      if (!container) return;
+      container.innerHTML = '';
+      const exams = EXAMS_DATA[currentLevel];
+      exams.forEach(name => {
+        const examId = `${currentLevel}_${name.replace(/\s/g, '')}`;
+        const unlocked = userData.unlockedExams?.includes(examId);
+        const div = document.createElement('div');
+        div.className = 'exam-item';
+        div.innerHTML = `
+          <div><strong>${name}</strong><br><span class="exam-cost">${EXAM_COST[currentLevel]} pts</span>
+          ${!unlocked ? '<div style="font-size:0.7rem; color:#9CA3B8;">🔒 À débloquer</div>' : '<div style="font-size:0.7rem;" id="timer_' + examId + '">⏳...</div>'}</div>
+          <button class="${unlocked ? 'btn-secondary' : 'btn'}" style="width:120px; padding:8px;" data-id="${examId}" data-cost="${EXAM_COST[currentLevel]}" ${unlocked ? 'disabled' : ''}>
+            ${unlocked ? 'Débloqué' : 'Débloquer'}
+          </button>
+        `;
+        container.appendChild(div);
+        if (unlocked) startCountdown(examId);
+      });
 
-      showToast(message, type = 'info') {
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.textContent = message;
-        document.body.appendChild(toast);
-
-        setTimeout(() => {
-          toast.remove();
-        }, 3000);
-      }
-
-      updateDashboard() {
-        if (AppState.userData) {
-          document.getElementById('pointsDisplay').textContent = AppState.userData.points || 0;
-          document.getElementById('streakDisplay').textContent = AppState.userData.streak || 0;
-        }
-      }
-
-      renderExams() {
-        const container = document.getElementById('examsContainer');
-        const level = AppState.currentLevel;
-        const exams = examData[level] || [];
-
-        container.innerHTML = '';
-        exams.forEach(exam => {
-          const isUnlocked = AppState.userData?.unlockedExams?.includes(exam.id);
-          const examCard = document.createElement('div');
-          examCard.className = 'exam-item';
-          
-          const examDate = new Date(exam.date);
-          const today = new Date();
-          const daysLeft = Math.ceil((examDate - today) / (1000 * 60 * 60 * 24));
-
-          examCard.innerHTML = `
-            <div class="exam-info">
-              <h3>${exam.name}</h3>
-              <div class="exam-cost">${exam.cost} pts</div>
-              <div class="exam-countdown">${daysLeft > 0 ? daysLeft + ' jours' : 'En cours'}</div>
-            </div>
-            <button class="btn ${isUnlocked ? 'btn-secondary' : ''}" 
-              onclick="AppCore.exams.unlock('${exam.id}')" 
-              ${isUnlocked ? 'disabled' : ''}
-              style="width: 120px; padding: 10px;">
-              ${isUnlocked ? '✓ Ouvert' : 'Déverrouiller'}
-            </button>
-          `;
-          
-          container.appendChild(examCard);
+      document.querySelectorAll('[data-id]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = btn.getAttribute('data-id');
+          const cost = parseInt(btn.getAttribute('data-cost'));
+          unlockExam(id, cost);
         });
-      }
+      });
     }
 
-    // ===== AUTH MANAGER =====
-    class AuthManager {
-      async login() {
-        const email = document.getElementById('emailInput').value;
-        const password = document.getElementById('passwordInput').value;
-
-        if (!email || !password) {
-          AppCore.ui.showToast('Remplir tous les champs', 'error');
-          return;
-        }
-
-        try {
-          const result = await auth.signInWithEmailAndPassword(email, password);
-          await AppCore.user.setCurrentUser(result.user);
-          AppCore.ui.navigate('dashboard');
-          AppState.soundManager.play('success');
-        } catch (err) {
-          AppCore.ui.showToast('Erreur de connexion: ' + err.message, 'error');
-          AppState.soundManager.play('error');
-        }
-      }
-
-      async signup() {
-        const email = document.getElementById('emailInput').value;
-        const password = document.getElementById('passwordInput').value;
-
-        if (!email || !password) {
-          AppCore.ui.showToast('Remplir tous les champs', 'error');
-          return;
-        }
-
-        try {
-          const result = await auth.createUserWithEmailAndPassword(email, password);
-          const referralCode = document.getElementById('referralInput').value;
-
-          const userData = {
-            email,
-            points: referralCode ? 10 : 0,
-            streak: 0,
-            unlockedExams: [],
-            achievements: [],
-            createdAt: new Date(),
-            theme: 'dark',
-            language: 'ht',
-            vipActive: false,
-            vipExpires: null
-          };
-
-          await db.collection('users').doc(result.user.uid).set(userData);
-          await AppCore.user.setCurrentUser(result.user);
-          AppCore.ui.navigate('dashboard');
-          AppState.soundManager.play('success');
-        } catch (err) {
-          AppCore.ui.showToast('Erreur: ' + err.message, 'error');
-        }
-      }
-
-      redeemReferral() {
-        const code = document.getElementById('referralInput').value;
-        if (code) {
-          AppCore.ui.showToast('Code utilisé!', 'success');
-        }
-      }
-
-      logout() {
-        auth.signOut();
-        AppState.currentUser = null;
-        AppState.userData = null;
-        AppCore.ui.navigate('auth');
-        AppCore.ui.showToast('Déconnecté', 'success');
-      }
+    async function unlockExam(examId, cost) {
+      if (userData.points < cost) return showToast(`❌ Il vous manque ${cost - userData.points} points`, true);
+      await db.collection('users').doc(currentUser.uid).update({
+        points: firebase.firestore.FieldValue.increment(-cost),
+        unlockedExams: firebase.firestore.FieldValue.arrayUnion(examId)
+      });
+      await refreshUser();
+      showToast(`✅ ${examId} débloqué !`);
+      renderExams();
     }
 
-    // ===== USER MANAGER =====
-    class UserManager {
-      async setCurrentUser(user) {
-        AppState.currentUser = user;
-        
-        try {
-          const doc = await db.collection('users').doc(user.uid).get();
-          AppState.userData = doc.data();
-          
-          if (!AppState.userData) {
-            AppState.userData = {
-              email: user.email,
-              points: 0,
-              streak: 0,
-              unlockedExams: [],
-              achievements: [],
-              theme: 'dark',
-              language: 'ht'
-            };
-            await db.collection('users').doc(user.uid).set(AppState.userData);
-          }
-
-          AppCore.ui.updateDashboard();
-          AppCore.ui.renderExams();
-          document.getElementById('emailDisplay').textContent = `Email: ${user.email}`;
-        } catch (err) {
-          console.error('Error loading user:', err);
-        }
-      }
-
-      async updatePseudo() {
-        const pseudo = document.getElementById('pseudoInput').value;
-        if (!pseudo) {
-          AppCore.ui.showToast('Entrez un pseudo', 'error');
+    function startCountdown(examId) {
+      const el = document.getElementById('timer_' + examId);
+      if (!el) return;
+      const target = EXAM_DATE;
+      const effectiveTarget = userData.isVip ? new Date(target.getTime() - 3 * 86400000) : target;
+      const update = () => {
+        const diff = effectiveTarget - new Date();
+        if (diff <= 0) {
+          el.innerHTML = "📄 DISPONIBLE LE JOUR J À 5H";
+          if (timers[examId]) clearInterval(timers[examId]);
           return;
         }
+        const days = Math.floor(diff / 86400000);
+        const hours = Math.floor((diff % 86400000) / 3600000);
+        el.innerHTML = `⏳ ${days}j ${hours}h avant l'examen officiel (5h)`;
+      };
+      update();
+      if (timers[examId]) clearInterval(timers[examId]);
+      timers[examId] = setInterval(update, 3600000);
+    }
 
-        try {
-          await db.collection('users').doc(AppState.currentUser.uid).update({
-            pseudo: pseudo
-          });
-          AppState.userData.pseudo = pseudo;
-          AppCore.ui.showToast('Pseudo mis à jour!', 'success');
-          document.getElementById('pseudoInput').value = '';
-        } catch (err) {
-          AppCore.ui.showToast('Erreur', 'error');
-        }
+    async function performMission(type, reward) {
+      const today = new Date().toISOString().slice(0,10);
+      const missionKey = `mission_${type}_${today}`;
+      if (localStorage.getItem(missionKey)) return showToast("Mission déjà effectuée aujourd'hui", true);
+      if (type === 'share') {
+        const url = window.location.href;
+        if (navigator.share) navigator.share({ title: 'EXAMBREAKER HT', text: `Rejoins-moi sur EXAMBREAKER HT : ${url}` });
+        else window.open(`https://wa.me/?text=${encodeURIComponent(url)}`);
       }
+      await db.collection('users').doc(currentUser.uid).update({
+        points: firebase.firestore.FieldValue.increment(reward),
+        streak: firebase.firestore.FieldValue.increment(1)
+      });
+      localStorage.setItem(missionKey, 'done');
+      await refreshUser();
+      showToast(`+${reward} points !`);
+    }
 
-      async activateVIP() {
-        if (AppState.userData.points < 500) {
-          AppCore.ui.showToast('Pas assez de points (besoin 500)', 'error');
-          return;
-        }
+    async function upgradeToVip() {
+      if (userData.isVip) return showToast("Vous êtes déjà VIP", true);
+      if (userData.points < 500) return showToast(`Il manque ${500 - userData.points} points`, true);
+      await db.collection('users').doc(currentUser.uid).update({
+        points: firebase.firestore.FieldValue.increment(-500),
+        isVip: true
+      });
+      await refreshUser();
+      showToast("🎉 VIP activé ! Accès anticipé 3 jours avant !");
+      renderExams();
+    }
 
-        try {
-          const now = new Date();
-          const expiresAt = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000);
-
-          await db.collection('users').doc(AppState.currentUser.uid).update({
-            points: firebase.firestore.FieldValue.increment(-500),
-            vipActive: true,
-            vipExpires: expiresAt
-          });
-
-          AppState.userData.points -= 500;
-          AppState.userData.vipActive = true;
-          AppState.userData.vipExpires = expiresAt;
-
-          AppCore.ui.updateDashboard();
-          AppCore.ui.showToast('VIP activé pour 3 jours!', 'success');
-          AppState.soundManager.play('success');
-        } catch (err) {
-          AppCore.ui.showToast('Erreur', 'error');
-        }
+    async function showReferralCode() {
+      let code = userData.referralCode;
+      if (!code) {
+        code = currentUser.uid.slice(0,8);
+        await db.collection('users').doc(currentUser.uid).update({ referralCode: code });
+        await db.collection('referralCodes').doc(code).set({ ownerId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
       }
+      navigator.clipboard.writeText(code);
+      showToast(`Code copié : ${code}`);
+    }
 
-      async unlockAchievement(id) {
-        if (!AppState.userData.achievements) {
-          AppState.userData.achievements = [];
-        }
-        if (!AppState.userData.achievements.includes(id)) {
-          AppState.userData.achievements.push(id);
-          try {
-            await db.collection('users').doc(AppState.currentUser.uid).update({
-              achievements: AppState.userData.achievements
+    async function updatePseudo() {
+      const newPseudo = document.getElementById('profilePseudoInput').value.trim();
+      if (!newPseudo) return;
+      await db.collection('users').doc(currentUser.uid).update({ pseudo: newPseudo });
+      await refreshUser();
+      showToast("Pseudo mis à jour");
+    }
+
+    function finishTutorial() {
+      localStorage.setItem('tutoSeen', 'true');
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById('authScreen').classList.add('active');
+    }
+
+    // ========== AUTH ==========
+    async function handleLogin() {
+      const email = document.getElementById('loginEmail').value;
+      const pwd = document.getElementById('loginPass').value;
+      try {
+        await auth.signInWithEmailAndPassword(email, pwd);
+      } catch(e) { showToast(e.message, true); }
+    }
+
+    async function handleSignup() {
+      const pseudo = document.getElementById('signupPseudo').value;
+      const email = document.getElementById('signupEmail').value;
+      const pwd = document.getElementById('signupPass').value;
+      const ref = document.getElementById('signupReferral').value;
+      if (!pseudo || !email || !pwd) return showToast("Tous les champs requis", true);
+      try {
+        const cred = await auth.createUserWithEmailAndPassword(email, pwd);
+        const uid = cred.user.uid;
+        const refCode = uid.slice(0,8);
+        await db.collection('users').doc(uid).set({
+          pseudo, points: 0, streak: 0, unlockedExams: [], referralCode: refCode, referralCount: 0, isVip: false
+        });
+        await db.collection('referralCodes').doc(refCode).set({
+          ownerId: uid,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        if (ref) {
+          const codeDoc = await db.collection('referralCodes').doc(ref).get();
+          if (codeDoc.exists) {
+            const referrerId = codeDoc.data().ownerId;
+            await db.collection('users').doc(referrerId).update({
+              points: firebase.firestore.FieldValue.increment(10),
+              referralCount: firebase.firestore.FieldValue.increment(1)
             });
-          } catch (err) {
-            console.error('Achievement unlock error:', err);
-          }
-        }
-      }
-    }
-
-    // ===== EXAM MANAGER =====
-    class ExamManager {
-      async unlock(examId) {
-        const exam = Object.values(examData).flat().find(e => e.id === examId);
-        if (!exam) return;
-
-        const cost = exam.cost;
-        if (AppState.userData.points < cost) {
-          AppCore.ui.showToast('Pas assez de points', 'error');
-          return;
-        }
-
-        try {
-          await db.collection('users').doc(AppState.currentUser.uid).update({
-            points: firebase.firestore.FieldValue.increment(-cost),
-            unlockedExams: firebase.firestore.FieldValue.arrayUnion(examId)
-          });
-
-          AppState.userData.points -= cost;
-          AppState.userData.unlockedExams.push(examId);
-          
-          AppCore.ui.showToast('✅ Examen déverrouillé!', 'success');
-          AppCore.ui.renderExams();
-          AppCore.ui.updateDashboard();
-          AppState.soundManager.play('success');
-        } catch (err) {
-          AppCore.ui.showToast('Erreur', 'error');
-        }
-      }
-    }
-
-    // ===== MISSION MANAGER =====
-    class MissionManager {
-      async perform(missionType) {
-        const today = new Date().toISOString().slice(0, 10);
-        const key = `mission_${missionType}_${today}`;
-
-        if (localStorage.getItem(key)) {
-          AppCore.ui.showToast('Déjà complété aujourd\'hui', 'error');
-          return;
-        }
-
-        const rewards = { share: 10, daily: 5, referral: 15 };
-        const reward = rewards[missionType] || 0;
-
-        if (missionType === 'share') {
-          const text = `Découvrez EXAMBREAKER HT - Plateforme élite de préparation aux examens! ${window.location.href}`;
-          if (navigator.share) {
-            navigator.share({ title: 'EXAMBREAKER HT', text });
+            showToast("Code parrainage validé ! +10 pts pour votre parrain");
           } else {
-            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
+            showToast("Code de parrainage invalide", true);
           }
         }
-
-        try {
-          await db.collection('users').doc(AppState.currentUser.uid).update({
-            points: firebase.firestore.FieldValue.increment(reward)
-          });
-
-          localStorage.setItem(key, 'done');
-          AppState.userData.points += reward;
-          AppCore.ui.updateDashboard();
-          AppCore.ui.showToast(`+${reward} XP gagné!`, 'success');
-          AppState.soundManager.play('success');
-        } catch (err) {
-          AppCore.ui.showToast('Erreur', 'error');
-        }
-      }
-
-      async showReferral() {
-        if (!AppState.userData.referralCode) {
-          AppState.userData.referralCode = AppState.currentUser.uid.slice(0, 8).toUpperCase();
-          try {
-            await db.collection('users').doc(AppState.currentUser.uid).update({
-              referralCode: AppState.userData.referralCode
-            });
-          } catch (err) {
-            console.error('Referral code error:', err);
-          }
-        }
-
-        navigator.clipboard.writeText(AppState.userData.referralCode);
-        AppCore.ui.showToast(`Code copié: ${AppState.userData.referralCode}`, 'success');
-      }
+        showToast("Compte créé ! Connectez-vous.");
+        document.getElementById('signupPanel').style.display = 'none';
+      } catch(e) { showToast(e.message, true); }
     }
 
-    // ===== STORAGE MANAGER =====
-    class StorageManager {
-      clearCache() {
-        if (!confirm('Vider tous les données en cache?')) return;
-        localStorage.clear();
-        sessionStorage.clear();
-        AppCore.ui.showToast('Cache vidé', 'success');
-      }
+    function logout() { auth.signOut(); window.location.reload(); }
+
+    function navigateTo(screen) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screen + 'Screen').classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      if (screen === 'dashboard') document.querySelector('.nav-item[data-nav="dashboard"]').classList.add('active');
+      if (screen === 'profile') document.querySelector('.nav-item[data-nav="profile"]').classList.add('active');
+      if (screen === 'dashboard') renderExams();
     }
 
-    // ===== APP MANAGER =====
-    class AppManager {
-      async initialize() {
-        AppState.soundManager = new AudioManager();
-        const splash = new SplashManager();
-        splash.show();
-
-        const savedLang = localStorage.getItem('language') || 'ht';
-        AppState.currentLanguage = savedLang;
-        document.getElementById('langSelect').value = savedLang;
-
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        document.getElementById('themeSelect').value = savedTheme;
-
-        this.setupEventListeners();
-      }
-
-      setupEventListeners() {
-        // Theme change
-        document.getElementById('themeSelect').addEventListener('change', (e) => {
-          const theme = e.target.value;
-          document.documentElement.setAttribute('data-theme', theme);
-          localStorage.setItem('theme', theme);
-        });
-
-        // Language change
-        document.getElementById('langSelect').addEventListener('change', (e) => {
-          AppState.currentLanguage = e.target.value;
-          localStorage.setItem('language', e.target.value);
-          TranslationManager.updateUI();
-          AppCore.ui.renderExams();
-        });
-
-        // Sound toggle
-        document.getElementById('soundToggle').addEventListener('change', (e) => {
-          AppState.soundManager.setEnabled(e.target.checked);
-          localStorage.setItem('soundEnabled', e.target.checked);
-        });
-
-        // Vibration toggle
-        document.getElementById('vibrationToggle').addEventListener('change', (e) => {
-          localStorage.setItem('vibrationEnabled', e.target.checked);
-        });
-
-        // Nav items
-        document.querySelectorAll('.nav-item').forEach(item => {
-          item.addEventListener('click', () => {
-            AppCore.ui.navigate(item.dataset.nav);
-          });
-        });
-
-        // Exam tabs
-        document.querySelectorAll('.tab').forEach(tab => {
-          tab.addEventListener('click', () => {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            AppState.currentLevel = tab.dataset.level;
-            AppCore.ui.renderExams();
-          });
-        });
-
-        // Load preferences
-        document.getElementById('soundToggle').checked = localStorage.getItem('soundEnabled') !== 'false';
-        document.getElementById('vibrationToggle').checked = localStorage.getItem('vibrationEnabled') !== 'false';
-
-        TranslationManager.updateUI();
+    // ========== MONOLOGUE TAPETAPETAPE ==========
+    const story = `> Année 2024. Bac Haïti.
+> J'ai tout donné. Nuits blanches. Cafés froids. Sacrifices.
+> Je croyais au mérite. À la justice du système.
+> 
+> Résultat : échec. 17 points manquants.
+> Le système m'a brisé. Mais pas tué.
+> 
+> J'ai appris. Codé. Étudié les failles.
+> Aujourd'hui, je reviens.
+> Non pas pour tricher, mais pour armer.
+> Pour que plus aucun élève haïtien ne subisse mon sort.
+> 
+> Bienvenue dans EXAMBREAKER HT.`;
+    let i = 0;
+    function typeStory() {
+      const el = document.getElementById('storyText');
+      if (i < story.length) {
+        el.innerHTML += story.charAt(i);
+        i++;
+        setTimeout(typeStory, 35);
       }
     }
+    typeStory();
 
-    // ===== CORE APP =====
-    const AppCore = {
-      ui: new UIManager(),
-      auth: new AuthManager(),
-      user: new UserManager(),
-      exams: new ExamManager(),
-      missions: new MissionManager(),
-      storage: new StorageManager(),
-      app: new AppManager(),
-      splash: new SplashManager()
+    // ========== ÉVÉNEMENTS ==========
+    document.getElementById('nextStoryBtn').onclick = () => {
+      document.getElementById('splashScreen').classList.add('hidden');
+      if (localStorage.getItem('tutoSeen') === 'true') {
+        document.getElementById('authScreen').classList.add('active');
+      } else {
+        document.getElementById('tutoScreen').classList.add('active');
+      }
     };
-
-    // ===== INITIALIZATION =====
-    document.addEventListener('DOMContentLoaded', () => {
-      AppCore.app.initialize();
+    document.getElementById('finishTutoBtn').onclick = finishTutorial;
+    document.getElementById('doLoginBtn').onclick = handleLogin;
+    document.getElementById('showSignupBtn').onclick = () => document.getElementById('signupPanel').style.display = 'block';
+    document.getElementById('doSignupBtn').onclick = handleSignup;
+    document.getElementById('backToLoginBtn').onclick = () => document.getElementById('signupPanel').style.display = 'none';
+    document.getElementById('dailyMissionBtn').onclick = () => performMission('daily', 5);
+    document.getElementById('shareMissionBtn').onclick = () => performMission('share', 10);
+    document.getElementById('showReferralCodeBtn').onclick = showReferralCode;
+    document.getElementById('upgradeVipBtn').onclick = upgradeToVip;
+    document.getElementById('updatePseudoBtn').onclick = updatePseudo;
+    document.getElementById('logoutBtn').onclick = logout;
+    document.querySelectorAll('.tab').forEach(t => {
+      t.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        t.classList.add('active');
+        currentLevel = t.getAttribute('data-level');
+        renderExams();
+      });
+    });
+    document.querySelectorAll('.nav-item').forEach(n => {
+      n.addEventListener('click', () => navigateTo(n.getAttribute('data-nav')));
     });
 
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        await AppCore.user.setCurrentUser(user);
-        AppCore.ui.navigate('dashboard');
+        currentUser = user;
+        await refreshUser();
+        navigateTo('dashboard');
       } else {
-        document.getElementById('splashScreen').classList.add('hidden');
-        AppCore.ui.navigate('auth');
+        navigateTo('auth');
       }
     });
   </script>
