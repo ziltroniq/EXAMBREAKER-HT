@@ -1,608 +1,540 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>EXAMBREAKER HT</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #0F1117;
-      color: #EFF3F6;
-      padding: 16px;
-      padding-bottom: 80px;
-    }
-    .container { max-width: 550px; margin: 0 auto; }
-    .card {
-      background: #1F2128;
-      border-radius: 24px;
-      padding: 20px;
-      margin-bottom: 16px;
-      border: 1px solid #2C2F36;
-    }
-    .card-vip {
-      background: linear-gradient(135deg, #2A1F2E, #1A1A1A);
-      border: 2px solid #FFD700;
-      box-shadow: 0 0 20px rgba(255,215,0,0.3);
-      position: relative;
-      overflow: hidden;
-    }
-    .card-vip::before {
-      content: "👑 VIP";
-      position: absolute;
-      top: 10px;
-      right: -30px;
-      background: #FFD700;
-      color: #1A1A1A;
-      font-weight: bold;
-      font-size: 0.7rem;
-      padding: 4px 40px;
-      transform: rotate(45deg);
-    }
-    .vip-badge { background: #FFD700; color: #1A1A1A; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.7rem; display: inline-block; }
-    .badge-vip { background: #FFD70020; color: #FFD700; border: 1px solid #FFD700; padding: 4px 10px; border-radius: 30px; font-size: 0.7rem; }
-    .btn {
-      background: #34C759;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 40px;
-      font-weight: 600;
-      width: 100%;
-      cursor: pointer;
-      font-family: inherit;
-      color: white;
-      font-size: 0.9rem;
-    }
-    .btn-gold { background: linear-gradient(135deg, #FFD700, #FFA500); color: #1A1A1A; font-weight: bold; }
-    input {
-      background: #2C2F36;
-      border: none;
-      padding: 14px 16px;
-      border-radius: 16px;
-      color: white;
-      width: 100%;
-      margin-bottom: 12px;
-      font-family: inherit;
-    }
-    input::placeholder { color: #8E8E93; }
-    .exam-card {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      background: #2C2F36;
-      padding: 14px;
-      border-radius: 20px;
-    }
-    .badge { background: #34C75920; padding: 4px 10px; border-radius: 30px; font-size: 0.7rem; color: #34C759; }
-    .task-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      padding: 10px;
-      background: #2C2F36;
-      border-radius: 16px;
-    }
-    .task-btn { background: #34C759; border: none; padding: 6px 16px; border-radius: 30px; color: white; font-weight: 600; cursor: pointer; }
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: #1F2128; display: flex; justify-content: space-around;
-      padding: 10px 0 20px; border-top: 1px solid #2C2F36;
-      z-index: 1000; max-width: 550px; margin: 0 auto;
-    }
-    .nav-item { text-align: center; color: #8E8E93; font-size: 0.7rem; cursor: pointer; flex: 1; }
-    .nav-item i { font-size: 1.5rem; display: block; margin-bottom: 4px; }
-    .nav-item.active { color: #34C759; }
-    .hide { display: none; }
-    .toast {
-      position: fixed; bottom: 80px; left: 20px; right: 20px;
-      background: #000000cc; color: white; padding: 12px;
-      border-radius: 30px; text-align: center; z-index: 1100;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EXAMBREAKER HT | Le Réseau</title>
+    
+    <!-- PWA Meta -->
+    <meta name="theme-color" content="#0F1117">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <!-- Librairies -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --bg: #0F1117;
+            --card: #1F2128;
+            --border: #2C2F36;
+            --accent: #34C759;
+            --gold: linear-gradient(135deg, #FFD700, #B8860B);
+            --vip-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
+            --text: #EFF3F6;
+            --text-dim: #8E8E93;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* --- ÉCRANS --- */
+        .screen { 
+            min-height: 100vh; 
+            width: 100%; 
+            display: none; 
+            padding: 20px;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .active-screen { display: flex; flex-direction: column; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- NARRATION STYLE (Typewriter) --- */
+        #storyScreen { background: #000; justify-content: center; align-items: center; text-align: center; font-family: 'JetBrains Mono', monospace; }
+        .glitch-text { color: var(--accent); font-size: 1.2rem; margin-bottom: 20px; }
+        
+        /* --- DESIGN DES CARTES --- */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .gold-card {
+            background: linear-gradient(135deg, #1a1a1a, #2a1f2e);
+            border: 1px solid #FFD700;
+            box-shadow: var(--vip-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* --- BOUTONS --- */
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+        }
+        .btn-gold { background: var(--gold); color: #000; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); }
+
+        /* --- NAVIGATION --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(31, 33, 40, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex; justify-content: space-around;
+            padding: 15px 10px 25px;
+            border-top: 1px solid var(--border);
+            z-index: 100;
+        }
+        .nav-item { color: var(--text-dim); font-size: 0.75rem; text-align: center; }
+        .nav-item.active { color: var(--accent); }
+        .nav-item i { display: block; font-size: 1.4rem; margin-bottom: 4px; }
+
+        /* --- UI ELEMENTS --- */
+        .points-badge { background: #34C75920; color: var(--accent); padding: 5px 12px; border-radius: 20px; font-weight: bold; }
+        input { 
+            width: 100%; background: #2C2F36; border: 1px solid transparent; 
+            padding: 14px; border-radius: 12px; color: white; margin-bottom: 12px;
+        }
+        input:focus { border-color: var(--accent); outline: none; }
+        .timer { font-family: 'JetBrains Mono'; color: #FF3B30; font-weight: bold; }
+        
+        /* --- TOAST --- */
+        #toast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: #34C759; color: white; padding: 10px 20px; border-radius: 30px;
+            z-index: 1000; display: none; font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
-<div class="container" id="app">
-  <!-- Connexion -->
-  <div id="loginScreen" class="screen">
-    <div class="card" style="margin-top: 40px;">
-      <h1 style="font-size: 2rem;">⛓️ EB·HT</h1>
-      <p style="margin: 12px 0; color: #8E8E93;">Prépare-toi aux examens officiels 2026</p>
-      <input type="email" id="loginEmail" placeholder="Email">
-      <input type="password" id="loginPassword" placeholder="Mot de passe">
-      <button class="btn" id="doLogin">SE CONNECTER</button>
-      <p style="margin-top: 16px; text-align: center;"><span id="showSignup" style="color:#34C759;">Créer un compte</span></p>
-    </div>
-  </div>
 
-  <!-- Inscription -->
-  <div id="signupScreen" class="screen hide">
-    <div class="card" style="margin-top: 40px;">
-      <h2>Inscription</h2>
-      <input type="text" id="signupName" placeholder="Nom d'utilisateur">
-      <input type="email" id="signupEmail" placeholder="Email">
-      <input type="password" id="signupPassword" placeholder="Mot de passe">
-      <input type="text" id="referralCode" placeholder="Code de parrainage (optionnel)">
-      <button class="btn" id="doSignup">S'INSCRIRE</button>
-      <p style="margin-top: 16px; text-align: center;"><span id="showLogin" style="color:#34C759;">Déjà un compte</span></p>
-    </div>
-  </div>
+    <div id="toast">Message envoyé !</div>
 
-  <!-- Dashboard -->
-  <div id="dashboardScreen" class="screen hide">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-      <h2>📚 EXAMBREAKER</h2>
-      <div><i class="fas fa-coins"></i> <span id="userPoints">0</span> pts <span id="vipIndicator" class="badge-vip" style="margin-left: 8px; display: none;">👑 VIP</span></div>
-    </div>
-    
-    <div class="card card-vip" id="vipPromoCard">
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <span class="vip-badge">👑 EXAMBREAKER VIP</span>
-          <h3 style="margin: 8px 0;">Accès anticipé aux examens !</h3>
-          <p style="font-size: 0.8rem; color: #FFD700;">Recevez vos examens 3 jours avant (500 pts / an)</p>
+    <!-- 1. STORY SCREEN -->
+    <div id="storyScreen" class="screen active-screen">
+        <div style="max-width: 400px;">
+            <div id="storyContent" class="glitch-text"></div>
+            <button id="nextStoryBtn" class="btn btn-outline" style="display:none; margin-top:30px;">CONTINUER</button>
         </div>
-        <button class="btn-gold" id="upgradeVipBtn" style="width: auto; padding: 8px 16px;">💎 500 pts</button>
-      </div>
     </div>
-    
-    <div style="display: flex; gap: 12px; margin-bottom: 20px;">
-      <button class="btn" id="tab9af" style="flex:1; background:#2C2F36;">9AF (7 examens)</button>
-      <button class="btn" id="tabNs4" style="flex:1; background:#2C2F36;">NS4 (12 examens)</button>
+
+    <!-- 2. TUTORIAL/CONSENT SCREEN -->
+    <div id="tutoScreen" class="screen">
+        <h1 style="font-size: 1.8rem; margin-bottom: 20px;">⚠️ PROTOCOLE D'ACCÈS</h1>
+        <div class="card">
+            <p style="color: var(--text-dim); margin-bottom: 15px;">
+                Ceci n'est pas un jeu. Tu es sur le point d'accéder au réseau <span style="color:white; font-weight:bold;">EXAMBREAKER</span>.
+            </p>
+            <p style="color: var(--text-dim); margin-bottom: 15px;">
+                En 2024, j'ai échoué à cause du système. Aujourd'hui, je hacke le système pour vous.
+            </p>
+            <ul style="margin-left: 20px; color: var(--accent); font-size: 0.9rem;">
+                <li>Pas de triche gratuite : Travaille pour tes points.</li>
+                <li>Le partage est ta seule arme.</li>
+                <li>Es-tu prêt à briser les règles ?</li>
+            </ul>
+        </div>
+        <button id="acceptTutoBtn" class="btn" style="margin-top:auto;">J'ACCEPTE LE RISQUE</button>
     </div>
-    
-    <div id="examsContainer"></div>
-    
-    <div class="card">
-      <h3>⚡ Gagner des points</h3>
-      <div class="task-item" id="taskSurvey"><span><i class="fas fa-poll"></i> Sondage (offre)</span><button class="task-btn">+5 pts</button></div>
-      <div class="task-item" id="taskShare"><span><i class="fab fa-whatsapp"></i> Partage WhatsApp</span><button class="task-btn">+3 pts</button></div>
-      <div class="task-item" id="taskDaily"><span><i class="fas fa-calendar-day"></i> Mission quotidienne</span><button class="task-btn">+2 pts</button></div>
-      <div class="task-item" id="taskReferral"><span><i class="fas fa-link"></i> Parrainage</span><button class="task-btn">Mon code</button></div>
+
+    <!-- 3. AUTH SCREEN -->
+    <div id="authScreen" class="screen">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <h1 style="font-size: 2.5rem; letter-spacing: -2px;">EB<span style="color:var(--accent)">.HT</span></h1>
+            <p style="color: var(--text-dim);">Identifie-toi dans la base</p>
+        </div>
+        
+        <div id="loginForm">
+            <input type="email" id="email" placeholder="Email encrypté">
+            <input type="password" id="password" placeholder="Clé d'accès">
+            <button onclick="handleAuth('login')" class="btn">DÉCRYPTER L'ACCÈS</button>
+            <p onclick="toggleAuth(false)" style="text-align:center; margin-top:20px; font-size:0.8rem; color:var(--text-dim)">Pas de matricule ? <span style="color:var(--accent)">Créer un profil</span></p>
+        </div>
+
+        <div id="registerForm" style="display:none;">
+            <input type="text" id="regPseudo" placeholder="Pseudo (Hacker Name)">
+            <input type="email" id="regEmail" placeholder="Email">
+            <input type="password" id="regPassword" placeholder="Mot de passe">
+            <input type="text" id="regReferral" placeholder="Code Parrainage (Optionnel)">
+            <button onclick="handleAuth('register')" class="btn">INITIALISER LE PROFIL</button>
+            <p onclick="toggleAuth(true)" style="text-align:center; margin-top:20px; font-size:0.8rem; color:var(--text-dim)">Déjà inscrit ? <span style="color:var(--accent)">Se connecter</span></p>
+        </div>
     </div>
-  </div>
 
-  <!-- Détail examen -->
-  <div id="examDetailScreen" class="screen hide">
-    <div style="margin-bottom: 16px;"><i class="fas fa-arrow-left" id="backToDash" style="font-size: 1.5rem; cursor: pointer;"></i></div>
-    <div class="card" id="examDetailCard">
-      <h2 id="examName"></h2>
-      <p>Niveau: <span id="examLevel"></span> | Coût: <span id="examCost"></span> points</p>
-      <div id="examStatus"></div>
-      <button class="btn" id="unlockExamBtn">🔓 DÉBLOQUER</button>
-      <div id="timerDisplay" style="margin-top: 16px;"></div>
+    <!-- 4. MAIN DASHBOARD -->
+    <div id="dashScreen" class="screen" style="padding-bottom: 100px;">
+        <header style="display:flex; justify-content: space-between; align-items:center; margin-bottom:25px;">
+            <div>
+                <p style="font-size: 0.8rem; color: var(--text-dim);">Bienvenue, <span id="userDisp" style="color:white">Agent</span></p>
+                <h2 id="vipBadge" style="display:none; color:#FFD700; font-size:0.7rem;"><i class="fas fa-crown"></i> MEMBRE VIP</h2>
+            </div>
+            <div class="points-badge"><i class="fas fa-bolt"></i> <span id="ptCount">0</span> pts</div>
+        </header>
+
+        <!-- VIP PROMO -->
+        <div id="vipPromo" class="card gold-card">
+            <h3 style="margin-bottom:5px;">DEVENIR VIP 👑</h3>
+            <p style="font-size:0.8rem; color:rgba(255,255,255,0.7); margin-bottom:15px;">Accède aux fuites 72h avant tout le monde.</p>
+            <button onclick="buyVip()" class="btn btn-gold" style="padding:10px;">DÉBLOQUER (500 pts)</button>
+        </div>
+
+        <!-- TABS -->
+        <div style="display:flex; gap:10px; margin-bottom:20px;">
+            <button onclick="switchTab('9AF')" id="tab9AF" class="btn btn-outline" style="flex:1;">9ème AF</button>
+            <button onclick="switchTab('NS4')" id="tabNS4" class="btn btn-outline" style="flex:1;">NS4</button>
+        </div>
+
+        <div id="examsList"></div>
     </div>
-  </div>
 
-  <!-- Twist -->
-  <div id="twistScreen" class="screen hide">
-    <div class="card" style="text-align: center;">
-      <i class="fas fa-skull" style="font-size: 4rem; color: #FF3B30;"></i>
-      <h2>ERREUR 404</h2>
-      <p>Le vrai pouvoir était en vous.<br> Révisez bien !</p>
-      <button class="btn" id="resetTwistBtn">⟳ Accueil</button>
+    <!-- 5. TASK SCREEN -->
+    <div id="taskScreen" class="screen">
+        <h2>CENTRE DE DATA</h2>
+        <p style="color:var(--text-dim); margin-bottom:20px;">Collecte des points pour débloquer les fuites.</p>
+        
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h4>Sondage Rapide</h4>
+                    <p style="font-size:0.75rem; color:var(--text-dim)">+5 points (Quotidien)</p>
+                </div>
+                <button onclick="completeTask('survey', 5)" class="btn" style="width:80px; padding:8px;">FAIRE</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h4>Partage WhatsApp</h4>
+                    <p style="font-size:0.75rem; color:var(--text-dim)">+3 points (Quotidien)</p>
+                </div>
+                <button onclick="completeTask('share', 3)" class="btn" style="width:80px; padding:8px;">PARTAGER</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h4>Parrainage</h4>
+                    <p style="font-size:0.75rem; color:var(--text-dim)">+10 points par ami</p>
+                </div>
+                <button onclick="copyReferral()" class="btn btn-outline" style="width:80px; padding:8px;">CODE</button>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-<div class="bottom-nav" id="bottomNav" style="display: none;">
-  <div class="nav-item active" data-nav="dashboard"><i class="fas fa-home"></i><span>Accueil</span></div>
-  <div class="nav-item" data-nav="profile"><i class="fas fa-user"></i><span>Profil</span></div>
-</div>
+    <!-- 6. TWIST SCREEN (LA FIN) -->
+    <div id="twistScreen" class="screen" style="justify-content:center; align-items:center; text-align:center;">
+        <i class="fas fa-skull-crossbones" style="font-size: 5rem; color:#FF3B30; margin-bottom:20px;"></i>
+        <h1 style="color:#FF3B30">OPÉRATION TERMINÉE</h1>
+        <p style="margin:20px 0; color:var(--text-dim);">
+            "C'était une blague." <br><br>
+            Il n'y a pas de raccourcis dans la vie. <br>
+            Le seul moyen de "breaker" l'examen, c'est d'étudier.<br>
+            <b>Bonne chance pour vos examens réels.</b>
+        </p>
+        <button onclick="location.reload()" class="btn btn-outline">RETOUR À LA RÉALITÉ</button>
+    </div>
 
-<!-- Firebase SDKs - Version CORRECTE -->
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <!-- NAVIGATION BAR -->
+    <nav class="bottom-nav" id="mainNav" style="display:none;">
+        <div class="nav-item active" onclick="showSection('dash')"><i class="fas fa-folder-open"></i>Fuites</div>
+        <div class="nav-item" onclick="showSection('task')"><i class="fas fa-server"></i>Points</div>
+        <div class="nav-item" onclick="logout()"><i class="fas fa-user-secret"></i>Profil</div>
+    </nav>
 
-<script>
-  // Configuration Firebase
-  const firebaseConfig = {
-    apiKey: "AIzaSyC81oECS6HWNhNQY0wkp5yEuKDjkD5w_uE",
-    authDomain: "exambreaker-ht.firebaseapp.com",
-    projectId: "exambreaker-ht",
-    storageBucket: "exambreaker-ht.firebasestorage.app",
-    messagingSenderId: "155660696647",
-    appId: "1:155660696647:web:78b1fc14795227c5b08562"
-  };
+    <!-- Firebase Compat SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
-  // Initialiser Firebase
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
+    <script>
+        // --- CONFIGURATION FIREBASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyC81oECS6HWNhNQY0wkp5yEuKDjkD5w_uE",
+            authDomain: "exambreaker-ht.firebaseapp.com",
+            projectId: "exambreaker-ht",
+            storageBucket: "exambreaker-ht.firebasestorage.app",
+            messagingSenderId: "155660696647",
+            appId: "1:155660696647:web:78b1fc14795227c5b08562"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-  // Données examens
-  const EXAMS = {
-    "9AF": [
-      { id: "9af_anglais", name: "Anglais", cost: 10, date: new Date(2026, 6, 1, 5, 0, 0) },
-      { id: "9af_kreyol", name: "Kreyòl", cost: 10, date: new Date(2026, 6, 1, 5, 0, 0) },
-      { id: "9af_espagnol", name: "Espagnol", cost: 10, date: new Date(2026, 6, 1, 5, 0, 0) },
-      { id: "9af_francais", name: "Français", cost: 10, date: new Date(2026, 6, 1, 5, 0, 0) },
-      { id: "9af_math", name: "Math", cost: 10, date: new Date(2026, 6, 1, 5, 0, 0) },
-      { id: "9af_socio", name: "Sciences Sociales", cost: 10, date: new Date(2026, 6, 1, 5, 0, 0) },
-      { id: "9af_scient", name: "Sciences Expérimentales", cost: 10, date: new Date(2026, 6, 1, 5, 0, 0) }
-    ],
-    "NS4": [
-      { id: "ns4_physique", name: "Physiques", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
-      { id: "ns4_math", name: "Math", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
-      { id: "ns4_chimie", name: "Chimie", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
-      { id: "ns4_kreyol", name: "Kreyòl", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
-      { id: "ns4_anglais", name: "Anglais", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
-      { id: "ns4_socio", name: "Sciences Sociales", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
-      { id: "ns4_philo", name: "Philosophie", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
-      { id: "ns4_info", name: "Informatiques", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
-      { id: "ns4_bio", name: "Biologie/Géologie", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
-      { id: "ns4_economie", name: "Economie", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
-      { id: "ns4_esp", name: "Espagnol", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
-      { id: "ns4_art", name: "Art/Musique", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) }
-    ]
-  };
+        // --- DATA ---
+        const DATA_EXAMS = {
+            "9AF": [
+                { id: '9f_ang', n: 'Anglais', d: '2026-07-01T08:00:00' },
+                { id: '9f_math', n: 'Mathématiques', d: '2026-07-01T10:00:00' },
+                { id: '9f_kr', n: 'Kreyòl', d: '2026-07-01T13:00:00' },
+                { id: '9f_fr', n: 'Français', d: '2026-07-02T08:00:00' },
+                { id: '9f_soc', n: 'Sc. Sociales', d: '2026-07-02T10:00:00' },
+                { id: '9f_exp', n: 'Sc. Expérimentales', d: '2026-07-03T08:00:00' },
+                { id: '9f_esp', n: 'Espagnol', d: '2026-07-03T10:00:00' }
+            ],
+            "NS4": [
+                { id: 'n4_ph', n: 'Physique', d: '2026-07-05T08:00:00' },
+                { id: 'n4_ma', n: 'Mathématiques', d: '2026-07-05T13:00:00' },
+                { id: 'n4_ch', n: 'Chimie', d: '2026-07-06T08:00:00' },
+                { id: 'n4_kr', n: 'Kreyòl', d: '2026-07-06T13:00:00' },
+                { id: 'n4_an', n: 'Anglais', d: '2026-07-07T08:00:00' },
+                { id: 'n4_ss', n: 'Sc. Sociales', d: '2026-07-07T13:00:00' },
+                { id: 'n4_phi', n: 'Philosophie', d: '2026-07-08T08:00:00' },
+                { id: 'n4_inf', n: 'Informatiques', d: '2026-07-08T13:00:00' },
+                { id: 'n4_bio', n: 'Biologie/Géo', d: '2026-07-09T08:00:00' },
+                { id: 'n4_eco', n: 'Economie', d: '2026-07-09T13:00:00' },
+                { id: 'n4_es', n: 'Espagnol', d: '2026-07-10T08:00:00' },
+                { id: 'n4_art', n: 'Art/Musique', d: '2026-07-10T13:00:00' }
+            ]
+        };
 
-  let currentUser = null;
-  let currentTab = "9AF";
-  let selectedExam = null;
-  let userPoints = 0;
-  let unlockedExams = {};
-  let isVIP = false;
+        let userState = { points: 0, isVip: false, unlocked: [], uid: null, refCode: '' };
+        let currentLevel = "9AF";
 
-  function showToast(msg) {
-    const toast = document.createElement('div');
-    toast.className = 'toast';
-    toast.innerText = msg;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-  }
+        // --- NARRATION ENGINE ---
+        const storyLines = [
+            "Initialisation du système...",
+            "En 2024, j'étais comme toi.",
+            "J'ai échoué aux examens d'État.",
+            "Le système m'a rejeté.",
+            "Alors j'ai appris à briser le système.",
+            "Bienvenue dans EXAMBREAKER HT.",
+            "Ma revanche est maintenant ton opportunité."
+        ];
 
-  async function loadUserData(uid) {
-    const userRef = db.collection('users').doc(uid);
-    const userSnap = await userRef.get();
-    
-    if (!userSnap.exists) {
-      await userRef.set({
-        points: 0,
-        unlockedExams: {},
-        referralCode: uid.slice(0, 8),
-        isVIP: false,
-        vipExpiry: null,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      userPoints = 0;
-      unlockedExams = {};
-      isVIP = false;
-    } else {
-      const data = userSnap.data();
-      userPoints = data.points || 0;
-      unlockedExams = data.unlockedExams || {};
-      isVIP = data.isVIP || false;
-      
-      if (isVIP && data.vipExpiry && data.vipExpiry.toDate() < new Date()) {
-        isVIP = false;
-        await userRef.update({ isVIP: false, vipExpiry: null });
-      }
-    }
-    
-    document.getElementById('userPoints').innerText = userPoints;
-    const vipIndicator = document.getElementById('vipIndicator');
-    const vipPromo = document.getElementById('vipPromoCard');
-    
-    if (isVIP) {
-      vipIndicator.style.display = 'inline-block';
-      vipPromo.style.display = 'none';
-    } else {
-      vipIndicator.style.display = 'none';
-      vipPromo.style.display = 'block';
-    }
-  }
-
-  function getExamDate(exam, isVIP) {
-    const originalDate = new Date(exam.date);
-    if (isVIP) {
-      const vipDate = new Date(originalDate);
-      vipDate.setDate(vipDate.getDate() - 3);
-      return vipDate;
-    }
-    return originalDate;
-  }
-
-  async function renderExams() {
-    const container = document.getElementById('examsContainer');
-    container.innerHTML = '';
-    const examsList = EXAMS[currentTab];
-    
-    for (let exam of examsList) {
-      const isUnlocked = unlockedExams[exam.id] === true;
-      const div = document.createElement('div');
-      div.className = 'exam-card';
-      div.innerHTML = `
-        <div><strong>${exam.name}</strong><br>${isUnlocked ? '<span class="badge">✅ Débloqué</span>' : `<span class="badge">💰 ${exam.cost} pts</span>`}</div>
-        <button class="task-btn" data-id="${exam.id}" data-name="${exam.name}" data-level="${currentTab}" data-cost="${exam.cost}" data-unlocked="${isUnlocked}">Détails</button>
-      `;
-      container.appendChild(div);
-    }
-    
-    document.querySelectorAll('[data-id]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        showExamDetail(
-          btn.dataset.id, btn.dataset.name, btn.dataset.level,
-          parseInt(btn.dataset.cost), btn.dataset.unlocked === 'true'
-        );
-      });
-    });
-  }
-
-  async function showExamDetail(examId, examName, level, cost, unlocked) {
-    selectedExam = { examId, examName, level, cost, unlocked };
-    document.getElementById('examName').innerText = examName;
-    document.getElementById('examLevel').innerText = level;
-    document.getElementById('examCost').innerText = cost;
-    
-    const statusDiv = document.getElementById('examStatus');
-    const unlockBtn = document.getElementById('unlockExamBtn');
-    const timerDiv = document.getElementById('timerDisplay');
-    const detailCard = document.getElementById('examDetailCard');
-    
-    if (isVIP) detailCard.classList.add('card-vip');
-    else detailCard.classList.remove('card-vip');
-    
-    if (unlocked) {
-      statusDiv.innerHTML = '<span class="badge">✅ Examen débloqué</span>';
-      unlockBtn.disabled = true;
-      unlockBtn.innerText = '✅ Déjà débloqué';
-      
-      const exam = EXAMS[level].find(e => e.id === examId);
-      if (exam) {
-        const examDate = getExamDate(exam, isVIP);
-        function updateTimer() {
-          const now = new Date();
-          if (now >= examDate) {
-            timerDiv.innerHTML = '<div class="timer">📢 Examen disponible !</div>';
-          } else {
-            const diff = examDate - now;
-            const days = Math.floor(diff / (1000*60*60*24));
-            const hours = Math.floor((diff % (86400000))/3600000);
-            timerDiv.innerHTML = `<div class="timer">⏳ ${days}j ${hours}h${isVIP ? ' (VIP: -3j)' : ''}</div>`;
-          }
+        function playStory() {
+            let i = 0;
+            const container = document.getElementById('storyContent');
+            const interval = setInterval(() => {
+                if(i < storyLines.length) {
+                    container.innerHTML = `> ${storyLines[i]}`;
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    document.getElementById('nextStoryBtn').style.display = 'block';
+                }
+            }, 1800);
         }
-        updateTimer();
-        if (window.timerInterval) clearInterval(window.timerInterval);
-        window.timerInterval = setInterval(updateTimer, 60000);
-      }
-    } else {
-      statusDiv.innerHTML = `<span class="badge">🔒 ${cost} points requis</span>`;
-      unlockBtn.disabled = userPoints < cost;
-      unlockBtn.innerText = userPoints >= cost ? `🔓 DÉBLOQUER (${cost} pts)` : `🔒 ${cost - userPoints} pts manquants`;
-      timerDiv.innerHTML = '';
-    }
-    
-    document.getElementById('dashboardScreen').classList.add('hide');
-    document.getElementById('examDetailScreen').classList.remove('hide');
-  }
 
-  async function unlockCurrentExam() {
-    if (!selectedExam || selectedExam.unlocked) return;
-    if (userPoints < selectedExam.cost) {
-      showToast(`❌ Pas assez de points. Gagnez-en via les tâches !`);
-      return;
-    }
-    
-    const userRef = db.collection('users').doc(currentUser.uid);
-    await db.runTransaction(async (transaction) => {
-      const userDoc = await transaction.get(userRef);
-      const currentPoints = userDoc.data().points || 0;
-      const currentUnlocked = userDoc.data().unlockedExams || {};
-      
-      if (currentPoints >= selectedExam.cost && !currentUnlocked[selectedExam.examId]) {
-        transaction.update(userRef, {
-          points: currentPoints - selectedExam.cost,
-          [`unlockedExams.${selectedExam.examId}`]: true
-        });
-      }
-    });
-    
-    userPoints -= selectedExam.cost;
-    unlockedExams[selectedExam.examId] = true;
-    selectedExam.unlocked = true;
-    
-    document.getElementById('userPoints').innerText = userPoints;
-    showToast(`✅ ${selectedExam.examName} débloqué !`);
-    await renderExams();
-    await showExamDetail(selectedExam.examId, selectedExam.examName, selectedExam.level, selectedExam.cost, true);
-  }
+        // --- LOGIQUE CORE ---
+        window.onload = () => {
+            // Vérifier le twist final
+            const today = new Date();
+            if(today > new Date('2026-07-01')) {
+                showSection('twist');
+                return;
+            }
 
-  async function performTask(taskId, points) {
-    const today = new Date().toISOString().slice(0,10);
-    const taskRef = db.collection('users').doc(currentUser.uid).collection('dailyTasks').doc(today);
-    const taskSnap = await taskRef.get();
-    
-    if (taskSnap.exists && taskSnap.data()[taskId] === true) {
-      showToast(`Tâche déjà faite aujourd'hui. Revenez demain !`);
-      return;
-    }
-    
-    if (taskId === 'share' && navigator.share) {
-      try { await navigator.share({ title: 'EXAMBREAKER HT', text: 'Prépare-toi aux examens officiels 2026 !' }); }
-      catch(e) {}
-    }
-    
-    const userRef = db.collection('users').doc(currentUser.uid);
-    await db.runTransaction(async (transaction) => {
-      const userDoc = await transaction.get(userRef);
-      const oldPoints = userDoc.data().points || 0;
-      transaction.update(userRef, { points: oldPoints + points });
-      transaction.set(taskRef, { [taskId]: true }, { merge: true });
-    });
-    
-    userPoints += points;
-    document.getElementById('userPoints').innerText = userPoints;
-    showToast(`+${points} points ! Total: ${userPoints} pts`);
-    await renderExams();
-  }
+            if(!localStorage.getItem('storyDone')) {
+                playStory();
+            } else {
+                checkAuth();
+            }
+        };
 
-  async function upgradeToVIP() {
-    if (isVIP) {
-      showToast('Vous êtes déjà VIP !');
-      return;
-    }
-    
-    if (userPoints < 500) {
-      showToast(`❌ Il vous manque ${500 - userPoints} points pour le VIP.`);
-      return;
-    }
-    
-    const userRef = db.collection('users').doc(currentUser.uid);
-    const oneYearLater = new Date();
-    oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
-    
-    await db.runTransaction(async (transaction) => {
-      const userDoc = await transaction.get(userRef);
-      const currentPoints = userDoc.data().points || 0;
-      if (currentPoints >= 500) {
-        transaction.update(userRef, {
-          points: currentPoints - 500,
-          isVIP: true,
-          vipExpiry: oneYearLater
-        });
-      }
-    });
-    
-    userPoints -= 500;
-    isVIP = true;
-    showToast('🎉 Félicitations ! Vous êtes VIP pour 1 an !');
-    
-    document.getElementById('userPoints').innerText = userPoints;
-    document.getElementById('vipIndicator').style.display = 'inline-block';
-    document.getElementById('vipPromoCard').style.display = 'none';
-    await renderExams();
-  }
+        document.getElementById('nextStoryBtn').onclick = () => {
+            localStorage.setItem('storyDone', 'true');
+            showSection('tuto');
+        };
 
-  async function showReferralCode() {
-    const userRef = db.collection('users').doc(currentUser.uid);
-    const userSnap = await userRef.get();
-    let code = userSnap.data().referralCode;
-    if (!code) {
-      code = currentUser.uid.slice(0, 8);
-      await userRef.update({ referralCode: code });
-    }
-    alert(`🔗 VOTRE CODE : ${code}\nChaque ami inscrit vous rapporte 10 points !`);
-  }
+        document.getElementById('acceptTutoBtn').onclick = () => showSection('auth');
 
-  // Événements
-  document.getElementById('doLogin').onclick = async () => {
-    const email = document.getElementById('loginEmail').value;
-    const pwd = document.getElementById('loginPassword').value;
-    try {
-      const cred = await auth.signInWithEmailAndPassword(email, pwd);
-      currentUser = cred.user;
-      await loadUserData(currentUser.uid);
-      await renderExams();
-      document.getElementById('loginScreen').classList.add('hide');
-      document.getElementById('dashboardScreen').classList.remove('hide');
-      document.getElementById('bottomNav').style.display = 'flex';
-    } catch(e) { showToast('Erreur: ' + e.message); }
-  };
-
-  document.getElementById('doSignup').onclick = async () => {
-    const name = document.getElementById('signupName').value;
-    const email = document.getElementById('signupEmail').value;
-    const pwd = document.getElementById('signupPassword').value;
-    const referral = document.getElementById('referralCode').value;
-    
-    if (!name || !email || !pwd) {
-      showToast('Veuillez remplir tous les champs');
-      return;
-    }
-    
-    try {
-      const cred = await auth.createUserWithEmailAndPassword(email, pwd);
-      currentUser = cred.user;
-      
-      await db.collection('users').doc(currentUser.uid).set({
-        username: name,
-        email: email,
-        points: 0,
-        unlockedExams: {},
-        referralCode: currentUser.uid.slice(0, 8),
-        isVIP: false,
-        vipExpiry: null,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-      });
-      
-      if (referral) {
-        const snapshot = await db.collection('users').where('referralCode', '==', referral).get();
-        if (!snapshot.empty) {
-          const referrerId = snapshot.docs[0].id;
-          const referrerRef = db.collection('users').doc(referrerId);
-          await db.runTransaction(async (transaction) => {
-            const doc = await transaction.get(referrerRef);
-            const oldPoints = doc.data().points || 0;
-            transaction.update(referrerRef, { points: oldPoints + 10 });
-          });
-          showToast('Parrainage réussi ! +10 points pour votre parrain.');
+        function toggleAuth(showLogin) {
+            document.getElementById('loginForm').style.display = showLogin ? 'block' : 'none';
+            document.getElementById('registerForm').style.display = showLogin ? 'none' : 'block';
         }
-      }
-      
-      userPoints = 0;
-      unlockedExams = {};
-      await renderExams();
-      document.getElementById('signupScreen').classList.add('hide');
-      document.getElementById('dashboardScreen').classList.remove('hide');
-      document.getElementById('bottomNav').style.display = 'flex';
-    } catch(e) { showToast('Erreur: ' + e.message); }
-  };
 
-  document.getElementById('showSignup').onclick = () => {
-    document.getElementById('loginScreen').classList.add('hide');
-    document.getElementById('signupScreen').classList.remove('hide');
-  };
-  
-  document.getElementById('showLogin').onclick = () => {
-    document.getElementById('signupScreen').classList.add('hide');
-    document.getElementById('loginScreen').classList.remove('hide');
-  };
-  
-  document.getElementById('backToDash').onclick = () => {
-    if (window.timerInterval) clearInterval(window.timerInterval);
-    document.getElementById('examDetailScreen').classList.add('hide');
-    document.getElementById('dashboardScreen').classList.remove('hide');
-    renderExams();
-  };
-  
-  document.getElementById('unlockExamBtn').onclick = unlockCurrentExam;
-  document.getElementById('upgradeVipBtn').onclick = upgradeToVIP;
-  document.getElementById('tab9af').onclick = async () => { currentTab = '9AF'; await renderExams(); };
-  document.getElementById('tabNs4').onclick = async () => { currentTab = 'NS4'; await renderExams(); };
-  document.getElementById('resetTwistBtn').onclick = () => {
-    document.getElementById('twistScreen').classList.add('hide');
-    document.getElementById('dashboardScreen').classList.remove('hide');
-  };
-  
-  document.querySelector('#taskSurvey button').onclick = () => performTask('survey', 5);
-  document.querySelector('#taskShare button').onclick = () => performTask('share', 3);
-  document.querySelector('#taskDaily button').onclick = () => performTask('daily', 2);
-  document.querySelector('#taskReferral button').onclick = showReferralCode;
-  
-  auth.onAuthStateChanged(async (user) => {
-    if (user) {
-      currentUser = user;
-      await loadUserData(user.uid);
-      await renderExams();
-      document.getElementById('loginScreen').classList.add('hide');
-      document.getElementById('signupScreen').classList.add('hide');
-      document.getElementById('dashboardScreen').classList.remove('hide');
-      document.getElementById('bottomNav').style.display = 'flex';
-    } else {
-      document.getElementById('dashboardScreen').classList.add('hide');
-      document.getElementById('examDetailScreen').classList.add('hide');
-      document.getElementById('twistScreen').classList.add('hide');
-      document.getElementById('loginScreen').classList.remove('hide');
-      document.getElementById('bottomNav').style.display = 'none';
-    }
-  });
-</script>
+        async function handleAuth(type) {
+            try {
+                let res;
+                if(type === 'register') {
+                    const email = document.getElementById('regEmail').value;
+                    const pass = document.getElementById('regPassword').value;
+                    const pseudo = document.getElementById('regPseudo').value;
+                    const ref = document.getElementById('regReferral').value;
+                    
+                    res = await auth.createUserWithEmailAndPassword(email, pass);
+                    const myRef = res.user.uid.slice(0,8);
+                    
+                    await db.collection('users').doc(res.user.uid).set({
+                        pseudo, points: 5, isVip: false, unlocked: [], refCode: myRef
+                    });
+
+                    if(ref) handleReferral(ref);
+                } else {
+                    const email = document.getElementById('email').value;
+                    const pass = document.getElementById('password').value;
+                    res = await auth.signInWithEmailAndPassword(email, pass);
+                }
+                notify("Accès autorisé.");
+            } catch(e) { alert(e.message); }
+        }
+
+        async function handleReferral(code) {
+            const snap = await db.collection('users').where('refCode', '==', code).get();
+            if(!snap.empty) {
+                const refUser = snap.docs[0];
+                await db.collection('users').doc(refUser.id).update({
+                    points: firebase.firestore.FieldValue.increment(10)
+                });
+            }
+        }
+
+        function checkAuth() {
+            auth.onAuthStateChanged(async user => {
+                if(user) {
+                    userState.uid = user.uid;
+                    const doc = await db.collection('users').doc(user.uid).get();
+                    const data = doc.data();
+                    userState = { ...userState, ...data };
+                    
+                    document.getElementById('userDisp').innerText = data.pseudo;
+                    document.getElementById('ptCount').innerText = data.points;
+                    if(data.isVip) document.getElementById('vipBadge').style.display = 'block';
+                    
+                    showSection('dash');
+                    document.getElementById('mainNav').style.display = 'flex';
+                    renderExams();
+                } else {
+                    showSection('auth');
+                }
+            });
+        }
+
+        function renderExams() {
+            const container = document.getElementById('examsList');
+            container.innerHTML = "";
+            const cost = currentLevel === "9AF" ? 10 : 15;
+            
+            DATA_EXAMS[currentLevel].forEach(ex => {
+                const isUnlocked = userState.unlocked.includes(ex.id);
+                const exDate = new Date(ex.d);
+                if(userState.isVip) exDate.setDate(exDate.getDate() - 3);
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h4 style="margin-bottom:4px;">${ex.n}</h4>
+                            <p class="timer" style="font-size:0.7rem;">${isUnlocked ? getCountdown(exDate) : 'VERROUILLÉ'}</p>
+                        </div>
+                        <button onclick="unlockEx('${ex.id}', ${cost})" class="btn" style="width:100px; padding:10px; font-size:0.8rem; ${isUnlocked ? 'background:#2C2F36' : ''}">
+                            ${isUnlocked ? 'OUVRIR' : '<i class="fas fa-lock"></i> '+cost+'pts'}
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function unlockEx(id, cost) {
+            if(userState.unlocked.includes(id)) {
+                notify("Examen débloqué. Lien crypté disponible le jour J.");
+                return;
+            }
+            if(userState.points < cost) {
+                notify("Points insuffisants !");
+                return;
+            }
+
+            const ref = db.collection('users').doc(userState.uid);
+            await db.runTransaction(async (t) => {
+                t.update(ref, {
+                    points: firebase.firestore.FieldValue.increment(-cost),
+                    unlocked: firebase.firestore.FieldValue.arrayUnion(id)
+                });
+            });
+            
+            userState.points -= cost;
+            userState.unlocked.push(id);
+            document.getElementById('ptCount').innerText = userState.points;
+            confetti();
+            renderExams();
+        }
+
+        async function buyVip() {
+            if(userState.points < 500) { notify("Il te faut 500 pts !"); return; }
+            await db.collection('users').doc(userState.uid).update({
+                points: firebase.firestore.FieldValue.increment(-500),
+                isVip: true
+            });
+            location.reload();
+        }
+
+        async function completeTask(type, pts) {
+            const today = new Date().toDateString();
+            const lastTask = localStorage.getItem('last_'+type);
+            
+            if(lastTask === today) {
+                notify("Déjà fait aujourd'hui !");
+                return;
+            }
+
+            if(type === 'share') {
+                window.open(`whatsapp://send?text=Je viens de débloquer les fuites 2026 ici: ${window.location.href}`);
+            } else {
+                notify("Redirection vers le sondage...");
+                setTimeout(() => {}, 2000);
+            }
+
+            await db.collection('users').doc(userState.uid).update({
+                points: firebase.firestore.FieldValue.increment(pts)
+            });
+            localStorage.setItem('last_'+type, today);
+            userState.points += pts;
+            document.getElementById('ptCount').innerText = userState.points;
+            notify(`+${pts} Points récoltés !`);
+        }
+
+        function getCountdown(date) {
+            const diff = date - new Date();
+            if(diff < 0) return "DISPONIBLE";
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            return `FUITE DANS : ${days}j ${hours}h`;
+        }
+
+        function switchTab(lvl) {
+            currentLevel = lvl;
+            document.getElementById('tab9AF').className = lvl === '9AF' ? 'btn' : 'btn btn-outline';
+            document.getElementById('tabNS4').className = lvl === 'NS4' ? 'btn' : 'btn btn-outline';
+            renderExams();
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.getElementById(id + 'Screen').classList.add('active-screen');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if(id === 'dash') document.querySelector('.nav-item:nth-child(1)').classList.add('active');
+            if(id === 'task') document.querySelector('.nav-item:nth-child(2)').classList.add('active');
+        }
+
+        function notify(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 3000);
+        }
+
+        function copyReferral() {
+            navigator.clipboard.writeText(userState.refCode);
+            notify("Code copié : " + userState.refCode);
+        }
+
+        function logout() {
+            auth.signOut();
+            location.reload();
+        }
+    </script>
 </body>
 </html>
