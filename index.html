@@ -2,45 +2,93 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>EXAMBREAKER HT • Prépa Examens Officiels 2026</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>EXAMBREAKER HT</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
-  <!-- Firebase SDKs et configuration -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyC81oECS6HWNhNQY0wkp5yEuKDjkD5w_uE",
-      authDomain: "exambreaker-ht.firebaseapp.com",
-      projectId: "exambreaker-ht",
-      storageBucket: "exambreaker-ht.firebasestorage.app",
-      messagingSenderId: "155660696647",
-      appId: "1:155660696647:web:78b1fc14795227c5b08562"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    window.firebaseAuth = auth;
-    window.firebaseDb = db;
-    window.firebase = { getDoc, setDoc, updateDoc, doc, collection, query, where, getDocs, runTransaction, serverTimestamp };
-  </script>
-
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Inter', sans-serif;
       background: #0F1117;
       color: #EFF3F6;
+      padding: 16px;
       padding-bottom: 80px;
     }
-    .container { max-width: 550px; margin: 0 auto; padding: 16px; }
-    
+    .container { max-width: 550px; margin: 0 auto; }
+    .card {
+      background: #1F2128;
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 16px;
+      border: 1px solid #2C2F36;
+    }
+    .card-vip {
+      background: linear-gradient(135deg, #2A1F2E, #1A1A1A);
+      border: 2px solid #FFD700;
+      box-shadow: 0 0 20px rgba(255,215,0,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .card-vip::before {
+      content: "👑 VIP";
+      position: absolute;
+      top: 10px;
+      right: -30px;
+      background: #FFD700;
+      color: #1A1A1A;
+      font-weight: bold;
+      font-size: 0.7rem;
+      padding: 4px 40px;
+      transform: rotate(45deg);
+    }
+    .vip-badge { background: #FFD700; color: #1A1A1A; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.7rem; display: inline-block; }
+    .badge-vip { background: #FFD70020; color: #FFD700; border: 1px solid #FFD700; padding: 4px 10px; border-radius: 30px; font-size: 0.7rem; }
+    .btn {
+      background: #34C759;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      width: 100%;
+      cursor: pointer;
+      font-family: inherit;
+      color: white;
+      font-size: 0.9rem;
+    }
+    .btn-gold { background: linear-gradient(135deg, #FFD700, #FFA500); color: #1A1A1A; font-weight: bold; }
+    input {
+      background: #2C2F36;
+      border: none;
+      padding: 14px 16px;
+      border-radius: 16px;
+      color: white;
+      width: 100%;
+      margin-bottom: 12px;
+      font-family: inherit;
+    }
+    input::placeholder { color: #8E8E93; }
+    .exam-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      background: #2C2F36;
+      padding: 14px;
+      border-radius: 20px;
+    }
+    .badge { background: #34C75920; padding: 4px 10px; border-radius: 30px; font-size: 0.7rem; color: #34C759; }
+    .task-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 10px;
+      background: #2C2F36;
+      border-radius: 16px;
+    }
+    .task-btn { background: #34C759; border: none; padding: 6px 16px; border-radius: 30px; color: white; font-weight: 600; cursor: pointer; }
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0;
       background: #1F2128; display: flex; justify-content: space-around;
@@ -50,32 +98,12 @@
     .nav-item { text-align: center; color: #8E8E93; font-size: 0.7rem; cursor: pointer; flex: 1; }
     .nav-item i { font-size: 1.5rem; display: block; margin-bottom: 4px; }
     .nav-item.active { color: #34C759; }
-    
-    .card { background: #1F2128; border-radius: 24px; padding: 18px; margin-bottom: 16px; border: 1px solid #2C2F36; }
-    .card-vip {
-      background: linear-gradient(135deg, #2A1F2E, #1A1A1A);
-      border: 2px solid #FFD700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-      position: relative; overflow: hidden;
-    }
-    .card-vip::before {
-      content: "👑 VIP"; position: absolute; top: 10px; right: -30px;
-      background: #FFD700; color: #1A1A1A; font-weight: bold; font-size: 0.7rem;
-      padding: 4px 40px; transform: rotate(45deg);
-    }
-    .vip-badge { background: #FFD700; color: #1A1A1A; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 0.7rem; display: inline-block; }
-    .badge-vip { background: #FFD70020; color: #FFD700; border: 1px solid #FFD700; padding: 4px 10px; border-radius: 30px; font-size: 0.7rem; }
-    
-    .btn { background: #34C759; border: none; padding: 12px 20px; border-radius: 40px; font-weight: 600; width: 100%; cursor: pointer; font-family: inherit; color: white; font-size: 0.9rem; }
-    .btn-gold { background: linear-gradient(135deg, #FFD700, #FFA500); color: #1A1A1A; font-weight: bold; }
-    input { background: #2C2F36; border: none; padding: 14px 16px; border-radius: 16px; color: white; width: 100%; margin-bottom: 12px; font-family: inherit; }
-    
-    .exam-card { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; background: #2C2F36; padding: 14px; border-radius: 20px; }
-    .badge { background: #34C75920; padding: 4px 10px; border-radius: 30px; font-size: 0.7rem; color: #34C759; }
-    .task-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding: 10px; background: #2C2F36; border-radius: 16px; }
-    .task-btn { background: #34C759; border: none; padding: 6px 16px; border-radius: 30px; color: white; font-weight: 600; cursor: pointer; }
-    
     .hide { display: none; }
-    .toast { position: fixed; bottom: 80px; left: 20px; right: 20px; background: #000000cc; color: white; padding: 12px; border-radius: 30px; text-align: center; z-index: 1100; }
+    .toast {
+      position: fixed; bottom: 80px; left: 20px; right: 20px;
+      background: #000000cc; color: white; padding: 12px;
+      border-radius: 30px; text-align: center; z-index: 1100;
+    }
   </style>
 </head>
 <body>
@@ -112,15 +140,14 @@
       <div><i class="fas fa-coins"></i> <span id="userPoints">0</span> pts <span id="vipIndicator" class="badge-vip" style="margin-left: 8px; display: none;">👑 VIP</span></div>
     </div>
     
-    <!-- Carte VIP - Achat avec points -->
     <div class="card card-vip" id="vipPromoCard">
       <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
           <span class="vip-badge">👑 EXAMBREAKER VIP</span>
           <h3 style="margin: 8px 0;">Accès anticipé aux examens !</h3>
-          <p style="font-size: 0.8rem; color: #FFD700;">Recevez vos examens 3 jours avant la date officielle.</p>
+          <p style="font-size: 0.8rem; color: #FFD700;">Recevez vos examens 3 jours avant (500 pts / an)</p>
         </div>
-        <button class="btn-gold" id="upgradeVipBtn" style="width: auto; padding: 8px 16px;">💰 500 pts / an</button>
+        <button class="btn-gold" id="upgradeVipBtn" style="width: auto; padding: 8px 16px;">💎 500 pts</button>
       </div>
     </div>
     
@@ -133,7 +160,7 @@
     
     <div class="card">
       <h3>⚡ Gagner des points</h3>
-      <div class="task-item" id="taskSurvey"><span><i class="fas fa-poll"></i> Sondage (offre CPA)</span><button class="task-btn">+5 pts</button></div>
+      <div class="task-item" id="taskSurvey"><span><i class="fas fa-poll"></i> Sondage (offre)</span><button class="task-btn">+5 pts</button></div>
       <div class="task-item" id="taskShare"><span><i class="fab fa-whatsapp"></i> Partage WhatsApp</span><button class="task-btn">+3 pts</button></div>
       <div class="task-item" id="taskDaily"><span><i class="fas fa-calendar-day"></i> Mission quotidienne</span><button class="task-btn">+2 pts</button></div>
       <div class="task-item" id="taskReferral"><span><i class="fas fa-link"></i> Parrainage</span><button class="task-btn">Mon code</button></div>
@@ -145,20 +172,19 @@
     <div style="margin-bottom: 16px;"><i class="fas fa-arrow-left" id="backToDash" style="font-size: 1.5rem; cursor: pointer;"></i></div>
     <div class="card" id="examDetailCard">
       <h2 id="examName"></h2>
-      <p style="margin: 8px 0;">Niveau: <span id="examLevel"></span></p>
-      <p>Coût: <span id="examCost"></span> points</p>
+      <p>Niveau: <span id="examLevel"></span> | Coût: <span id="examCost"></span> points</p>
       <div id="examStatus"></div>
       <button class="btn" id="unlockExamBtn">🔓 DÉBLOQUER</button>
       <div id="timerDisplay" style="margin-top: 16px;"></div>
     </div>
   </div>
 
-  <!-- Twist final -->
+  <!-- Twist -->
   <div id="twistScreen" class="screen hide">
-    <div class="card" style="text-align: center; margin-top: 40px;">
+    <div class="card" style="text-align: center;">
       <i class="fas fa-skull" style="font-size: 4rem; color: #FF3B30;"></i>
       <h2>ERREUR 404</h2>
-      <p>Le vrai pouvoir était en vous depuis le début.<br> Révisez bien !</p>
+      <p>Le vrai pouvoir était en vous.<br> Révisez bien !</p>
       <button class="btn" id="resetTwistBtn">⟳ Accueil</button>
     </div>
   </div>
@@ -169,15 +195,28 @@
   <div class="nav-item" data-nav="profile"><i class="fas fa-user"></i><span>Profil</span></div>
 </div>
 
+<!-- Firebase SDKs - Version CORRECTE -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+
 <script>
-  // ==================== CONFIGURATION CPA (modifiable) ====================
-  // Remplace ces liens par tes propres liens d'affiliation CPA
-  const CPA_LINKS = {
-    survey: "https://www.cpagrip.com/show_offer?offer_id=XXXX",  // Lien sondage
-    daily: "https://www.cpagrip.com/show_offer?offer_id=YYYY"    // Lien mission quotidienne
+  // Configuration Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyC81oECS6HWNhNQY0wkp5yEuKDjkD5w_uE",
+    authDomain: "exambreaker-ht.firebaseapp.com",
+    projectId: "exambreaker-ht",
+    storageBucket: "exambreaker-ht.firebasestorage.app",
+    messagingSenderId: "155660696647",
+    appId: "1:155660696647:web:78b1fc14795227c5b08562"
   };
-  
-  // ==================== DONNÉES EXAMENS ====================
+
+  // Initialiser Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  // Données examens
   const EXAMS = {
     "9AF": [
       { id: "9af_anglais", name: "Anglais", cost: 10, date: new Date(2026, 6, 1, 5, 0, 0) },
@@ -220,17 +259,17 @@
   }
 
   async function loadUserData(uid) {
-    const userRef = window.firebase.doc(window.firebaseDb, 'users', uid);
-    const userSnap = await window.firebase.getDoc(userRef);
+    const userRef = db.collection('users').doc(uid);
+    const userSnap = await userRef.get();
     
-    if (!userSnap.exists()) {
-      await window.firebase.setDoc(userRef, {
+    if (!userSnap.exists) {
+      await userRef.set({
         points: 0,
         unlockedExams: {},
         referralCode: uid.slice(0, 8),
         isVIP: false,
         vipExpiry: null,
-        createdAt: window.firebase.serverTimestamp()
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
       userPoints = 0;
       unlockedExams = {};
@@ -243,7 +282,7 @@
       
       if (isVIP && data.vipExpiry && data.vipExpiry.toDate() < new Date()) {
         isVIP = false;
-        await window.firebase.updateDoc(userRef, { isVIP: false, vipExpiry: null });
+        await userRef.update({ isVIP: false, vipExpiry: null });
       }
     }
     
@@ -258,8 +297,6 @@
       vipIndicator.style.display = 'none';
       vipPromo.style.display = 'block';
     }
-    
-    return { points: userPoints, unlockedExams, isVIP };
   }
 
   function getExamDate(exam, isVIP) {
@@ -279,12 +316,10 @@
     
     for (let exam of examsList) {
       const isUnlocked = unlockedExams[exam.id] === true;
-      const statusHtml = isUnlocked ? '<span class="badge">✅ Débloqué</span>' : `<span class="badge">💰 ${exam.cost} pts</span>`;
-      
       const div = document.createElement('div');
       div.className = 'exam-card';
       div.innerHTML = `
-        <div><strong>${exam.name}</strong><br>${statusHtml}</div>
+        <div><strong>${exam.name}</strong><br>${isUnlocked ? '<span class="badge">✅ Débloqué</span>' : `<span class="badge">💰 ${exam.cost} pts</span>`}</div>
         <button class="task-btn" data-id="${exam.id}" data-name="${exam.name}" data-level="${currentTab}" data-cost="${exam.cost}" data-unlocked="${isUnlocked}">Détails</button>
       `;
       container.appendChild(div);
@@ -292,12 +327,10 @@
     
     document.querySelectorAll('[data-id]').forEach(btn => {
       btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-id');
-        const name = btn.getAttribute('data-name');
-        const level = btn.getAttribute('data-level');
-        const cost = parseInt(btn.getAttribute('data-cost'));
-        const unlocked = btn.getAttribute('data-unlocked') === 'true';
-        showExamDetail(id, name, level, cost, unlocked);
+        showExamDetail(
+          btn.dataset.id, btn.dataset.name, btn.dataset.level,
+          parseInt(btn.dataset.cost), btn.dataset.unlocked === 'true'
+        );
       });
     });
   }
@@ -332,8 +365,7 @@
             const diff = examDate - now;
             const days = Math.floor(diff / (1000*60*60*24));
             const hours = Math.floor((diff % (86400000))/3600000);
-            const vipText = isVIP ? ' (VIP: 3 jours avant)' : '';
-            timerDiv.innerHTML = `<div class="timer">⏳ ${days}j ${hours}h${vipText}</div>`;
+            timerDiv.innerHTML = `<div class="timer">⏳ ${days}j ${hours}h${isVIP ? ' (VIP: -3j)' : ''}</div>`;
           }
         }
         updateTimer();
@@ -341,7 +373,7 @@
         window.timerInterval = setInterval(updateTimer, 60000);
       }
     } else {
-      statusDiv.innerHTML = `<span class="badge">🔒 Nécessite ${cost} points</span>`;
+      statusDiv.innerHTML = `<span class="badge">🔒 ${cost} points requis</span>`;
       unlockBtn.disabled = userPoints < cost;
       unlockBtn.innerText = userPoints >= cost ? `🔓 DÉBLOQUER (${cost} pts)` : `🔒 ${cost - userPoints} pts manquants`;
       timerDiv.innerHTML = '';
@@ -358,8 +390,8 @@
       return;
     }
     
-    const userRef = window.firebase.doc(window.firebaseDb, 'users', currentUser.uid);
-    await window.firebase.runTransaction(window.firebaseDb, async (transaction) => {
+    const userRef = db.collection('users').doc(currentUser.uid);
+    await db.runTransaction(async (transaction) => {
       const userDoc = await transaction.get(userRef);
       const currentPoints = userDoc.data().points || 0;
       const currentUnlocked = userDoc.data().unlockedExams || {};
@@ -379,37 +411,26 @@
     document.getElementById('userPoints').innerText = userPoints;
     showToast(`✅ ${selectedExam.examName} débloqué !`);
     await renderExams();
-    showExamDetail(selectedExam.examId, selectedExam.examName, selectedExam.level, selectedExam.cost, true);
+    await showExamDetail(selectedExam.examId, selectedExam.examName, selectedExam.level, selectedExam.cost, true);
   }
 
-  // Tâches avec redirection CPA
-  async function performTask(taskId, points, linkKey) {
+  async function performTask(taskId, points) {
     const today = new Date().toISOString().slice(0,10);
-    const taskRef = window.firebase.doc(window.firebaseDb, 'users', currentUser.uid, 'dailyTasks', today);
-    const taskSnap = await window.firebase.getDoc(taskRef);
+    const taskRef = db.collection('users').doc(currentUser.uid).collection('dailyTasks').doc(today);
+    const taskSnap = await taskRef.get();
     
-    if (taskSnap.exists() && taskSnap.data()[taskId] === true) {
+    if (taskSnap.exists && taskSnap.data()[taskId] === true) {
       showToast(`Tâche déjà faite aujourd'hui. Revenez demain !`);
-      return false;
+      return;
     }
     
-    // Redirection CPA (ou partage WhatsApp)
-    if (taskId === 'share') {
-      if (navigator.share) {
-        try { await navigator.share({ title: 'EXAMBREAKER HT', text: 'Prépare-toi aux examens officiels 2026 !' }); }
-        catch(e) {}
-      } else {
-        alert("🔗 Copiez le lien : https://exambreaker-ht.vercel.app");
-      }
-    } else if (CPA_LINKS[linkKey]) {
-      window.open(CPA_LINKS[linkKey], '_blank');
-      showToast(`Ouverture de l'offre... Revenez après avoir complété l'action.`);
-      // Note: en réalité, tu devras implémenter un callback ou attendre un temps pour valider
-      // Ici on donne les points immédiatement pour la démo
+    if (taskId === 'share' && navigator.share) {
+      try { await navigator.share({ title: 'EXAMBREAKER HT', text: 'Prépare-toi aux examens officiels 2026 !' }); }
+      catch(e) {}
     }
     
-    const userRef = window.firebase.doc(window.firebaseDb, 'users', currentUser.uid);
-    await window.firebase.runTransaction(window.firebaseDb, async (transaction) => {
+    const userRef = db.collection('users').doc(currentUser.uid);
+    await db.runTransaction(async (transaction) => {
       const userDoc = await transaction.get(userRef);
       const oldPoints = userDoc.data().points || 0;
       transaction.update(userRef, { points: oldPoints + points });
@@ -420,10 +441,8 @@
     document.getElementById('userPoints').innerText = userPoints;
     showToast(`+${points} points ! Total: ${userPoints} pts`);
     await renderExams();
-    return true;
   }
 
-  // Achat VIP avec points
   async function upgradeToVIP() {
     if (isVIP) {
       showToast('Vous êtes déjà VIP !');
@@ -431,15 +450,15 @@
     }
     
     if (userPoints < 500) {
-      showToast(`❌ Il vous manque ${500 - userPoints} points pour le VIP. Continuez les tâches !`);
+      showToast(`❌ Il vous manque ${500 - userPoints} points pour le VIP.`);
       return;
     }
     
-    const userRef = window.firebase.doc(window.firebaseDb, 'users', currentUser.uid);
+    const userRef = db.collection('users').doc(currentUser.uid);
     const oneYearLater = new Date();
     oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
     
-    await window.firebase.runTransaction(window.firebaseDb, async (transaction) => {
+    await db.runTransaction(async (transaction) => {
       const userDoc = await transaction.get(userRef);
       const currentPoints = userDoc.data().points || 0;
       if (currentPoints >= 500) {
@@ -453,7 +472,7 @@
     
     userPoints -= 500;
     isVIP = true;
-    showToast('🎉 Félicitations ! Vous êtes maintenant VIP pour 1 an !');
+    showToast('🎉 Félicitations ! Vous êtes VIP pour 1 an !');
     
     document.getElementById('userPoints').innerText = userPoints;
     document.getElementById('vipIndicator').style.display = 'inline-block';
@@ -462,22 +481,22 @@
   }
 
   async function showReferralCode() {
-    const userRef = window.firebase.doc(window.firebaseDb, 'users', currentUser.uid);
-    const userSnap = await window.firebase.getDoc(userRef);
+    const userRef = db.collection('users').doc(currentUser.uid);
+    const userSnap = await userRef.get();
     let code = userSnap.data().referralCode;
     if (!code) {
       code = currentUser.uid.slice(0, 8);
-      await window.firebase.updateDoc(userRef, { referralCode: code });
+      await userRef.update({ referralCode: code });
     }
-    alert(`🔗 VOTRE CODE PARRAINAGE : ${code}\n\nPartagez ce code à vos amis. Chaque inscription vous rapporte 10 points !`);
+    alert(`🔗 VOTRE CODE : ${code}\nChaque ami inscrit vous rapporte 10 points !`);
   }
 
-  // ==================== ÉVÉNEMENTS ====================
+  // Événements
   document.getElementById('doLogin').onclick = async () => {
     const email = document.getElementById('loginEmail').value;
     const pwd = document.getElementById('loginPassword').value;
     try {
-      const cred = await window.firebaseAuth.signInWithEmailAndPassword(email, pwd);
+      const cred = await auth.signInWithEmailAndPassword(email, pwd);
       currentUser = cred.user;
       await loadUserData(currentUser.uid);
       await renderExams();
@@ -499,10 +518,10 @@
     }
     
     try {
-      const cred = await window.firebaseAuth.createUserWithEmailAndPassword(email, pwd);
+      const cred = await auth.createUserWithEmailAndPassword(email, pwd);
       currentUser = cred.user;
       
-      await window.firebase.setDoc(window.firebase.doc(window.firebaseDb, 'users', currentUser.uid), {
+      await db.collection('users').doc(currentUser.uid).set({
         username: name,
         email: email,
         points: 0,
@@ -510,16 +529,15 @@
         referralCode: currentUser.uid.slice(0, 8),
         isVIP: false,
         vipExpiry: null,
-        createdAt: window.firebase.serverTimestamp()
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
       
       if (referral) {
-        const q = window.firebase.query(window.firebase.collection(window.firebaseDb, 'users'), window.firebase.where('referralCode', '==', referral));
-        const snapshot = await window.firebase.getDocs(q);
+        const snapshot = await db.collection('users').where('referralCode', '==', referral).get();
         if (!snapshot.empty) {
           const referrerId = snapshot.docs[0].id;
-          const referrerRef = window.firebase.doc(window.firebaseDb, 'users', referrerId);
-          await window.firebase.runTransaction(window.firebaseDb, async (transaction) => {
+          const referrerRef = db.collection('users').doc(referrerId);
+          await db.runTransaction(async (transaction) => {
             const doc = await transaction.get(referrerRef);
             const oldPoints = doc.data().points || 0;
             transaction.update(referrerRef, { points: oldPoints + 10 });
@@ -563,12 +581,12 @@
     document.getElementById('dashboardScreen').classList.remove('hide');
   };
   
-  document.querySelector('#taskSurvey button').onclick = () => performTask('survey', 5, 'survey');
-  document.querySelector('#taskShare button').onclick = () => performTask('share', 3, null);
-  document.querySelector('#taskDaily button').onclick = () => performTask('daily', 2, 'daily');
+  document.querySelector('#taskSurvey button').onclick = () => performTask('survey', 5);
+  document.querySelector('#taskShare button').onclick = () => performTask('share', 3);
+  document.querySelector('#taskDaily button').onclick = () => performTask('daily', 2);
   document.querySelector('#taskReferral button').onclick = showReferralCode;
   
-  window.firebaseAuth.onAuthStateChanged(async (user) => {
+  auth.onAuthStateChanged(async (user) => {
     if (user) {
       currentUser = user;
       await loadUserData(user.uid);
