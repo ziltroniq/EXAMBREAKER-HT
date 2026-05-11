@@ -5,21 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
   <meta name="theme-color" content="#0A0B12">
   <title>EXAMBREAKER HT | J.P PHOENIX</title>
-  <link rel="manifest" href="data:application/manifest+json,{
-  \"name\": \"EXAMBREAKER HT\",
-  \"short_name\": \"EBHT\",
-  \"start_url\": \"/\",
-  \"display\": \"standalone\",
-  \"theme_color\": \"#0A0B12\",
-  \"background_color\": \"#0A0B12\",
-  \"icons\": [
-    {
-      \"src\": \"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect fill='%230A0B12' width='192' height='192'/%3E%3Ctext x='50%25' y='50%25' font-size='100' fill='%238B5CF6' text-anchor='middle' dominant-baseline='middle'%3EEB%3C/text%3E%3C/svg%3E\",
-      \"sizes\": \"192x192\",
-      \"type\": \"image/svg+xml\"
-    }
-  ]
-}">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -136,6 +121,8 @@
     }
     .spinner { width: 50px; height: 50px; border: 3px solid #2D3748; border-top-color: #8B5CF6; border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
+    /* Masquer la bottom-nav quand non connecté */
+    .bottom-nav.hidden { display: none; }
   </style>
 </head>
 <body>
@@ -254,15 +241,11 @@
           <button class="btn-secondary" id="instaTaskBtn" data-url="https://instagram.com/exambreaker" style="padding: 8px 16px;">+10 pts</button>
         </div>
         <div class="task-item">
-          <span><i class="fab fa-youtube"></i> S'abonner YouTube</span>
-          <button class="btn-secondary" id="youtubeTaskBtn" data-url="https://youtube.com/@exambreaker" style="padding: 8px 16px;">+10 pts</button>
-        </div>
-        <div class="task-item">
           <span><i class="fas fa-eye"></i> Regarder une pub</span>
           <button class="btn-secondary" id="adTaskBtn" data-url="#" style="padding: 8px 16px;">+5 pts</button>
         </div>
         <div class="task-item">
-          <span><i class="fas fa-globe"></i> Visiter un partenaire</span>
+          <span><i class="fas fa-globe"></i> Visiter un site partenaire</span>
           <button class="btn-secondary" id="visitTaskBtn" data-url="#" style="padding: 8px 16px;">+3 pts</button>
         </div>
       </div>
@@ -288,8 +271,8 @@
     </div>
   </div>
 
-  <!-- BOTTOM NAVIGATION (3 onglets) -->
-  <div class="bottom-nav">
+  <!-- BOTTOM NAVIGATION (3 onglets) - MASQUÉE PAR DÉFAUT (hidden) -->
+  <div class="bottom-nav hidden" id="bottomNav">
     <div class="nav-item" data-nav="dashboard"><i class="fas fa-home"></i><span>Accueil</span></div>
     <div class="nav-item" data-nav="earn"><i class="fas fa-coins"></i><span>Gagner</span></div>
     <div class="nav-item" data-nav="profile"><i class="fas fa-user"></i><span>Profil</span></div>
@@ -548,14 +531,30 @@
       navigateTo('dashboard');
     }
 
-    function logout() { auth.signOut(); window.location.reload(); }
+    function logout() { 
+      auth.signOut(); 
+      window.location.reload(); 
+    }
+    
     function navigateTo(screen) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(screen + 'Screen').classList.add('active');
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      const navMap = { dashboard: 'dashboard', earn: 'earn', profile: 'profile' };
-      if (navMap[screen]) document.querySelector(`.nav-item[data-nav="${navMap[screen]}"]`)?.classList.add('active');
       if (screen === 'dashboard') renderExams();
+    }
+    
+    function updateBottomNavVisibility() {
+      const bottomNav = document.getElementById('bottomNav');
+      if (currentUser) {
+        bottomNav.classList.remove('hidden');
+        // Mettre à jour l'onglet actif
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        const activeScreen = document.querySelector('.screen.active')?.id;
+        if (activeScreen === 'dashboardScreen') document.querySelector('.nav-item[data-nav="dashboard"]')?.classList.add('active');
+        else if (activeScreen === 'earnScreen') document.querySelector('.nav-item[data-nav="earn"]')?.classList.add('active');
+        else if (activeScreen === 'profileScreen') document.querySelector('.nav-item[data-nav="profile"]')?.classList.add('active');
+      } else {
+        bottomNav.classList.add('hidden');
+      }
     }
 
     // ========== MONOLOGUE ==========
@@ -595,12 +594,13 @@
     document.getElementById('updatePseudoBtn').onclick = updatePseudo;
     document.getElementById('logoutBtn').onclick = logout;
     document.getElementById('instaTaskBtn')?.addEventListener('click', () => performMission('instagram', 10, 'https://instagram.com/exambreaker'));
-    document.getElementById('youtubeTaskBtn')?.addEventListener('click', () => performMission('youtube', 10, 'https://youtube.com/@exambreaker'));
     document.getElementById('adTaskBtn')?.addEventListener('click', () => performMission('ad', 5, '#'));
     document.getElementById('visitTaskBtn')?.addEventListener('click', () => performMission('visit', 3, '#'));
+    
     document.querySelectorAll('.serie-option').forEach(btn => {
       btn.addEventListener('click', () => setSerie(btn.dataset.serie));
     });
+    
     document.querySelectorAll('.tab').forEach(t => {
       t.addEventListener('click', () => {
         document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
@@ -609,9 +609,16 @@
         renderExams();
       });
     });
+    
+    // Navigation depuis la bottom bar (seulement si connecté)
     document.querySelectorAll('.nav-item').forEach(n => {
-      n.addEventListener('click', () => navigateTo(n.getAttribute('data-nav')));
+      n.addEventListener('click', () => {
+        if (!currentUser) return;
+        navigateTo(n.getAttribute('data-nav'));
+        updateBottomNavVisibility();
+      });
     });
+    
     document.getElementById('loginTabBtn').onclick = () => {
       document.getElementById('loginForm').style.display = 'block';
       document.getElementById('signupForm').style.display = 'none';
@@ -633,9 +640,11 @@
         if (!doc.exists || !doc.data().serie) navigateTo('serie');
         else navigateTo('dashboard');
       } else {
+        currentUser = null;
         navigateTo('auth');
       }
+      updateBottomNavVisibility();
     });
   </script>
 </body>
-</html>
+                     </html>
