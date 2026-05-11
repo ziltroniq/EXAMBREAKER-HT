@@ -3,10 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>EXAMBREAKER HT - Prépa Examens Officiels 2026</title>
-  <!-- Google Fonts & Font Awesome -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <title>EXAMBREAKER HT • Prépa Examens Officiels</title>
+  <!-- Font Awesome 6 (gratuit) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <style>
     * {
       margin: 0;
@@ -16,585 +21,537 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: #f5f7fb;
-      color: #1e293b;
-      padding: 20px 16px 40px;
+      background: #0F1117;
+      color: #EFF3F6;
+      padding-bottom: 70px;
     }
 
+    /* Dark mode Telegram style */
     .container {
       max-width: 550px;
       margin: 0 auto;
+      padding: 16px;
     }
 
-    /* écrans */
-    .screen {
-      transition: all 0.2s ease;
+    /* Bottom navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #1F2128;
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0 20px;
+      border-top: 1px solid #2C2F36;
+      z-index: 1000;
+      max-width: 550px;
+      margin: 0 auto;
     }
-    .hide {
-      display: none;
+    .nav-item {
+      text-align: center;
+      color: #8E8E93;
+      font-size: 0.7rem;
+      transition: 0.2s;
+      cursor: pointer;
+      flex: 1;
+    }
+    .nav-item i {
+      font-size: 1.5rem;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .nav-item.active {
+      color: #34C759;
     }
 
-    /* cartes style moderne */
+    /* Cartes */
     .card {
-      background: white;
-      border-radius: 28px;
-      padding: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-      margin-bottom: 20px;
+      background: #1F2128;
+      border-radius: 24px;
+      padding: 18px;
+      margin-bottom: 16px;
+      transition: transform 0.1s ease;
+      border: 1px solid #2C2F36;
     }
-
     .btn {
-      background: #4361ee;
+      background: #34C759;
       border: none;
-      padding: 14px 20px;
+      padding: 12px 20px;
       border-radius: 40px;
-      color: white;
       font-weight: 600;
-      font-size: 1rem;
       width: 100%;
       cursor: pointer;
       transition: 0.2s;
       font-family: inherit;
+      color: white;
+      font-size: 0.9rem;
     }
-    .btn:active { transform: scale(0.97); background: #2b44d4; }
-    .btn-outline {
-      background: transparent;
-      border: 1px solid #4361ee;
-      color: #4361ee;
+    .btn:active { transform: scale(0.97); background: #2DA44E; }
+    .btn-secondary {
+      background: #2C2F36;
+      color: #fff;
     }
-
     input {
-      width: 100%;
+      background: #2C2F36;
+      border: none;
       padding: 14px 16px;
-      border: 1px solid #e2e8f0;
-      border-radius: 24px;
-      font-size: 1rem;
+      border-radius: 16px;
+      color: white;
+      width: 100%;
       margin-bottom: 12px;
       font-family: inherit;
-      background: #f8fafc;
     }
-    input:focus { outline: none; border-color: #4361ee; }
-
-    /* header */
-    .header-flex {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 20px;
-    }
-    .logo {
-      font-size: 1.6rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #4361ee, #f72585);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .category-grid {
-      display: flex;
-      gap: 16px;
-      overflow-x: auto;
-      padding-bottom: 8px;
-    }
-    .category-card {
-      background: white;
-      border-radius: 24px;
-      padding: 16px;
-      min-width: 140px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      text-align: center;
-    }
-    .category-icon {
-      font-size: 2rem;
-      margin-bottom: 8px;
-    }
-    .exam-badge {
-      background: #eef2ff;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: #4361ee;
-    }
-
     .exam-card {
-      background: white;
-      border-radius: 24px;
-      padding: 16px;
-      margin-bottom: 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-      border: 1px solid #eef2ff;
-    }
-    .exam-info h3 {
-      font-size: 1.1rem;
-      margin-bottom: 4px;
-    }
-    .timer-chip {
-      font-family: monospace;
-      background: #1e293b;
-      color: #facc15;
-      padding: 6px 12px;
-      border-radius: 40px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .task-list {
-      margin: 16px 0;
-    }
-    .task-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #f8fafc;
-      padding: 12px 16px;
+      margin-bottom: 12px;
+      background: #2C2F36;
+      padding: 14px;
       border-radius: 20px;
-      margin-bottom: 10px;
     }
-    .task-btn {
-      background: #e2e8f0;
-      border: none;
-      padding: 6px 14px;
+    .badge {
+      background: #34C75920;
+      padding: 4px 10px;
       border-radius: 30px;
-      font-weight: 500;
-      font-size: 0.75rem;
-      cursor: pointer;
-    }
-    .task-btn.completed {
-      background: #10b981;
-      color: white;
-    }
-    .points-progress {
-      height: 8px;
-      background: #e2e8f0;
-      border-radius: 10px;
-      margin: 12px 0;
-      overflow: hidden;
-    }
-    .points-fill {
-      height: 100%;
-      background: #4361ee;
-      width: 0%;
-      border-radius: 10px;
-    }
-
-    footer {
-      text-align: center;
       font-size: 0.7rem;
-      color: #94a3b8;
-      margin-top: 30px;
+      color: #34C759;
     }
+    .points-bar {
+      height: 6px;
+      background: #3A3D44;
+      border-radius: 10px;
+      margin: 8px 0;
+    }
+    .timer {
+      font-family: monospace;
+      font-size: 0.9rem;
+      background: #00000040;
+      padding: 6px 12px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+    .glitch {
+      text-shadow: 1px 0 red, -1px 0 blue;
+      animation: glitch 0.2s infinite;
+    }
+    @keyframes glitch {
+      0% { text-shadow: -1px 0 cyan, 1px 0 magenta; }
+      100% { text-shadow: 1px 0 cyan, -1px 0 magenta; }
+    }
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 20px;
+      right: 20px;
+      background: #000000cc;
+      color: white;
+      padding: 12px;
+      border-radius: 30px;
+      text-align: center;
+      backdrop-filter: blur(8px);
+      z-index: 1100;
+      transition: opacity 0.2s;
+    }
+    .hide { display: none; }
+    .screen { transition: display 0.2s; }
   </style>
 </head>
 <body>
 <div class="container" id="app">
-
   <!-- Écran de connexion -->
   <div id="loginScreen" class="screen">
-    <div class="card" style="text-align:center; margin-top:40px;">
-      <div class="logo" style="font-size:2rem;">EXAMBREAKER HT</div>
-      <p style="margin:16px 0;">Entrez vos identifiants pour commencer</p>
-      <input type="email" id="loginEmail" placeholder="Email" value="eleve@examen.ht">
-      <input type="password" id="loginPassword" placeholder="Mot de passe" value="123456">
-      <button class="btn" id="doLoginBtn">SE CONNECTER</button>
-      <p style="margin-top:16px; font-size:0.8rem;">Pas de compte ? <strong id="gotoSignup" style="color:#4361ee;">Inscrivez-vous</strong></p>
+    <div class="card" style="margin-top: 40px;">
+      <h1 style="font-size: 2rem;">⛓️ EB·HT</h1>
+      <p>Connectez-vous pour accéder aux examens</p>
+      <input type="email" id="loginEmail" placeholder="Email">
+      <input type="password" id="loginPassword" placeholder="Mot de passe">
+      <button class="btn" id="doLogin">SE CONNECTER</button>
+      <p style="margin-top: 12px;"><span id="showSignup" style="color:#34C759;">Créer un compte</span></p>
     </div>
   </div>
 
   <!-- Écran d'inscription -->
   <div id="signupScreen" class="screen hide">
-    <div class="card" style="margin-top:40px;">
-      <h2>Créer un compte</h2>
-      <input type="text" id="signupName" placeholder="Nom complet">
+    <div class="card">
+      <h2>Inscription</h2>
+      <input type="text" id="signupName" placeholder="Nom d'utilisateur">
       <input type="email" id="signupEmail" placeholder="Email">
       <input type="password" id="signupPassword" placeholder="Mot de passe">
-      <button class="btn" id="doSignupBtn">S'INSCRIRE</button>
-      <p style="margin-top:12px;"><span id="gotoLogin" style="color:#4361ee;">Déjà un compte ? Se connecter</span></p>
+      <input type="text" id="referralCode" placeholder="Code de parrainage (optionnel)">
+      <button class="btn" id="doSignup">S'INSCRIRE</button>
+      <p><span id="showLogin" style="color:#34C759;">Déjà un compte</span></p>
     </div>
   </div>
 
-  <!-- Tableau de bord principal -->
+  <!-- Dashboard principal (bottom nav) -->
   <div id="dashboardScreen" class="screen hide">
-    <div class="header-flex">
-      <div class="logo">EB·HT</div>
-      <div><i class="fas fa-bell"></i> <span id="userNameDisplay">Élève</span></div>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h2>📚 EXAMBREAKER</h2>
+      <div><i class="fas fa-user-circle"></i> <span id="userPoints">0</span> pts</div>
     </div>
-
-    <!-- Barre recherche -->
-    <div class="card" style="padding:12px 16px;">
-      <i class="fas fa-search"></i> <input type="text" placeholder="Rechercher un examen..." style="border:none; background:transparent; width:85%; display:inline;">
+    <!-- Sélection niveau -->
+    <div style="display: flex; gap: 12px; margin: 16px 0;">
+      <button class="btn-secondary" id="tab9af" style="flex:1;">9AF</button>
+      <button class="btn-secondary" id="tabNs4" style="flex:1;">NS4</button>
     </div>
-
-    <!-- Catégories -->
-    <div style="margin:16px 0 8px; display:flex; justify-content:space-between;">
-      <h3>Catégories</h3>
-      <span style="color:#4361ee;">Voir tout</span>
+    <div id="examsContainer"></div>
+    <div class="card" style="margin-top: 16px;">
+      <h3>⚡ Gagner des points</h3>
+      <div class="task-item" id="taskSurvey"><i class="fas fa-poll"></i> Sondage (pub) +5 <button class="task-btn">Faire</button></div>
+      <div class="task-item" id="taskShare"><i class="fab fa-whatsapp"></i> Partage WhatsApp +3 <button class="task-btn">Partager</button></div>
+      <div class="task-item" id="taskDaily"><i class="fas fa-calendar-day"></i> Mission quotidienne +2 <button class="task-btn">Regarder</button></div>
+      <div class="task-item" id="taskReferral"><i class="fas fa-link"></i> Parrainage +10/ami <button class="task-btn">Mon code</button></div>
     </div>
-    <div class="category-grid">
-      <div class="category-card" data-cat="9AF"><div class="category-icon">📘</div><div>9AF</div><div class="exam-badge">6 examens</div></div>
-      <div class="category-card" data-cat="NS4"><div class="category-icon">🎓</div><div>NS4</div><div class="exam-badge">9 examens</div></div>
-      <div class="category-card" data-cat="Bac"><div class="category-icon">📖</div><div>Bac</div><div class="exam-badge">4 examens</div></div>
-    </div>
-
-    <!-- Liste des examens disponibles -->
-    <h3 style="margin:20px 0 12px;">Examens officiels 2026</h3>
-    <div id="examsList"></div>
-
-    <footer>🔐 Chaque examen requiert des tâches pour débloquer le compte à rebours officiel.</footer>
   </div>
 
-  <!-- Vue détaillée d'un examen (tâches + timer) -->
+  <!-- Écran de détail examen pour débloquer -->
   <div id="examDetailScreen" class="screen hide">
-    <div class="header-flex">
-      <i class="fas fa-arrow-left" id="backToDashboard" style="font-size:1.5rem; cursor:pointer;"></i>
-      <div class="logo" id="detailExamTitle">Examen</div>
-      <div></div>
-    </div>
-    <div class="card">
-      <div style="display: flex; justify-content: space-between;">
-        <span class="exam-badge" id="detailExamLevel">9AF</span>
-        <span id="detailTimerLabel" class="timer-chip">⏳ Non débloqué</span>
-      </div>
-      <h2 style="margin:12px 0;" id="detailExamName">Mathématiques</h2>
-      <div class="points-progress"><div class="points-fill" id="detailPointsFill"></div></div>
-      <div><span id="detailPointsCount">0</span> / <span id="detailTargetPoints">10</span> points</div>
-
-      <div class="task-list">
-        <div class="task-item" id="taskSurveyDetail">
-          <span><i class="fas fa-poll"></i> Faire un sondage (pub)</span>
-          <button class="task-btn" data-task="survey">+5 pts</button>
-        </div>
-        <div class="task-item" id="taskShareDetail">
-          <span><i class="fab fa-whatsapp"></i> Partager sur WhatsApp</span>
-          <button class="task-btn" data-task="share">+3 pts</button>
-        </div>
-        <div class="task-item" id="taskReferralDetail">
-          <span><i class="fas fa-user-plus"></i> Parrainer un ami</span>
-          <button class="task-btn" data-task="referral">+10 pts</button>
-        </div>
-        <div class="task-item" id="taskDailyDetail">
-          <span><i class="fas fa-calendar-day"></i> Mission quotidienne (video)</span>
-          <button class="task-btn" data-task="daily">+2 pts</button>
-        </div>
-      </div>
-      <button class="btn" id="unlockExamBtn" disabled>🔒 Débloquer le timer</button>
-      <div id="timerDisplayArea" style="margin-top:20px; text-align:center;"></div>
-      <p style="font-size:0.7rem; margin-top:16px;">* Une fois le timer débloqué, vous recevrez l'examen le jour J à 5h du matin.</p>
+    <div><i class="fas fa-arrow-left" id="backToDash" style="font-size:1.5rem; cursor:pointer;"></i> Retour</div>
+    <div class="card" style="margin-top: 16px;">
+      <h2 id="examName"></h2>
+      <p>Niveau: <span id="examLevel"></span></p>
+      <p>Coût: <span id="examCost"></span> points</p>
+      <div id="examStatus"></div>
+      <button class="btn" id="unlockExamBtn">🔓 DÉBLOQUER CET EXAMEN</button>
+      <div id="timerDisplay" style="margin-top: 16px;"></div>
     </div>
   </div>
 
-  <!-- Écran twist final (jour J) -->
+  <!-- Twister final (jour J) -->
   <div id="twistScreen" class="screen hide">
-    <div class="card" style="text-align:center; margin-top:40px;">
-      <i class="fas fa-skull" style="font-size:4rem; color:#f72585;"></i>
-      <h2 class="glitch" style="margin:16px 0;">B L A G U E</h2>
-      <p style="font-size:1rem;">Ou kwè mwen ta lage egzamen an? Non.<br>
-      Avenir w se nan men w. Etidye, fè ou fè.<br>
-      Mwen te testé detèminasyon w. Bon chans!</p>
-      <button class="btn" id="resetAllBtn">⟳ Recommencer l'expérience</button>
+    <div class="card" style="text-align:center;">
+      <i class="fas fa-skull" style="font-size:4rem; color:#ff3b30;"></i>
+      <h2 class="glitch">ERREUR 404</h2>
+      <p>Ou kwè mwen ta lage egzamen an? Non.<br> Avenir w se nan men w. Etidye, fè ou fè.<br> Mwen te testé detèminasyon w. Bon chans!</p>
+      <button class="btn" id="resetTwistBtn">⟳ Retour à l'accueil</button>
     </div>
   </div>
 </div>
-
+<div class="bottom-nav" id="bottomNav" style="display: none;">
+  <div class="nav-item" data-nav="dashboard"><i class="fas fa-home"></i><span>Accueil</span></div>
+  <div class="nav-item" data-nav="profile"><i class="fas fa-user"></i><span>Profil</span></div>
+</div>
 <script>
-  // ---------- STOCKAGE LOCAL ----------
-  let currentUser = null; // { id, name, email, exams: { examId: { points, tasksDoneToday, timerUnlocked } } }
-  let examsData = [
-    { id: "math_9af", name: "Mathématiques 9AF", level: "9AF", targetPoints: 10, examDate: new Date(2026, 6, 1, 5, 0, 0) },
-    { id: "physique_9af", name: "Physique Chimie 9AF", level: "9AF", targetPoints: 10, examDate: new Date(2026, 6, 1, 5, 0, 0) },
-    { id: "histoire_ns4", name: "Histoire/Géo NS4", level: "NS4", targetPoints: 10, examDate: new Date(2026, 6, 5, 5, 0, 0) },
-    { id: "anglais_ns4", name: "Anglais NS4", level: "NS4", targetPoints: 10, examDate: new Date(2026, 6, 5, 5, 0, 0) },
-    { id: "bac_math", name: "Mathématiques Bac", level: "Bac", targetPoints: 15, examDate: new Date(2026, 6, 10, 5, 0, 0) }
-  ];
+  // ==================== CONFIGURATION FIREBASE ====================
+  // Remplace par tes propres valeurs (créer un projet Firebase)
+  const firebaseConfig = {
+    apiKey: "VOTRE_API_KEY",
+    authDomain: "VOTRE_AUTH_DOMAIN",
+    projectId: "VOTRE_PROJECT_ID",
+    storageBucket: "VOTRE_STORAGE_BUCKET",
+    messagingSenderId: "VOTRE_SENDER_ID",
+    appId: "VOTRE_APP_ID"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
 
-  // Helper
-  function saveUser() {
-    if(currentUser) localStorage.setItem('eb_currentUser', JSON.stringify(currentUser));
-  }
-  function loadUser() {
-    let raw = localStorage.getItem('eb_currentUser');
-    if(raw) {
-      try {
-        currentUser = JSON.parse(raw);
-        // initialiser les propriétés manquantes
-        if(!currentUser.exams) currentUser.exams = {};
-        examsData.forEach(ex => {
-          if(!currentUser.exams[ex.id]) {
-            currentUser.exams[ex.id] = { points: 0, tasksToday: {}, timerUnlocked: false };
-          }
-        });
-        saveUser();
-        return true;
-      } catch(e) {}
-    }
-    return false;
-  }
+  // ==================== DONNÉES EXAMENS ====================
+  const EXAMS = {
+    "9AF": [
+      { id: "9af_anglais", name: "Anglais", cost: 10, date: new Date(2026, 6, 1, 5, 0, 0) },
+      { id: "9af_kreyol", name: "Kreyòl", cost: 10, date: new Date(2026, 6, 1, 5, 0, 0) },
+      { id: "9af_espagnol", name: "Espagnol", cost: 10, date: new Date(2026, 6, 1, 5, 0, 0) },
+      { id: "9af_francais", name: "Français", cost: 10, date: new Date(2026, 6, 1, 5, 0, 0) },
+      { id: "9af_math", name: "Math", cost: 10, date: new Date(2026, 6, 1, 5, 0, 0) },
+      { id: "9af_socio", name: "Sciences Sociales", cost: 10, date: new Date(2026, 6, 1, 5, 0, 0) },
+      { id: "9af_scient", name: "Sciences Expérimentales", cost: 10, date: new Date(2026, 6, 1, 5, 0, 0) }
+    ],
+    "NS4": [
+      { id: "ns4_physique", name: "Physiques", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
+      { id: "ns4_math", name: "Math", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
+      { id: "ns4_chimie", name: "Chimie", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
+      { id: "ns4_kreyol", name: "Kreyòl", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
+      { id: "ns4_anglais", name: "Anglais", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
+      { id: "ns4_socio", name: "Sciences Sociales", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
+      { id: "ns4_philo", name: "Philosophie", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
+      { id: "ns4_info", name: "Informatiques", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
+      { id: "ns4_bio", name: "Biologie/Géologie", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
+      { id: "ns4_economie", name: "Economie", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
+      { id: "ns4_esp", name: "Espagnol", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) },
+      { id: "ns4_art", name: "Art/Musique", cost: 15, date: new Date(2026, 6, 5, 5, 0, 0) }
+    ]
+  };
 
-  // Reset complet
-  function resetAll() {
-    localStorage.removeItem('eb_currentUser');
-    window.location.reload();
-  }
+  let currentUser = null;
+  let currentTab = "9AF";
+  let selectedExam = null;
 
-  // Affichage des écrans
-  function showScreen(screenId) {
-    document.getElementById('loginScreen').classList.add('hide');
-    document.getElementById('signupScreen').classList.add('hide');
-    document.getElementById('dashboardScreen').classList.add('hide');
-    document.getElementById('examDetailScreen').classList.add('hide');
-    document.getElementById('twistScreen').classList.add('hide');
-    document.getElementById(screenId).classList.remove('hide');
-  }
-
-  // Vérifier si un examen est débloqué (points atteints) et gérer timer
-  function checkAndUnlockExam(examId) {
-    let exam = examsData.find(e => e.id === examId);
-    if(!exam) return false;
-    let userExam = currentUser.exams[examId];
-    if(userExam.points >= exam.targetPoints && !userExam.timerUnlocked) {
-      userExam.timerUnlocked = true;
-      saveUser();
-      return true;
-    }
-    return false;
+  // Helper UI
+  function showToast(msg) {
+    let toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerText = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
   }
 
-  // Ajouter des points à un examen, avec limite quotidienne par tâche
-  function addPointsToExam(examId, taskKey, points) {
-    let exam = examsData.find(e => e.id === examId);
-    if(!exam) return false;
-    let userExam = currentUser.exams[examId];
-    if(userExam.timerUnlocked) {
-      alert("Timer déjà débloqué pour cet examen. Vous recevrez le contenu le jour J à 5h.");
-      return false;
-    }
-    let today = new Date().toISOString().slice(0,10);
-    if(userExam.tasksToday[taskKey] === today) {
-      alert(`Tâche "${taskKey}" déjà effectuée aujourd'hui pour cet examen. Revenez demain.`);
-      return false;
-    }
-    userExam.points += points;
-    userExam.tasksToday[taskKey] = today;
-    saveUser();
-    let unlocked = checkAndUnlockExam(examId);
-    if(unlocked) {
-      alert(`🎉 Félicitations ! Vous avez débloqué le timer pour ${exam.name}. L'examen vous sera envoyé le jour officiel à 5h.`);
-    }
-    return true;
+  async function updateUserPointsUI() {
+    if (!currentUser) return;
+    const userDoc = await db.collection('users').doc(currentUser.uid).get();
+    const points = userDoc.exists ? userDoc.data().points || 0 : 0;
+    document.getElementById('userPoints').innerText = points;
   }
 
-  // Mettre à jour l'affichage de la liste des examens sur dashboard
-  function renderDashboard() {
-    let container = document.getElementById('examsList');
-    if(!container) return;
+  async function renderExams() {
+    const container = document.getElementById('examsContainer');
     container.innerHTML = '';
-    examsData.forEach(exam => {
-      let userExam = currentUser.exams[exam.id];
-      let statusText = userExam.timerUnlocked ? '✅ Timer actif' : `🔒 ${userExam.points}/${exam.targetPoints} pts`;
-      let div = document.createElement('div');
+    const examsList = EXAMS[currentTab];
+    const userDoc = await db.collection('users').doc(currentUser.uid).get();
+    const unlockedExams = userDoc.exists ? (userDoc.data().unlockedExams || {}) : {};
+    const userPoints = userDoc.exists ? (userDoc.data().points || 0) : 0;
+
+    for (let exam of examsList) {
+      const isUnlocked = unlockedExams[exam.id] === true;
+      const statusHtml = isUnlocked ? '<span class="badge">✅ Débloqué</span>' : `<span class="badge">💰 ${exam.cost} pts</span>`;
+      const div = document.createElement('div');
       div.className = 'exam-card';
       div.innerHTML = `
-        <div class="exam-info">
-          <h3>${exam.name}</h3>
-          <span class="exam-badge">${exam.level}</span>
-        </div>
-        <div style="text-align:right;">
-          <div class="timer-chip">${statusText}</div>
-          <button class="task-btn" style="margin-top:8px;" data-exam-id="${exam.id}">Détails</button>
-        </div>
+        <div><strong>${exam.name}</strong><br>${statusHtml}</div>
+        <button class="task-btn" data-id="${exam.id}" data-name="${exam.name}" data-level="${currentTab}" data-cost="${exam.cost}" data-unlocked="${isUnlocked}">Détails</button>
       `;
       container.appendChild(div);
-    });
-    // attacher events
-    document.querySelectorAll('[data-exam-id]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        let examId = btn.getAttribute('data-exam-id');
-        showExamDetail(examId);
+    }
+    document.querySelectorAll('[data-id]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        const name = btn.getAttribute('data-name');
+        const level = btn.getAttribute('data-level');
+        const cost = parseInt(btn.getAttribute('data-cost'));
+        const unlocked = btn.getAttribute('data-unlocked') === 'true';
+        showExamDetail(id, name, level, cost, unlocked);
       });
     });
-    document.getElementById('userNameDisplay').innerText = currentUser.name.split(' ')[0];
   }
 
-  let currentExamId = null;
-  function showExamDetail(examId) {
-    currentExamId = examId;
-    let exam = examsData.find(e => e.id === examId);
-    if(!exam) return;
-    let userExam = currentUser.exams[examId];
-    document.getElementById('detailExamTitle').innerText = exam.name;
-    document.getElementById('detailExamLevel').innerText = exam.level;
-    document.getElementById('detailExamName').innerText = exam.name;
-    document.getElementById('detailPointsCount').innerText = userExam.points;
-    document.getElementById('detailTargetPoints').innerText = exam.targetPoints;
-    let percent = (userExam.points / exam.targetPoints) * 100;
-    document.getElementById('detailPointsFill').style.width = percent + '%';
-    let unlockBtn = document.getElementById('unlockExamBtn');
-    if(userExam.timerUnlocked) {
+  async function showExamDetail(examId, examName, level, cost, unlocked) {
+    selectedExam = { examId, examName, level, cost, unlocked };
+    document.getElementById('examName').innerText = examName;
+    document.getElementById('examLevel').innerText = level;
+    document.getElementById('examCost').innerText = cost;
+    const statusDiv = document.getElementById('examStatus');
+    const unlockBtn = document.getElementById('unlockExamBtn');
+    const timerDiv = document.getElementById('timerDisplay');
+
+    if (unlocked) {
+      statusDiv.innerHTML = '<span class="badge">✅ Examen débloqué</span>';
       unlockBtn.disabled = true;
-      unlockBtn.innerText = '✅ Timer débloqué';
-      showTimerForExam(examId);
-    } else {
-      unlockBtn.disabled = (userExam.points < exam.targetPoints);
-      unlockBtn.innerText = (userExam.points >= exam.targetPoints) ? '🔓 DÉBLOQUER LE TIMER' : '🔒 Débloquez d\'abord 10 points';
-    }
-    // reset tasks UI style
-    ['survey', 'share', 'referral', 'daily'].forEach(task => {
-      let btn = document.querySelector(`.task-btn[data-task="${task}"]`);
-      if(btn) btn.classList.remove('completed');
-    });
-    showTimerForExam(examId);
-    showScreen('examDetailScreen');
-  }
-
-  function showTimerForExam(examId) {
-    let exam = examsData.find(e => e.id === examId);
-    let userExam = currentUser.exams[examId];
-    let timerDiv = document.getElementById('timerDisplayArea');
-    if(!userExam.timerUnlocked) {
-      timerDiv.innerHTML = '';
-      return;
-    }
-    function updateTimer() {
-      let now = new Date();
-      let diff = exam.examDate - now;
-      if(diff <= 0) {
-        // Le jour J est passé, afficher twist
-        clearInterval(window._timerInterval);
-        showTwist();
-        return;
-      }
-      let days = Math.floor(diff / (1000*60*60*24));
-      let hours = Math.floor((diff % (86400000)) / 3600000);
-      let mins = Math.floor((diff % 3600000) / 60000);
-      timerDiv.innerHTML = `<div style="background:#eef2ff; padding:12px; border-radius:24px;"><i class="fas fa-hourglass-half"></i> Compte à rebours : <strong>${days}j ${hours}h ${mins}m</strong><br><span style="font-size:0.7rem;">Vous recevrez l'examen le ${exam.examDate.toLocaleDateString()} à 5h00.</span></div>`;
-    }
-    if(window._timerInterval) clearInterval(window._timerInterval);
-    updateTimer();
-    window._timerInterval = setInterval(updateTimer, 60000);
-  }
-
-  function showTwist() {
-    if(window._timerInterval) clearInterval(window._timerInterval);
-    showScreen('twistScreen');
-  }
-
-  // Attacher événements pour les tâches dans la vue détail
-  function bindTaskButtons() {
-    document.querySelectorAll('.task-btn[data-task]').forEach(btn => {
-      btn.removeEventListener('click', window._taskHandler);
-      let task = btn.getAttribute('data-task');
-      let handler = () => {
-        if(!currentExamId) return;
-        let pointsMap = { survey:5, share:3, referral:10, daily:2 };
-        let ok = addPointsToExam(currentExamId, task, pointsMap[task]);
-        if(ok) {
-          // recharger la vue détail
-          showExamDetail(currentExamId);
+      unlockBtn.innerText = 'Déjà débloqué';
+      // afficher timer
+      const exam = EXAMS[level].find(e => e.id === examId);
+      const examDate = exam.date;
+      const updateTimer = () => {
+        const now = new Date();
+        if (now >= examDate) {
+          timerDiv.innerHTML = '<div class="timer">📢 Le jour J est arrivé !</div>';
+          // déclencher twist si pas déjà
+          if (!localStorage.getItem('twist_shown')) {
+            localStorage.setItem('twist_shown', 'true');
+            showTwist();
+          }
+        } else {
+          const diff = examDate - now;
+          const days = Math.floor(diff / (1000*60*60*24));
+          const hours = Math.floor((diff % (86400000))/3600000);
+          timerDiv.innerHTML = `<div class="timer">⏳ ${days}j ${hours}h jusqu'à l'examen officiel (5h)</div>`;
         }
       };
-      btn.addEventListener('click', handler);
-      window._taskHandler = handler;
-    });
+      updateTimer();
+      setInterval(updateTimer, 60000);
+    } else {
+      statusDiv.innerHTML = `<span class="badge">🔒 Nécessite ${cost} points</span>`;
+      unlockBtn.disabled = false;
+      unlockBtn.innerText = `Débloquer (${cost} points)`;
+      timerDiv.innerHTML = '';
+    }
+    document.getElementById('dashboardScreen').classList.add('hide');
+    document.getElementById('examDetailScreen').classList.remove('hide');
   }
 
-  // Inscription / connexion
-  function signup(name, email, pwd) {
-    if(!name || !email || !pwd) { alert("Remplissez tous les champs"); return false; }
-    let user = {
-      id: Date.now(),
-      name: name,
-      email: email,
-      password: pwd,
-      exams: {}
-    };
-    examsData.forEach(ex => { user.exams[ex.id] = { points: 0, tasksToday: {}, timerUnlocked: false }; });
-    currentUser = user;
-    saveUser();
+  async function unlockCurrentExam() {
+    if (!selectedExam || selectedExam.unlocked) return;
+    const userDoc = await db.collection('users').doc(currentUser.uid).get();
+    let points = userDoc.exists ? userDoc.data().points : 0;
+    if (points >= selectedExam.cost) {
+      // déduire points, marquer unlocked
+      const newPoints = points - selectedExam.cost;
+      const unlockedExams = userDoc.exists ? (userDoc.data().unlockedExams || {}) : {};
+      unlockedExams[selectedExam.examId] = true;
+      await db.collection('users').doc(currentUser.uid).update({
+        points: newPoints,
+        unlockedExams: unlockedExams
+      });
+      showToast(`✅ Examen ${selectedExam.examName} débloqué !`);
+      // recharger dashboard et vue
+      selectedExam.unlocked = true;
+      await renderExams();
+      await updateUserPointsUI();
+      showExamDetail(selectedExam.examId, selectedExam.examName, selectedExam.level, selectedExam.cost, true);
+    } else {
+      showToast(`❌ Pas assez de points. Gagnez-en via les tâches.`);
+    }
+  }
+
+  // Tâches avec limites quotidiennes (Firestore)
+  async function performTask(taskId, points) {
+    const today = new Date().toISOString().slice(0,10);
+    const userTasksRef = db.collection('users').doc(currentUser.uid).collection('dailyTasks').doc(today);
+    const taskDoc = await userTasksRef.get();
+    const done = taskDoc.exists ? (taskDoc.data()[taskId] || false) : false;
+    if (done) {
+      showToast(`Cette tâche a déjà été faite aujourd'hui. Revenez demain !`);
+      return false;
+    }
+    // Simuler l'action (pub, partage...)
+    if (taskId === 'share') {
+      if (navigator.share) await navigator.share({ title: 'EXAMBREAKER HT', text: 'Prépare-toi aux examens officiels !' });
+      else alert('Partage simulé (WhatsApp)');
+    }
+    // Mettre à jour les points
+    const userRef = db.collection('users').doc(currentUser.uid);
+    await db.runTransaction(async (transaction) => {
+      const userDoc = await transaction.get(userRef);
+      const oldPoints = userDoc.data().points || 0;
+      transaction.update(userRef, { points: oldPoints + points });
+      transaction.set(userTasksRef, { [taskId]: true }, { merge: true });
+    });
+    showToast(`+${points} points !`);
+    await updateUserPointsUI();
+    await renderExams(); // refresh
     return true;
   }
 
-  function login(email, pwd) {
-    let raw = localStorage.getItem('eb_currentUser');
-    if(raw) {
-      let u = JSON.parse(raw);
-      if(u.email === email && u.password === pwd) {
-        currentUser = u;
-        // recaler exams manquants
-        examsData.forEach(ex => { if(!currentUser.exams[ex.id]) currentUser.exams[ex.id] = { points:0, tasksToday:{}, timerUnlocked:false }; });
-        saveUser();
-        return true;
-      }
+  async function showReferralCode() {
+    const userDoc = await db.collection('users').doc(currentUser.uid).get();
+    let code = userDoc.data().referralCode;
+    if (!code) {
+      code = currentUser.uid.slice(0,8);
+      await db.collection('users').doc(currentUser.uid).update({ referralCode: code });
     }
-    // fallback créer compte auto pour démo
-    if(email && pwd) {
-      return signup("Utilisateur", email, pwd);
-    }
-    return false;
+    alert(`Votre code de parrainage : ${code}\nPartagez-le à vos amis. Chaque inscription via ce code vous rapporte 10 points.`);
   }
 
-  // Event listeners UI
-  document.getElementById('doLoginBtn')?.addEventListener('click', () => {
-    let email = document.getElementById('loginEmail').value;
-    let pwd = document.getElementById('loginPassword').value;
-    if(login(email, pwd)) {
-      renderDashboard();
-      showScreen('dashboardScreen');
-    } else alert("Échec connexion");
-  });
-  document.getElementById('gotoSignup')?.addEventListener('click', () => showScreen('signupScreen'));
-  document.getElementById('gotoLogin')?.addEventListener('click', () => showScreen('loginScreen'));
-  document.getElementById('doSignupBtn')?.addEventListener('click', () => {
-    let name = document.getElementById('signupName').value;
-    let email = document.getElementById('signupEmail').value;
-    let pwd = document.getElementById('signupPassword').value;
-    if(signup(name, email, pwd)) {
-      renderDashboard();
-      showScreen('dashboardScreen');
-    } else alert("Erreur inscription");
-  });
-  document.getElementById('backToDashboard')?.addEventListener('click', () => {
-    if(window._timerInterval) clearInterval(window._timerInterval);
-    renderDashboard();
-    showScreen('dashboardScreen');
-  });
-  document.getElementById('unlockExamBtn')?.addEventListener('click', () => {
-    if(currentExamId) {
-      let exam = examsData.find(e => e.id === currentExamId);
-      let userExam = currentUser.exams[currentExamId];
-      if(userExam.points >= exam.targetPoints && !userExam.timerUnlocked) {
-        userExam.timerUnlocked = true;
-        saveUser();
-        showExamDetail(currentExamId);
-      } else alert("Points insuffisants ou déjà débloqué");
+  // Inscription avec parrainage
+  async function signupWithReferral(email, pwd, username, referralCode) {
+    const cred = await auth.createUserWithEmailAndPassword(email, pwd);
+    const uid = cred.user.uid;
+    let referrerId = null;
+    if (referralCode) {
+      const refSnapshot = await db.collection('users').where('referralCode', '==', referralCode).limit(1).get();
+      if (!refSnapshot.empty) referrerId = refSnapshot.docs[0].id;
     }
-  });
-  document.getElementById('resetAllBtn')?.addEventListener('click', resetAll);
-  document.querySelectorAll('.category-card').forEach(cat => {
-    cat.addEventListener('click', (e) => {
-      let niveau = cat.getAttribute('data-cat');
-      // filtrer les examens sur le dashboard ?
-      renderDashboard(); // refresh (simple)
-      alert(`Filtre par ${niveau} - Tous les examens de ce niveau seront mis en avant (simulation)`);
+    await db.collection('users').doc(uid).set({
+      username: username,
+      email: email,
+      points: 0,
+      unlockedExams: {},
+      referralCode: uid.slice(0,8),
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
-  });
-
-  // Initialisation
-  if(loadUser()) {
-    renderDashboard();
-    showScreen('dashboardScreen');
-  } else {
-    showScreen('loginScreen');
-  }
-  // binding dynamique pour les tâches (après chaque chargement détail)
-  setInterval(() => {
-    if(document.getElementById('examDetailScreen') && !document.getElementById('examDetailScreen').classList.contains('hide')) {
-      bindTaskButtons();
+    if (referrerId) {
+      const referrerRef = db.collection('users').doc(referrerId);
+      await db.runTransaction(async (t) => {
+        const doc = await t.get(referrerRef);
+        const oldPoints = doc.data().points || 0;
+        t.update(referrerRef, { points: oldPoints + 10 });
+      });
+      showToast(`Parrainage réussi ! +10 points pour votre parrain.`);
     }
-  }, 200);
+    return cred.user;
+  }
+
+  // UI Navigation
+  document.getElementById('doLogin').onclick = async () => {
+    const email = document.getElementById('loginEmail').value;
+    const pwd = document.getElementById('loginPassword').value;
+    try {
+      const cred = await auth.signInWithEmailAndPassword(email, pwd);
+      currentUser = cred.user;
+      await updateUserPointsUI();
+      await renderExams();
+      document.getElementById('loginScreen').classList.add('hide');
+      document.getElementById('dashboardScreen').classList.remove('hide');
+      document.getElementById('bottomNav').style.display = 'flex';
+    } catch(e) { alert('Erreur: '+e.message); }
+  };
+  document.getElementById('showSignup').onclick = () => {
+    document.getElementById('loginScreen').classList.add('hide');
+    document.getElementById('signupScreen').classList.remove('hide');
+  };
+  document.getElementById('doSignup').onclick = async () => {
+    const name = document.getElementById('signupName').value;
+    const email = document.getElementById('signupEmail').value;
+    const pwd = document.getElementById('signupPassword').value;
+    const refCode = document.getElementById('referralCode').value;
+    try {
+      await signupWithReferral(email, pwd, name, refCode);
+      currentUser = auth.currentUser;
+      await updateUserPointsUI();
+      await renderExams();
+      document.getElementById('signupScreen').classList.add('hide');
+      document.getElementById('dashboardScreen').classList.remove('hide');
+      document.getElementById('bottomNav').style.display = 'flex';
+    } catch(e) { alert(e.message); }
+  };
+  document.getElementById('showLogin').onclick = () => {
+    document.getElementById('signupScreen').classList.add('hide');
+    document.getElementById('loginScreen').classList.remove('hide');
+  };
+  document.getElementById('backToDash').onclick = () => {
+    document.getElementById('examDetailScreen').classList.add('hide');
+    document.getElementById('dashboardScreen').classList.remove('hide');
+    renderExams();
+  };
+  document.getElementById('unlockExamBtn').onclick = unlockCurrentExam;
+  document.getElementById('tab9af').onclick = async () => { currentTab = '9AF'; await renderExams(); };
+  document.getElementById('tabNs4').onclick = async () => { currentTab = 'NS4'; await renderExams(); };
+  document.getElementById('taskSurvey').querySelector('button').onclick = () => performTask('survey', 5);
+  document.getElementById('taskShare').querySelector('button').onclick = () => performTask('share', 3);
+  document.getElementById('taskDaily').querySelector('button').onclick = () => performTask('daily', 2);
+  document.getElementById('taskReferral').querySelector('button').onclick = showReferralCode;
+
+  function showTwist() {
+    document.getElementById('dashboardScreen').classList.add('hide');
+    document.getElementById('examDetailScreen').classList.add('hide');
+    document.getElementById('twistScreen').classList.remove('hide');
+  }
+  document.getElementById('resetTwistBtn').onclick = () => {
+    document.getElementById('twistScreen').classList.add('hide');
+    document.getElementById('dashboardScreen').classList.remove('hide');
+  };
+
+  auth.onAuthStateChanged(async (user) => {
+    if (user) {
+      currentUser = user;
+      await updateUserPointsUI();
+      await renderExams();
+      document.getElementById('loginScreen').classList.add('hide');
+      document.getElementById('signupScreen').classList.add('hide');
+      document.getElementById('dashboardScreen').classList.remove('hide');
+      document.getElementById('bottomNav').style.display = 'flex';
+    } else {
+      document.getElementById('dashboardScreen').classList.add('hide');
+      document.getElementById('examDetailScreen').classList.add('hide');
+      document.getElementById('twistScreen').classList.add('hide');
+      document.getElementById('loginScreen').classList.remove('hide');
+      document.getElementById('bottomNav').style.display = 'none';
+    }
+  });
+  // simple bottom nav
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.onclick = () => {
+      if (el.getAttribute('data-nav') === 'dashboard') {
+        document.getElementById('examDetailScreen').classList.add('hide');
+        document.getElementById('dashboardScreen').classList.remove('hide');
+        renderExams();
+      } else {
+        alert('Page profil à venir (statistiques, badges...)');
+      }
+    };
+  });
 </script>
 </body>
 </html>
