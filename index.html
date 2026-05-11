@@ -2,303 +2,456 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>EXAMBREAKER HT | J.P_PHOENIX_HT CORP</title>
-    
-    <meta name="description" content="Système d'accès anticipé aux examens officiels 2026">
-    <meta name="theme-color" content="#0F1117">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-
+    <meta name="description" content="Système d'accès anticipé aux examens officiels 2026 - Protocole Phoenix">
+    <meta name="theme-color" content="#0A0B10">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
     <style>
-        :root {
-            --bg: #0A0B10;
-            --card: #16181D;
-            --card-light: #1F2229;
-            --border: #2C2F36;
-            --accent: #00FF94;
-            --phoenix-blue: #00D1FF;
-            --vip-gold: #FFD700;
-            --text-main: #EFF3F6;
-            --text-dim: #8E8E93;
-            --danger: #FF3B30;
-            --glass: rgba(22, 24, 29, 0.7);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background: var(--bg); 
-            color: var(--text-main); 
+        :root {
+            --bg: #0A0B10;
+            --card: #121317;
+            --card-light: #1A1C23;
+            --border: #292C35;
+            --accent: #00FF94;
+            --phoenix: #00D1FF;
+            --vip: #FFD700;
+            --text: #F0F3F8;
+            --text-dim: #8A8D98;
+            --danger: #FF3B30;
+            --glass: rgba(18, 19, 23, 0.85);
+            --glow: 0 0 12px rgba(0, 255, 148, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             overflow-x: hidden;
             height: 100vh;
         }
 
-        /* --- SYSTÈME DE GRILLE / LAYOUT --- */
-        #app { max-width: 500px; margin: 0 auto; height: 100vh; position: relative; }
-        .screen { 
-            position: absolute; inset: 0; display: none; padding: 25px; 
-            overflow-y: auto; background: var(--bg); z-index: 10;
-            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        #app {
+            max-width: 550px;
+            margin: 0 auto;
+            height: 100vh;
+            position: relative;
+            background: radial-gradient(circle at 10% 20%, rgba(0, 255, 148, 0.02), transparent);
         }
-        .screen.active { display: flex; flex-direction: column; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- SPLASH SCREEN --- */
-        #splash { 
-            z-index: 9999; background: var(--bg); display: flex; 
-            flex-direction: column; justify-content: center; align-items: center; text-align: center;
+        /* Screens */
+        .screen {
+            position: absolute;
+            inset: 0;
+            display: none;
+            padding: 24px 20px 90px 20px;
+            overflow-y: auto;
+            background: var(--bg);
+            z-index: 10;
+            animation: fadeSlide 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeSlide {
+            from { opacity: 0; transform: translateY(18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Splash Screen */
+        #splashScreen {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: var(--bg);
+            z-index: 9999;
         }
         .glitch-logo {
-            font-weight: 900; font-size: 1.8rem; color: var(--phoenix-blue);
-            letter-spacing: 5px; text-transform: uppercase;
-            text-shadow: 2px 0 var(--danger), -2px 0 var(--accent);
-            animation: glitch 2s infinite;
+            font-weight: 900;
+            font-size: 2.2rem;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, var(--phoenix), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 10px rgba(0, 209, 255, 0.4);
+            animation: glitchText 2.5s infinite;
         }
-        @keyframes glitch {
-            0% { text-shadow: 2px 0 var(--danger), -2px 0 var(--accent); }
-            50% { text-shadow: -2px 0 var(--danger), 2px 0 var(--accent); }
-            100% { text-shadow: 2px 0 var(--danger), -2px 0 var(--accent); }
+        @keyframes glitchText {
+            0%, 100% { transform: skew(0deg, 0deg); opacity: 1; }
+            95% { transform: skew(2deg, 1deg); text-shadow: -2px 0 var(--danger), 2px 0 var(--accent); }
+            96% { transform: skew(-2deg, -1deg); text-shadow: 2px 0 var(--danger), -2px 0 var(--phoenix); }
         }
-        .phoenix-loader {
-            width: 50px; height: 50px; border: 2px solid var(--border);
-            border-top: 2px solid var(--phoenix-blue); border-radius: 50%;
-            margin-top: 30px; animation: spin 0.8s linear infinite;
+        .loader-container {
+            margin-top: 40px;
+            width: 180px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* --- STORY & TUTO --- */
-        .story-text { font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; color: var(--accent); line-height: 1.6; }
-        .tuto-box { background: var(--card); border: 1px dashed var(--accent); padding: 15px; border-radius: 12px; margin: 20px 0; }
-
-        /* --- CARDS & UI --- */
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 15px; }
-        .card-vip { 
-            background: linear-gradient(145deg, #1A1C22, #2A210D); 
-            border: 1px solid var(--vip-gold); box-shadow: 0 0 25px rgba(255, 215, 0, 0.1); 
+        .loader-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--phoenix), var(--accent));
+            animation: loadProgress 2.2s ease-out forwards;
+        }
+        @keyframes loadProgress {
+            0% { width: 0%; }
+            70% { width: 85%; }
+            100% { width: 100%; }
+        }
+        .splash-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            margin-top: 20px;
+            letter-spacing: 2px;
+        }
+        /* Story / Typewriter */
+        .story-box {
+            background: rgba(0, 0, 0, 0.5);
+            border-left: 3px solid var(--accent);
+            padding: 20px;
+            border-radius: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 30px 0;
+        }
+        /* Cards */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 20px;
+            margin-bottom: 16px;
+            transition: all 0.2s;
+        }
+        .card-vip {
+            background: linear-gradient(145deg, #1A1C22, #24200F);
+            border: 1px solid var(--vip);
+            box-shadow: 0 8px 20px rgba(255, 215, 0, 0.1);
         }
         .btn {
-            background: var(--accent); color: #000; border: none; padding: 18px; 
-            border-radius: 16px; font-weight: 800; cursor: pointer; width: 100%;
-            transition: all 0.2s; font-size: 0.9rem; text-transform: uppercase;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 16px 20px;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 1rem;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.1s linear;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .btn:active { transform: scale(0.96); }
-        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
-        .btn-vip { background: var(--vip-gold); }
-
+        .btn:active { transform: scale(0.97); background: #00e085; }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+        }
+        .btn-gold {
+            background: var(--vip);
+            color: #1e1a0c;
+        }
         input {
-            width: 100%; background: var(--card-light); border: 1px solid var(--border);
-            padding: 18px; border-radius: 16px; color: white; margin-bottom: 12px; font-family: inherit;
+            width: 100%;
+            background: var(--card-light);
+            border: 1px solid var(--border);
+            padding: 16px 18px;
+            border-radius: 24px;
+            color: white;
+            margin-bottom: 14px;
+            font-family: inherit;
         }
-        input:focus { border-color: var(--accent); outline: none; background: #252830; }
-
-        /* --- EXAM ITEMS --- */
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(0, 255, 148, 0.2);
+        }
+        /* Exam Grid */
         .exam-item {
-            display: flex; align-items: center; gap: 15px; padding: 15px;
-            background: var(--card-light); border-radius: 18px; margin-bottom: 10px;
+            background: var(--card-light);
+            border-radius: 22px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
             border: 1px solid transparent;
+            transition: 0.1s;
         }
         .exam-icon {
-            width: 50px; height: 50px; border-radius: 14px; display: flex; 
-            align-items: center; justify-content: center; font-size: 1.2rem;
-            background: rgba(0, 255, 148, 0.1); color: var(--accent);
+            width: 52px;
+            height: 52px;
+            background: rgba(0, 255, 148, 0.08);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color: var(--accent);
         }
-        .unlocked .exam-icon { background: rgba(0, 209, 255, 0.1); color: var(--phoenix-blue); }
-
-        /* --- NAVIGATION --- */
-        .nav-bar {
-            position: fixed; bottom: 0; left: 0; right: 0; height: 85px;
-            background: var(--glass); backdrop-filter: blur(15px);
-            display: flex; justify-content: space-around; align-items: center;
-            border-top: 1px solid var(--border); z-index: 100;
+        .unlocked .exam-icon {
+            background: rgba(0, 209, 255, 0.12);
+            color: var(--phoenix);
         }
-        .nav-btn { color: var(--text-dim); text-align: center; font-size: 0.65rem; transition: 0.3s; }
-        .nav-btn.active { color: var(--accent); }
-        .nav-btn i { font-size: 1.4rem; display: block; margin-bottom: 4px; }
-
-        /* --- PROFILE STATS --- */
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
-        .stat-box { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid var(--border); }
-        .stat-box span { display: block; }
-        .stat-num { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
-        .stat-label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; margin-top: 5px; }
-
-        .timer-countdown { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--danger); font-size: 1.1rem; }
+        .timer-countdown {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--phoenix);
+            letter-spacing: 1px;
+        }
+        /* Tabs */
+        .tab-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .tab {
+            flex: 1;
+            background: var(--card-light);
+            border: none;
+            padding: 12px;
+            border-radius: 40px;
+            color: var(--text-dim);
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .tab.active {
+            background: var(--accent);
+            color: black;
+        }
+        /* Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-width: 550px;
+            margin: 0 auto;
+            background: var(--glass);
+            backdrop-filter: blur(18px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 22px;
+            border-top: 1px solid var(--border);
+            z-index: 100;
+        }
+        .nav-item {
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.7rem;
+            transition: 0.2s;
+            cursor: pointer;
+            flex: 1;
+        }
+        .nav-item i {
+            font-size: 1.6rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .nav-item.active {
+            color: var(--accent);
+            text-shadow: 0 0 6px var(--accent);
+        }
+        /* Stats profile */
+        .stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin: 16px 0;
+        }
+        .stat-card {
+            background: var(--card);
+            padding: 18px;
+            border-radius: 24px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+        /* Toast manual */
+        .toast-msg {
+            position: fixed;
+            bottom: 100px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(12px);
+            padding: 12px;
+            border-radius: 60px;
+            text-align: center;
+            font-size: 0.8rem;
+            z-index: 2000;
+            border-left: 3px solid var(--accent);
+            animation: fadeUp 0.3s ease;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hide { display: none; }
     </style>
 </head>
 <body>
-
 <div id="app">
-    <div id="splash" class="screen active">
-        <div class="glitch-logo">J.P_PHOENIX_HT CORP</div>
-        <p style="color: var(--text-dim); font-size: 0.7rem; letter-spacing: 2px; margin-top: 10px;">OPTIMISATION DU SYSTÈME...</p>
-        <div class="phoenix-loader"></div>
+    <!-- SPLASH SCREEN -->
+    <div id="splashScreen" class="screen active">
+        <div class="glitch-logo">J.P_PHOENIX_HT</div>
+        <div style="font-size: 0.8rem; letter-spacing: 4px; margin-top: 8px;">CORPORATION</div>
+        <div class="loader-container"><div class="loader-bar"></div></div>
+        <div class="splash-text">[ DÉCRYPTAGE DU RÉSEAU ]</div>
     </div>
 
+    <!-- STORY (typewriter) -->
     <div id="storyScreen" class="screen">
-        <h2 style="margin-bottom: 20px;">> PROTOCOLE_REVANCHE</h2>
-        <div id="typewriter" class="story-text"></div>
-        <button id="btnNextStory" class="btn btn-outline" style="margin-top: auto; display: none;">LIRE LA SUITE</button>
+        <h2 style="color: var(--phoenix); margin-bottom: 20px;">&gt; PROTOCOLE_PHOENIX.Exe</h2>
+        <div class="story-box" id="typewriterText"></div>
+        <button id="nextStoryBtn" class="btn" style="margin-top: auto; background: var(--phoenix);">DÉVERROUILLER LA SUITE →</button>
     </div>
 
+    <!-- TUTO / RÈGLES -->
     <div id="tutoScreen" class="screen">
-        <h1 style="font-size: 2rem; margin-bottom: 10px;">AVERTISSEMENT</h1>
-        <p style="color: var(--text-dim);">Ce n'est pas une application éducative classique.</p>
-        
-        <div class="tuto-box">
-            <p style="font-size: 0.9rem; margin-bottom: 10px;"><strong>RÈGLES DU RÉSEAU :</strong></p>
-            <p style="font-size: 0.8rem; line-height: 1.5;">
-                1. L'accès aux fuites (simulation avancée) nécessite des points de calcul.<br>
-                2. Les points s'obtiennent par le partage et la fidélité.<br>
-                3. Tricher est un choix, réussir est une obligation.<br>
-                4. J.P Phoenix ne garantit rien, sauf ta volonté.
-            </p>
+        <h1 style="font-size: 1.8rem; margin-bottom: 12px;">⚠️ IMMERSION TOTALE</h1>
+        <p style="color: var(--text-dim); margin-bottom: 24px;">Ce réseau n'est pas une application classique</p>
+        <div class="card" style="border-left: 4px solid var(--accent);">
+            <h3><i class="fas fa-brain"></i> Règles de l'ombre</h3>
+            <ul style="margin-top: 12px; list-style: none; line-height: 1.6;">
+                <li>🔹 1. Les examens se débloquent avec des <strong>Points de Calcul</strong> (PTS).</li>
+                <li>🔹 2. Gagnez des PTS via missions quotidiennes, partages et parrainage.</li>
+                <li>🔹 3. Le statut <strong style="color: var(--vip);">VIP</strong> offre accès anticipé (72h avant la date officielle).</li>
+                <li>🔹 4. La triche est inutile : le seul hack viable est votre discipline.</li>
+            </ul>
         </div>
-        
-        <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 20px;">
-            En cliquant ci-dessous, tu acceptes de rejoindre le réseau clandestin EXAMBREAKER.
-        </p>
-        
-        <button id="btnAcceptTuto" class="btn">J'ACCEPTE DE TRICHER</button>
+        <button id="acceptTutoBtn" class="btn" style="margin-top: 24px;">J'ACTIVE LE PROTOCOLE</button>
     </div>
 
+    <!-- AUTH (Login/Register) -->
     <div id="authScreen" class="screen">
         <div style="text-align: center; margin-bottom: 30px;">
-            <span style="font-weight: 900; color: var(--accent);">EB.HT</span>
-            <h1>ACCÈS RÉSEAU</h1>
+            <span style="font-size: 2rem; font-weight: 900; background: linear-gradient(135deg,var(--accent),var(--phoenix)); -webkit-background-clip:text; background-clip:text; color:transparent;">EB.HT</span>
+            <h2>ACCÈS CELLULE CLANDESTINE</h2>
         </div>
-        
-        <div id="formLogin">
-            <input type="email" id="loginEmail" placeholder="ID (Email)">
-            <input type="password" id="loginPass" placeholder="Clé de sécurité">
-            <button onclick="handleAuth('login')" class="btn">DÉBLOQUER L'ACCÈS</button>
-            <p onclick="toggleAuth(false)" style="text-align:center; margin-top:20px; font-size:0.8rem; color:var(--text-dim)">Nouveau sujet ? <span style="color:var(--accent)">Créer un profil</span></p>
+        <div id="loginPanel">
+            <input type="email" id="loginEmail" placeholder="Identifiant (email)">
+            <input type="password" id="loginPass" placeholder="Clé d'accès">
+            <button onclick="authHandler('login')" class="btn">PÉNÉTRER DANS LE SYSTÈME</button>
+            <p style="text-align:center; margin-top:16px;" onclick="toggleAuthPanel(false)" class="btn-outline" style="display:inline-block; cursor:pointer;">Créer un nouveau profil →</p>
         </div>
-
-        <div id="formReg" style="display:none;">
-            <input type="text" id="regPseudo" placeholder="Nom d'agent (Pseudo)">
-            <input type="email" id="regEmail" placeholder="Email">
+        <div id="registerPanel" style="display:none;">
+            <input type="text" id="regPseudo" placeholder="Nom d'agent (pseudo)">
+            <input type="email" id="regEmail" placeholder="Adresse email">
             <input type="password" id="regPass" placeholder="Mot de passe">
-            <input type="text" id="regRef" placeholder="Code Parrainage (Optionnel)">
-            <button onclick="handleAuth('register')" class="btn">INITIALISER LE PROFIL</button>
-            <p onclick="toggleAuth(true)" style="text-align:center; margin-top:20px; font-size:0.8rem; color:var(--text-dim)">Déjà dans la base ? <span style="color:var(--accent)">Connexion</span></p>
+            <input type="text" id="regRefCode" placeholder="Code de parrainage (optionnel)">
+            <button onclick="authHandler('register')" class="btn">GÉNÉRER LE PROFIL</button>
+            <p style="text-align:center; margin-top:16px;" onclick="toggleAuthPanel(true)" class="btn-outline" style="cursor:pointer;">← Retour à la connexion</p>
         </div>
     </div>
 
-    <div id="dashScreen" class="screen">
-        <header style="display:flex; justify-content: space-between; align-items:center; margin-bottom:20px;">
-            <div>
-                <p style="font-size: 0.7rem; color: var(--text-dim);">Sujet: <span id="dispUser" style="color:white">...</span></p>
-                <div id="badgeVip" style="display:none; color: var(--vip-gold); font-size: 0.65rem; font-weight: 800;">
-                    <i class="fas fa-crown"></i> MEMBRE VIP
-                </div>
+    <!-- DASHBOARD PRINCIPAL -->
+    <div id="dashboardScreen" class="screen">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div><span id="dashboardUserName" style="font-weight: 800;">Agent</span>
+                <div id="vipBadgeDash" style="display:none; color: var(--vip); font-size:0.7rem;"><i class="fas fa-crown"></i> VIP</div>
             </div>
-            <div style="background: rgba(0,255,148,0.1); padding: 8px 15px; border-radius: 30px; border: 1px solid rgba(0,255,148,0.2);">
-                <span id="dispPoints" style="color: var(--accent); font-weight: 800;">0</span> <small style="font-size:0.6rem">PTS</small>
+            <div style="background: rgba(0,255,148,0.1); padding: 8px 16px; border-radius: 40px; border:1px solid var(--accent);">
+                <span id="dashboardPoints">0</span> <span style="font-size:0.7rem;">PTS</span>
             </div>
-        </header>
-
-        <div id="promoVip" class="card card-vip">
-            <h3 style="color: var(--vip-gold); margin-bottom: 5px;">PASSER VIP</h3>
-            <p style="font-size: 0.75rem; color: rgba(255,255,255,0.7); margin-bottom: 15px;">Débloquez les examens 3 jours avant (72h d'avance totale).</p>
-            <button onclick="activateVip()" class="btn btn-vip" style="padding: 12px; font-size: 0.7rem;">DÉBLOQUER (500 PTS)</button>
+        </div>
+        <!-- Carte VIP upgrade -->
+        <div id="vipUpgradeCard" class="card card-vip">
+            <h3><i class="fas fa-crown" style="color: var(--vip);"></i> PROGRAMME VIP – ACCÈS ANTICIPÉ</h3>
+            <p style="font-size: 0.75rem; margin: 8px 0;">Débloquez tous les examens 3 jours avant la date officielle (72h d'avance sur le réseau)</p>
+            <button id="upgradeVipBtn" class="btn btn-gold" style="padding: 12px; font-size:0.8rem;">ACTIVER VIP (500 PTS)</button>
         </div>
 
-        <div style="display:flex; gap:10px; margin-bottom:20px;">
-            <button onclick="setLvl('9AF')" id="tab9AF" class="btn btn-outline" style="flex:1; padding: 12px;">9ème AF</button>
-            <button onclick="setLvl('NS4')" id="tabNS4" class="btn btn-outline" style="flex:1; padding: 12px;">NS4</button>
+        <div class="tab-bar">
+            <button class="tab active" data-level="9AF">🎓 9ème AF</button>
+            <button class="tab" data-level="NS4">⚛️ NS4</button>
         </div>
-
-        <div id="examContainer"></div>
+        <div id="examsListContainer"></div>
     </div>
 
+    <!-- TÂCHES / MISSIONS -->
     <div id="taskScreen" class="screen">
-        <h1>GÉNÉRATEUR DE POINTS</h1>
-        <p style="color:var(--text-dim); margin-bottom:20px;">Alimente le serveur pour débloquer les fuites.</p>
-
+        <h1 style="font-size:1.6rem;">⚡ GÉNÉRATEUR DE PTS</h1>
+        <p style="margin-bottom:20px;">Alimentez le serveur pour débloquer les fichiers</p>
         <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                    <h4 style="color: var(--phoenix-blue);"><i class="fas fa-share-nodes"></i> Propager le lien</h4>
-                    <p style="font-size: 0.7rem; color: var(--text-dim);">WhatsApp (+3 pts / jour)</p>
-                </div>
-                <button onclick="doTask('share', 3)" class="btn" style="width:70px; padding:8px; font-size:0.7rem;">FAIRE</button>
+                <div><i class="fab fa-whatsapp" style="font-size:1.8rem; color:#25D366;"></i><h4>Partage Réseau</h4><span style="font-size:0.7rem;">+3 PTS / jour</span></div>
+                <button onclick="executeTask('share',3)" class="btn" style="width:auto; padding:12px 20px;">Lancer</button>
             </div>
         </div>
-
         <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                    <h4 style="color: var(--accent);"><i class="fas fa-bolt"></i> Mission Daily</h4>
-                    <p style="font-size: 0.7rem; color: var(--text-dim);">Check-in (+2 pts / jour)</p>
-                </div>
-                <button onclick="doTask('daily', 2)" class="btn" style="width:70px; padding:8px; font-size:0.7rem;">CHECK</button>
+                <div><i class="fas fa-calendar-check" style="font-size:1.8rem; color: var(--accent);"></i><h4>Check-in Quotidien</h4><span>+2 PTS</span></div>
+                <button onclick="executeTask('daily',2)" class="btn" style="width:auto;">Check</button>
             </div>
         </div>
-
         <div class="card">
             <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                    <h4 style="color: #A29BFE;"><i class="fas fa-users"></i> Recrutement</h4>
-                    <p style="font-size: 0.7rem; color: var(--text-dim);">+10 pts par ami parrainé</p>
-                </div>
-                <button onclick="showRef()" class="btn btn-outline" style="width:70px; padding:8px; font-size:0.7rem;">CODE</button>
+                <div><i class="fas fa-users" style="font-size:1.8rem; color: var(--phoenix);"></i><h4>Parrainage (référant)</h4><span>+10 PTS / ami</span></div>
+                <button onclick="showReferralCode()" class="btn btn-outline" style="width:auto;">Mon Code</button>
             </div>
         </div>
     </div>
 
+    <!-- PROFIL ANALYTICS -->
     <div id="profileScreen" class="screen">
-        <div style="text-align:center; margin-bottom:30px;">
-            <div style="width:100px; height:100px; border:2px solid var(--accent); border-radius:50%; margin: 0 auto 15px; display:flex; align-items:center; justify-content:center; font-size:3rem; color: var(--accent);">
-                <i class="fas fa-user-ninja"></i>
-            </div>
-            <h2 id="profPseudo">Agent</h2>
-            <p id="profStatus" style="font-size:0.8rem; color:var(--text-dim);">Plan Standard</p>
+        <div style="text-align:center; margin-bottom: 30px;">
+            <div style="width:90px; height:90px; background: var(--card-light); border-radius: 60px; margin:0 auto 16px; display:flex; align-items:center; justify-content:center; border:2px solid var(--accent);"><i class="fas fa-user-secret" style="font-size:3rem;"></i></div>
+            <h2 id="profilePseudo">Agent</h2>
+            <p id="profileStatus" style="color: var(--text-dim);">Sujet standard</p>
         </div>
-
         <div class="stats-row">
-            <div class="stat-box">
-                <span class="stat-num" id="statPts">0</span>
-                <span class="stat-label">Points</span>
-            </div>
-            <div class="stat-box">
-                <span class="stat-num" id="statUnl">0</span>
-                <span class="stat-label">Fuites</span>
-            </div>
+            <div class="stat-card"><span class="stat-number" id="profilePoints">0</span><br>Points totaux</div>
+            <div class="stat-card"><span class="stat-number" id="profileUnlocked">0</span><br>Examens débloqués</div>
         </div>
-
-        <button onclick="logout()" class="btn btn-outline" style="margin-top:auto; border-color:var(--danger); color:var(--danger);">DÉCONNEXION DU SYSTÈME</button>
+        <button onclick="logoutSystem()" class="btn btn-outline" style="border-color: var(--danger); color: var(--danger); margin-top: 20px;">DÉCONNEXION TOTALE</button>
     </div>
 
+    <!-- TWIST FINAL (le jour J) -->
     <div id="twistScreen" class="screen" style="justify-content:center; align-items:center; text-align:center;">
         <i class="fas fa-skull-crossbones" style="font-size: 5rem; color: var(--danger); margin-bottom: 20px;"></i>
-        <h1 style="color: var(--danger);">PROTOCOLE ÉCHOUÉ</h1>
-        <p style="margin: 20px 0; line-height: 1.6; color: var(--text-dim);">
-            "C'était une blague." <br><br>
-            En 2024, j'ai échoué parce que j'attendais un miracle. <br>
-            Aujourd'hui, je t'ai prouvé qu'il n'y a pas de raccourcis. <br>
-            Le seul vrai hack des examens, c'est ton cerveau. <br>
-            <b>RETOURNE ÉTUDIER.</b>
-        </p>
-        <button onclick="location.reload()" class="btn">RETOUR À LA RÉALITÉ</button>
+        <h2 style="color: var(--danger);">[ PROTOCOLE ÉCHOUÉ ]</h2>
+        <p style="margin: 20px 0; line-height: 1.5;">« Le seul vrai hack, c'est l'étude. »<br><br> J.P Phoenix n'a jamais eu l'intention de divulguer les examens. Je voulais te prouver que chercher des raccourcis te mène à une impasse. Ton avenir est entre tes mains, pas dans une fuite imaginaire.</p>
+        <button id="twistResetBtn" class="btn">RETOUR À LA RÉALITÉ</button>
     </div>
 
-    <nav class="nav-bar" id="mainNav" style="display:none;">
-        <div class="nav-btn active" onclick="navTo('dash')"><i class="fas fa-terminal"></i>Fuites</div>
-        <div class="nav-btn" onclick="navTo('task')"><i class="fas fa-microchip"></i>Points</div>
-        <div class="nav-btn" onclick="navTo('profile')"><i class="fas fa-fingerprint"></i>Profil</div>
-    </nav>
+    <div class="bottom-nav" id="bottomNav" style="display: none;">
+        <div class="nav-item" data-nav="dashboard"><i class="fas fa-database"></i><span>Fuites</span></div>
+        <div class="nav-item" data-nav="task"><i class="fas fa-bolt"></i><span>Missions</span></div>
+        <div class="nav-item" data-nav="profile"><i class="fas fa-chart-line"></i><span>Stats</span></div>
+    </div>
 </div>
 
+<!-- Firebase script -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
 <script>
-    // --- FIREBASE CONFIG ---
+    // ------------------ FIREBASE CONFIG ------------------
     const firebaseConfig = {
         apiKey: "AIzaSyC81oECS6HWNhNQY0wkp5yEuKDjkD5w_uE",
         authDomain: "exambreaker-ht.firebaseapp.com",
@@ -311,259 +464,312 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // --- APP STATE ---
-    let userData = { points: 0, unlocked: [], isVip: false, pseudo: '', refCode: '' };
+    // ------------------ GLOBAL STATE ------------------
+    let currentUser = null;
+    let userDocRef = null;
+    let userPoints = 0;
+    let unlockedExams = [];
+    let isVip = false;
+    let userPseudo = "";
+    let referralCodeUser = "";
     let currentLevel = "9AF";
-    const EXAMS = {
+    let timerIntervals = {};
+
+    // Exams Data (complete 9AF + NS4)
+    const examsDB = {
         "9AF": [
-            { id: '9f_ang', name: 'Anglais', icon: 'fa-language', date: '2026-07-01T05:00:00', cost: 10 },
-            { id: '9f_math', name: 'Mathématiques', icon: 'fa-calculator', date: '2026-07-01T05:00:00', cost: 10 },
-            { id: '9f_kr', name: 'Kreyòl', icon: 'fa-comment-dots', date: '2026-07-01T05:00:00', cost: 10 },
-            { id: '9f_fr', name: 'Français', icon: 'fa-book-open', date: '2026-07-02T05:00:00', cost: 10 },
-            { id: '9f_soc', name: 'Sc. Sociales', icon: 'fa-users-rectangle', date: '2026-07-02T05:00:00', cost: 10 },
-            { id: '9f_exp', name: 'Sc. Expérimentales', icon: 'fa-flask', date: '2026-07-03T05:00:00', cost: 10 },
-            { id: '9f_esp', name: 'Espagnol', icon: 'fa-earth-americas', date: '2026-07-03T05:00:00', cost: 10 }
+            { id: "9af_ang", name: "Anglais", icon: "fa-language", cost: 10, dateISO: "2026-07-01T05:00:00" },
+            { id: "9af_kr", name: "Kreyòl", icon: "fa-comment-dots", cost: 10, dateISO: "2026-07-01T05:00:00" },
+            { id: "9af_esp", name: "Espagnol", icon: "fa-earth-americas", cost: 10, dateISO: "2026-07-01T05:00:00" },
+            { id: "9af_fr", name: "Français", icon: "fa-book-open", cost: 10, dateISO: "2026-07-01T05:00:00" },
+            { id: "9af_math", name: "Mathématiques", icon: "fa-calculator", cost: 10, dateISO: "2026-07-01T05:00:00" },
+            { id: "9af_socio", name: "Sciences Sociales", icon: "fa-users", cost: 10, dateISO: "2026-07-02T05:00:00" },
+            { id: "9af_sci", name: "Sciences Expérimentales", icon: "fa-flask", cost: 10, dateISO: "2026-07-03T05:00:00" }
         ],
         "NS4": [
-            { id: 'n4_ph', name: 'Physique', icon: 'fa-atom', date: '2026-07-05T05:00:00', cost: 15 },
-            { id: 'n4_ma', name: 'Mathématiques', icon: 'fa-square-root-variable', date: '2026-07-05T05:00:00', cost: 15 },
-            { id: 'n4_ch', name: 'Chimie', icon: 'fa-vial-circle-check', date: '2026-07-06T05:00:00', cost: 15 },
-            { id: 'n4_kr', name: 'Kreyòl', icon: 'fa-quote-left', date: '2026-07-06T05:00:00', cost: 15 },
-            { id: 'n4_phi', name: 'Philosophie', icon: 'fa-brain', date: '2026-07-08T05:00:00', cost: 15 },
-            { id: 'n4_inf', name: 'Informatiques', icon: 'fa-microchip', date: '2026-07-08T05:00:00', cost: 15 }
-            // ... autres examens NS4 simplifiés pour l'exemple, mais structure identique
+            { id: "ns4_phy", name: "Physiques", icon: "fa-atom", cost: 15, dateISO: "2026-07-05T05:00:00" },
+            { id: "ns4_math", name: "Mathématiques", icon: "fa-square-root-variable", cost: 15, dateISO: "2026-07-05T05:00:00" },
+            { id: "ns4_chimie", name: "Chimie", icon: "fa-flask", cost: 15, dateISO: "2026-07-06T05:00:00" },
+            { id: "ns4_kreyol", name: "Kreyòl", icon: "fa-language", cost: 15, dateISO: "2026-07-06T05:00:00" },
+            { id: "ns4_anglais", name: "Anglais", icon: "fa-language", cost: 15, dateISO: "2026-07-06T05:00:00" },
+            { id: "ns4_socio", name: "Sciences Sociales", icon: "fa-landmark", cost: 15, dateISO: "2026-07-07T05:00:00" },
+            { id: "ns4_philo", name: "Philosophie", icon: "fa-brain", cost: 15, dateISO: "2026-07-07T05:00:00" },
+            { id: "ns4_info", name: "Informatiques", icon: "fa-microchip", cost: 15, dateISO: "2026-07-08T05:00:00" },
+            { id: "ns4_bio", name: "Biologie/Géologie", icon: "fa-leaf", cost: 15, dateISO: "2026-07-08T05:00:00" },
+            { id: "ns4_economie", name: "Economie", icon: "fa-chart-simple", cost: 15, dateISO: "2026-07-09T05:00:00" },
+            { id: "ns4_esp", name: "Espagnol", icon: "fa-flag", cost: 15, dateISO: "2026-07-10T05:00:00" },
+            { id: "ns4_art", name: "Art/Musique", icon: "fa-music", cost: 15, dateISO: "2026-07-10T05:00:00" }
         ]
     };
 
-    // --- INITIALIZATION ---
-    window.onload = () => {
-        const today = new Date();
-        if(today > new Date('2026-07-01')) return navTo('twist');
+    // Helper UI
+    function showToast(message, isError = false) {
+        let toastDiv = document.createElement('div');
+        toastDiv.className = 'toast-msg';
+        toastDiv.innerText = message;
+        toastDiv.style.borderLeftColor = isError ? 'var(--danger)' : 'var(--accent)';
+        document.body.appendChild(toastDiv);
+        setTimeout(() => toastDiv.remove(), 2800);
+    }
 
-        setTimeout(() => {
-            if(!localStorage.getItem('phoenix_story')) {
-                navTo('story');
-                runStory();
-            } else if(!localStorage.getItem('phoenix_tuto')) {
-                navTo('tuto');
+    function updateUIAfterSync() {
+        document.getElementById('dashboardPoints').innerText = userPoints;
+        document.getElementById('profilePoints').innerText = userPoints;
+        document.getElementById('profileUnlocked').innerText = unlockedExams.length;
+        document.getElementById('dashboardUserName').innerText = userPseudo;
+        document.getElementById('profilePseudo').innerText = userPseudo;
+        const vipBadge = document.getElementById('vipBadgeDash');
+        const vipStatusText = document.getElementById('profileStatus');
+        const vipCard = document.getElementById('vipUpgradeCard');
+        if (isVip) {
+            vipBadge.style.display = 'block';
+            vipStatusText.innerText = 'Agent Spécial VIP (Accès anticipé)';
+            vipCard.style.display = 'none';
+        } else {
+            vipBadge.style.display = 'none';
+            vipStatusText.innerText = 'Sujet standard';
+            vipCard.style.display = 'block';
+        }
+        renderExamsList();
+    }
+
+    async function refreshUserData() {
+        if (!currentUser) return;
+        const snap = await db.collection('users').doc(currentUser.uid).get();
+        if (snap.exists) {
+            const data = snap.data();
+            userPoints = data.points || 0;
+            unlockedExams = data.unlocked || [];
+            isVip = data.isVip || false;
+            userPseudo = data.pseudo;
+            referralCodeUser = data.refCode;
+            updateUIAfterSync();
+        }
+    }
+
+    // Render exams based on level
+    async function renderExamsList() {
+        const container = document.getElementById('examsListContainer');
+        if (!container) return;
+        container.innerHTML = '';
+        const examsArray = examsDB[currentLevel];
+        for (let exam of examsArray) {
+            const isUnlocked = unlockedExams.includes(exam.id);
+            const cardDiv = document.createElement('div');
+            cardDiv.className = `exam-item ${isUnlocked ? 'unlocked' : ''}`;
+            const examDateObj = new Date(exam.dateISO);
+            const effectiveDate = isVip ? new Date(examDateObj.getTime() - 3 * 24 * 3600000) : examDateObj;
+            const isExpired = effectiveDate <= new Date();
+            let timerHtml = '';
+            if (isUnlocked) {
+                timerHtml = `<div class="timer-countdown" id="timer_${exam.id}">--:--:--</div>`;
             } else {
-                checkAuthStatus();
+                timerHtml = `<div style="font-size:0.65rem;">🔒 ${exam.cost} PTS requis</div>`;
             }
-        }, 2500);
-    };
-
-    // --- NAVIGATION LOGIC ---
-    function navTo(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id + 'Screen').classList.add('active');
-        document.getElementById('mainNav').style.display = (['dash', 'task', 'profile'].includes(id)) ? 'flex' : 'none';
-        
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        if(id === 'dash') document.querySelector('.nav-btn:nth-child(1)').classList.add('active');
-        if(id === 'task') document.querySelector('.nav-btn:nth-child(2)').classList.add('active');
-        if(id === 'profile') document.querySelector('.nav-btn:nth-child(3)').classList.add('active');
-        
-        if(id === 'dash') renderExams();
-    }
-
-    // --- STORY TYPEWRITER ---
-    function runStory() {
-        const text = "En 2024, j'ai regardé mon nom absent de la liste des admis. Le système m'avait écrasé. J'ai choisi de ne pas pleurer. J'ai appris le code, le réseau, l'ombre. Aujourd'hui, je suis Phoenix. Et je reviens pour vous donner ce que le système vous cache. Bienvenue dans l'œil du cyclone.";
-        let i = 0;
-        const container = document.getElementById('typewriter');
-        const interval = setInterval(() => {
-            container.innerHTML += text[i];
-            i++;
-            if(i >= text.length) {
-                clearInterval(interval);
-                document.getElementById('btnNextStory').style.display = 'block';
-            }
-        }, 40);
-    }
-
-    document.getElementById('btnNextStory').onclick = () => {
-        localStorage.setItem('phoenix_story', 'true');
-        navTo('tuto');
-    };
-
-    document.getElementById('btnAcceptTuto').onclick = () => {
-        localStorage.setItem('phoenix_tuto', 'true');
-        navTo('auth');
-    };
-
-    // --- AUTH LOGIC ---
-    function toggleAuth(login) {
-        document.getElementById('formLogin').style.display = login ? 'block' : 'none';
-        document.getElementById('formReg').style.display = login ? 'none' : 'block';
-    }
-
-    async function handleAuth(type) {
-        try {
-            if(type === 'register') {
-                const pseudo = document.getElementById('regPseudo').value;
-                const email = document.getElementById('regEmail').value;
-                const pass = document.getElementById('regPass').value;
-                const ref = document.getElementById('regRef').value;
-                
-                if(!pseudo || !email || !pass) throw new Error("Données manquantes");
-                
-                const res = await auth.createUserWithEmailAndPassword(email, pass);
-                const code = res.user.uid.slice(0,8).toUpperCase();
-                
-                await db.collection('users').doc(res.user.uid).set({
-                    pseudo, points: 5, unlocked: [], isVip: false, refCode: code
-                });
-
-                if(ref) {
-                    const snap = await db.collection('users').where('refCode', '==', ref).get();
-                    if(!snap.empty) {
-                        await db.collection('users').doc(snap.docs[0].id).update({
-                            points: firebase.firestore.FieldValue.increment(10)
-                        });
-                    }
-                }
-            } else {
-                const email = document.getElementById('loginEmail').value;
-                const pass = document.getElementById('loginPass').value;
-                await auth.signInWithEmailAndPassword(email, pass);
-            }
-        } catch(e) { alert(e.message); }
-    }
-
-    function checkAuthStatus() {
-        auth.onAuthStateChanged(async user => {
-            if(user) {
-                const doc = await db.collection('users').doc(user.uid).get();
-                userData = { uid: user.uid, ...doc.data() };
-                syncUI();
-                navTo('dash');
-            } else {
-                navTo('auth');
-            }
-        });
-    }
-
-    function syncUI() {
-        document.getElementById('dispUser').innerText = userData.pseudo;
-        document.getElementById('profPseudo').innerText = userData.pseudo;
-        document.getElementById('dispPoints').innerText = userData.points;
-        document.getElementById('statPts').innerText = userData.points;
-        document.getElementById('statUnl').innerText = userData.unlocked.length;
-        document.getElementById('badgeVip').style.display = userData.isVip ? 'block' : 'none';
-        document.getElementById('promoVip').style.display = userData.isVip ? 'none' : 'block';
-        document.getElementById('profStatus').innerText = userData.isVip ? 'Agent Spécial VIP' : 'Sujet Standard';
-    }
-
-    // --- DASHBOARD LOGIC ---
-    function setLvl(lvl) {
-        currentLevel = lvl;
-        document.getElementById('tab9AF').className = lvl === '9AF' ? 'btn' : 'btn btn-outline';
-        document.getElementById('tabNS4').className = lvl === 'NS4' ? 'btn' : 'btn btn-outline';
-        renderExams();
-    }
-
-    function renderExams() {
-        const container = document.getElementById('examContainer');
-        container.innerHTML = "";
-        
-        EXAMS[currentLevel].forEach(ex => {
-            const isUnl = userData.unlocked.includes(ex.id);
-            const card = document.createElement('div');
-            card.className = `exam-item ${isUnl ? 'unlocked' : ''}`;
-            
-            card.innerHTML = `
-                <div class="exam-icon"><i class="fas ${ex.icon}"></i></div>
+            cardDiv.innerHTML = `
+                <div class="exam-icon"><i class="fas ${exam.icon}"></i></div>
                 <div style="flex:1">
-                    <h4 style="font-size:0.9rem;">${ex.name}</h4>
-                    ${isUnl ? `<div class="timer-countdown" id="timer_${ex.id}">CALCUL...</div>` : `<p style="font-size:0.65rem; color:var(--text-dim);">Requis: ${ex.cost} PTS</p>`}
+                    <strong>${exam.name}</strong><br>
+                    ${timerHtml}
                 </div>
-                ${!isUnl ? `<button onclick="unlockEx('${ex.id}', ${ex.cost})" class="btn" style="width:70px; padding:10px; font-size:0.6rem;">OUVRIR</button>` : ''}
+                ${!isUnlocked ? `<button class="btn" style="width:70px; padding:8px; font-size:0.7rem;" data-id="${exam.id}" data-cost="${exam.cost}">Débloquer</button>` : (isExpired ? '<span style="color:var(--accent);">📄 DISPONIBLE</span>' : '')}
             `;
-            container.appendChild(card);
-            if(isUnl) startCountdown(ex.id, ex.date);
-        });
+            container.appendChild(cardDiv);
+            if (isUnlocked && !isExpired) {
+                startCountdownForExam(exam.id, effectiveDate);
+            }
+            const unlockBtn = cardDiv.querySelector('button');
+            if (unlockBtn) {
+                unlockBtn.addEventListener('click', () => unlockExam(exam.id, exam.cost));
+            }
+        }
     }
 
-    async function unlockEx(id, cost) {
-        if(userData.points < cost) return alert("Points de calcul insuffisants.");
-        
-        await db.collection('users').doc(userData.uid).update({
-            points: firebase.firestore.FieldValue.increment(-cost),
-            unlocked: firebase.firestore.FieldValue.arrayUnion(id)
-        });
-        
-        userData.points -= cost;
-        userData.unlocked.push(id);
-        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-        syncUI();
-        renderExams();
-    }
-
-    function startCountdown(id, dateStr) {
-        const el = document.getElementById('timer_'+id);
-        const target = new Date(dateStr).getTime();
-        
+    function startCountdownForExam(examId, targetDate) {
+        const element = document.getElementById(`timer_${examId}`);
+        if (!element) return;
         const update = () => {
-            let now = new Date().getTime();
-            // Si VIP, l'examen est disponible 3 jours avant (259200000 ms)
-            const finalTarget = userData.isVip ? (target - 259200000) : target;
-            const diff = finalTarget - now;
-            
-            if(diff <= 0) {
-                el.innerHTML = "DISPONIBLE";
-                el.style.color = "var(--accent)";
+            const now = new Date();
+            const diff = targetDate - now;
+            if (diff <= 0) {
+                element.innerText = "DISPONIBLE";
+                element.style.color = "var(--accent)";
+                clearInterval(timerIntervals[examId]);
                 return;
             }
-            
-            const d = Math.floor(diff / 86400000);
-            const h = Math.floor((diff % 86400000) / 3600000);
-            const m = Math.floor((diff % 3600000) / 60000);
-            const s = Math.floor((diff % 60000) / 1000);
-            el.innerText = `${d}J ${h}H ${m}M ${s}S`;
+            const days = Math.floor(diff / 86400000);
+            const hrs = Math.floor((diff % 86400000) / 3600000);
+            const mins = Math.floor((diff % 3600000) / 60000);
+            const secs = Math.floor((diff % 60000) / 1000);
+            element.innerText = `${days}j ${hrs}h ${mins}m ${secs}s`;
         };
-        setInterval(update, 1000);
         update();
+        if (timerIntervals[examId]) clearInterval(timerIntervals[examId]);
+        timerIntervals[examId] = setInterval(update, 1000);
     }
 
-    // --- TASK LOGIC ---
-    async function doTask(type, pts) {
-        const today = new Date().toDateString();
-        const key = `last_${type}_${userData.uid}`;
-        if(localStorage.getItem(key) === today) return alert("Tâche déjà accomplie pour aujourd'hui.");
-
-        if(type === 'share') {
-            window.open(`whatsapp://send?text=Le protocole Phoenix est activé. Débloque tes examens 2026 ici: ${window.location.href}`);
-        }
-
-        await db.collection('users').doc(userData.uid).update({
-            points: firebase.firestore.FieldValue.increment(pts)
+    async function unlockExam(examId, cost) {
+        if (userPoints < cost) return showToast("❌ Points de calcul insuffisants.", true);
+        if (!currentUser) return;
+        const userRef = db.collection('users').doc(currentUser.uid);
+        await db.runTransaction(async transaction => {
+            const doc = await transaction.get(userRef);
+            const currentPts = doc.data().points;
+            const currentUnlocked = doc.data().unlocked || [];
+            if (currentPts >= cost && !currentUnlocked.includes(examId)) {
+                transaction.update(userRef, {
+                    points: currentPts - cost,
+                    unlocked: firebase.firestore.FieldValue.arrayUnion(examId)
+                });
+            }
         });
-        
-        localStorage.setItem(key, today);
-        userData.points += pts;
-        syncUI();
-        alert(`+${pts} points ajoutés au serveur.`);
+        await refreshUserData();
+        showToast(`✅ Accès débloqué : ${examId.toUpperCase()}`, false);
+        renderExamsList();
     }
 
-    async function activateVip() {
-        if(userData.points < 500) return alert("Besoin de 500 PTS pour le VIP.");
-        await db.collection('users').doc(userData.uid).update({
+    async function executeTask(taskType, reward) {
+        if (!currentUser) return;
+        const todayKey = new Date().toISOString().slice(0,10);
+        const taskFlag = `task_${taskType}_${todayKey}`;
+        const lastTask = localStorage.getItem(taskFlag);
+        if (lastTask) return showToast("Mission déjà accomplie aujourd'hui.", true);
+        if (taskType === 'share') {
+            const whatsappUrl = `https://wa.me/?text=🔓 J'ai rejoint EXAMBREAKER HT, le réseau de préparation aux examens 2026. Rejoins-moi : ${window.location.href}`;
+            window.open(whatsappUrl, '_blank');
+            setTimeout(() => showToast("Partage effectué. +3 points crédités", false), 500);
+        }
+        await db.collection('users').doc(currentUser.uid).update({
+            points: firebase.firestore.FieldValue.increment(reward)
+        });
+        localStorage.setItem(taskFlag, 'done');
+        await refreshUserData();
+        showToast(`+${reward} points ajoutés.`, false);
+    }
+
+    async function upgradeToVip() {
+        if (!currentUser) return;
+        if (isVip) return showToast("Déjà VIP.", true);
+        if (userPoints < 500) return showToast(`Il manque ${500 - userPoints} points pour activer VIP`, true);
+        await db.collection('users').doc(currentUser.uid).update({
             points: firebase.firestore.FieldValue.increment(-500),
             isVip: true
         });
-        userData.points -= 500;
-        userData.isVip = true;
-        syncUI();
-        renderExams();
-        alert("👑 PROTOCOLE VIP ACTIVÉ. -72H SUR TOUTES LES FUITES.");
+        await refreshUserData();
+        showToast("🎉 STATUT VIP OBTENU ! Accès anticipé activé.", false);
+        renderExamsList();
     }
 
-    function showRef() {
-        alert(`VOTRE CODE AGENT : ${userData.refCode}\nPartagez-le pour gagner 10 points par ami inscrit !`);
+    function showReferralCode() {
+        if (!referralCodeUser) return;
+        navigator.clipboard.writeText(referralCodeUser);
+        showToast(`Code copié : ${referralCodeUser} - Gagnez 10pts par filleul`, false);
     }
 
-    function logout() { auth.signOut(); location.reload(); }
+    // Auth handlers
+    window.toggleAuthPanel = (showLogin) => {
+        document.getElementById('loginPanel').style.display = showLogin ? 'block' : 'none';
+        document.getElementById('registerPanel').style.display = showLogin ? 'none' : 'block';
+    };
+    window.authHandler = async (type) => {
+        try {
+            if (type === 'register') {
+                const pseudo = document.getElementById('regPseudo').value.trim();
+                const email = document.getElementById('regEmail').value.trim();
+                const pwd = document.getElementById('regPass').value;
+                const ref = document.getElementById('regRefCode').value.trim();
+                if (!pseudo || !email || !pwd) throw new Error("Remplissez les champs");
+                const userCred = await auth.createUserWithEmailAndPassword(email, pwd);
+                const uid = userCred.user.uid;
+                const refCodeGen = uid.slice(0, 8).toUpperCase();
+                await db.collection('users').doc(uid).set({
+                    pseudo: pseudo, points: 5, unlocked: [], isVip: false, refCode: refCodeGen, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                if (ref) {
+                    const qSnap = await db.collection('users').where('refCode', '==', ref).get();
+                    if (!qSnap.empty) {
+                        await db.collection('users').doc(qSnap.docs[0].id).update({ points: firebase.firestore.FieldValue.increment(10) });
+                    }
+                }
+                await auth.signOut();
+                showToast("Profil créé, connectez-vous.", false);
+                toggleAuthPanel(true);
+            } else {
+                const email = document.getElementById('loginEmail').value;
+                const pwd = document.getElementById('loginPass').value;
+                await auth.signInWithEmailAndPassword(email, pwd);
+            }
+        } catch (err) { showToast(err.message, true); }
+    };
+
+    function logoutSystem() { auth.signOut(); window.location.reload(); }
+
+    // Navigation
+    function navigateTo(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId + 'Screen').classList.add('active');
+        const nav = document.getElementById('bottomNav');
+        nav.style.display = (screenId === 'dashboard' || screenId === 'task' || screenId === 'profile') ? 'flex' : 'none';
+        if (screenId === 'dashboard') renderExamsList();
+        if (screenId === 'profile') refreshUserData();
+    }
+
+    // Story typewriter
+    async function runStoryLine() {
+        const story = "`En 2024, mon nom était absent de la liste des admis. Silence radio. Le système m'avait broyé. J'ai passé 18 mois dans l'ombre à apprendre le code, les réseaux, les failles. Aujourd'hui, je suis Phoenix. Ce système que j'ai construit n'est pas une promesse de triche. C'est un test de détermination. Si tu veux les clés, prouve que tu les mérites.`";
+        let i = 0;
+        const container = document.getElementById('typewriterText');
+        container.innerHTML = '';
+        const interval = setInterval(() => {
+            container.innerHTML += story[i];
+            i++;
+            if (i === story.length) {
+                clearInterval(interval);
+                document.getElementById('nextStoryBtn').innerText = "ENTRER DANS LE RÉSEAU";
+            }
+        }, 35);
+    }
+    document.getElementById('nextStoryBtn').onclick = () => {
+        localStorage.setItem('ph_story_done', 'true');
+        navigateTo('tuto');
+    };
+    document.getElementById('acceptTutoBtn').onclick = () => {
+        localStorage.setItem('ph_tuto_done', 'true');
+        navigateTo('auth');
+    };
+    document.getElementById('upgradeVipBtn').onclick = upgradeToVip;
+    document.getElementById('twistResetBtn').onclick = () => window.location.reload();
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => navigateTo(item.dataset.nav));
+    });
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentLevel = tab.dataset.level;
+            renderExamsList();
+        });
+    });
+
+    auth.onAuthStateChanged(async (user) => {
+        currentUser = user;
+        if (user) {
+            await refreshUserData();
+            if (new Date() >= new Date('2026-07-01T05:00:00')) navigateTo('twist');
+            else navigateTo('dashboard');
+        } else {
+            const storyFlag = localStorage.getItem('ph_story_done');
+            const tutoFlag = localStorage.getItem('ph_tuto_done');
+            if (!storyFlag) navigateTo('story');
+            else if (!tutoFlag) navigateTo('tuto');
+            else navigateTo('auth');
+        }
+    });
+    setTimeout(() => {
+        if (!localStorage.getItem('ph_story_done')) navigateTo('story');
+        else document.getElementById('splashScreen').classList.remove('active');
+    }, 2500);
+    window.onload = () => runStoryLine();
 </script>
-
 </body>
 </html>
