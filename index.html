@@ -77,7 +77,7 @@
       font-size: 1rem; cursor: pointer;
     }
     #app { max-width: 700px; margin: 0 auto; padding-bottom: 85px; }
-    .screen { display: none; padding: 16px; animation: fadeIn 0.4s ease; }
+    .screen { display: none; padding: 16px; animation: fadeIn 0.4s ease; min-height: 100vh; }
     .screen.active { display: block; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     .card {
@@ -110,10 +110,12 @@
     .exam-cost { color: #FBBF24; font-weight: 600; }
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0; max-width: 700px;
-      margin: 0 auto; background: rgba(10, 11, 18, 0.95); display: flex;
-      justify-content: space-around; padding: 12px 0 20px; border-top: 1px solid var(--border-soft);
+      margin: 0 auto; background: rgba(10, 11, 18, 0.95); backdrop-filter: blur(12px);
+      display: flex; justify-content: space-around; padding: 12px 0 20px;
+      border-top: 1px solid var(--border-soft); z-index: 1000;
     }
-    .nav-item { text-align: center; color: #9CA3B8; cursor: pointer; transition: 0.2s; font-size: 0.7rem; }
+    .bottom-nav.hidden { display: none; }
+    .nav-item { text-align: center; color: #9CA3B8; cursor: pointer; transition: 0.2s; font-size: 0.7rem; flex: 1; }
     .nav-item.active { color: #8B5CF6; }
     .nav-item i { font-size: 1.4rem; display: block; margin-bottom: 4px; }
     .toast {
@@ -139,7 +141,19 @@
     }
     .spinner { width: 50px; height: 50px; border: 3px solid #2D3748; border-top-color: #8B5CF6; border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .bottom-nav.hidden { display: none; }
+    
+    /* Grille pour les séries */
+    .serie-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .serie-btn {
+      padding: 18px;
+      font-size: 1.1rem;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -151,23 +165,23 @@
   </div>
 
   <div id="app">
-    <!-- TUTORIEL -->
+    <!-- TUTORIEL (écran séparé) -->
     <div id="tutoScreen" class="screen">
-      <div class="card" style="text-align: center;">
+      <div class="card" style="text-align: center; margin-top: 40px;">
         <h2 style="margin-bottom: 16px;">📘 COMMENT ÇA MARCHE ?</h2>
-        <p style="margin-bottom: 16px; color: #9CA3B8;">
-          🔹 Gagne des <strong>points</strong> avec les missions quotidiennes.<br>
-          🔹 Débloque les examens avec tes points.<br>
-          🔹 Une fois débloqué, un <strong>compte à rebours</strong> apparaît.<br>
-          🔹 Le <strong>jour officiel, à 5h du matin</strong>, l’examen sera disponible.<br>
-          🔹 Nous ne fuyons rien. C’est un <strong>défi d’étude</strong> pour gagner ta confiance.<br>
+        <p style="margin-bottom: 16px; text-align: left; color: #9CA3B8;">
+          🔹 Gagne des <strong>points</strong> avec les missions quotidiennes.<br><br>
+          🔹 Débloque les examens avec tes points.<br><br>
+          🔹 Une fois débloqué, un <strong>compte à rebours</strong> apparaît.<br><br>
+          🔹 Le <strong>jour officiel, à 5h du matin</strong>, l’examen sera disponible.<br><br>
+          🔹 Nous ne fuyons rien. C’est un <strong>défi d’étude</strong> pour gagner ta confiance.<br><br>
           🔹 Deviens <strong>VIP</strong> pour avoir 3 jours d’avance.
         </p>
         <button class="btn" id="finishTutoBtn">J'AI COMPRIS, COMMENÇONS</button>
       </div>
     </div>
 
-    <!-- AUTHENTIFICATION (avec onglets) -->
+    <!-- AUTHENTIFICATION -->
     <div id="authScreen" class="screen">
       <div style="height: 10vh;"></div>
       <div class="card" style="text-align: center;">
@@ -176,13 +190,11 @@
           <button class="auth-tab active" id="loginTabBtn">CONNEXION</button>
           <button class="auth-tab" id="signupTabBtn">INSCRIPTION</button>
         </div>
-        
         <div id="loginForm">
           <input type="email" id="loginEmail" placeholder="Email">
           <input type="password" id="loginPass" placeholder="Mot de passe">
           <button class="btn" id="doLoginBtn">SE CONNECTER</button>
         </div>
-        
         <div id="signupForm" style="display: none;">
           <input type="text" id="signupPseudo" placeholder="Pseudo">
           <input type="email" id="signupEmail" placeholder="Email">
@@ -193,21 +205,21 @@
       </div>
     </div>
 
-    <!-- SÉLECTION SÉRIE (première connexion) -->
+    <!-- SÉLECTION SÉRIE -->
     <div id="serieScreen" class="screen">
       <div class="card" style="text-align: center;">
         <h2 style="margin-bottom: 20px;">🎓 CHOISIS TA SÉRIE</h2>
         <p style="margin-bottom: 20px; color: #9CA3B8;">Sélectionne ta filière pour personnaliser ton parcours</p>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-          <button class="btn serie-option" data-serie="SMP">📊 SMP</button>
-          <button class="btn serie-option" data-serie="SES">📈 SES</button>
-          <button class="btn serie-option" data-serie="SVT">🔬 SVT</button>
-          <button class="btn serie-option" data-serie="LLA">📖 LLA</button>
+        <div class="serie-grid">
+          <button class="btn serie-btn" data-serie="SMP">📊 SMP</button>
+          <button class="btn serie-btn" data-serie="SES">📈 SES</button>
+          <button class="btn serie-btn" data-serie="SVT">🔬 SVT</button>
+          <button class="btn serie-btn" data-serie="LLA">📖 LLA</button>
         </div>
       </div>
     </div>
 
-    <!-- TABLEAU DE BORD -->
+    <!-- DASHBOARD (ACCUEIL) -->
     <div id="dashboardScreen" class="screen">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2>Bonjour, <span id="dashboardUsername">Agent</span> <span id="vipBadge" style="color:#FBBF24; font-size:0.8rem;"></span></h2>
@@ -251,15 +263,15 @@
         <h3 style="margin-bottom: 12px;">🎯 TÂCHES RÉCOMPENSÉES</h3>
         <div class="task-item">
           <span><i class="fab fa-instagram"></i> Suivre Instagram</span>
-          <button class="btn-secondary" id="instaTaskBtn" data-url="https://instagram.com/exambreaker" style="padding: 8px 16px;">+10 pts</button>
+          <button class="btn-secondary" id="instaTaskBtn" style="padding: 8px 16px;">+10 pts</button>
         </div>
         <div class="task-item">
           <span><i class="fas fa-eye"></i> Regarder une pub</span>
-          <button class="btn-secondary" id="adTaskBtn" data-url="#" style="padding: 8px 16px;">+5 pts</button>
+          <button class="btn-secondary" id="adTaskBtn" style="padding: 8px 16px;">+5 pts</button>
         </div>
         <div class="task-item">
           <span><i class="fas fa-globe"></i> Visiter un site partenaire</span>
-          <button class="btn-secondary" id="visitTaskBtn" data-url="#" style="padding: 8px 16px;">+3 pts</button>
+          <button class="btn-secondary" id="visitTaskBtn" style="padding: 8px 16px;">+3 pts</button>
         </div>
       </div>
     </div>
@@ -284,7 +296,7 @@
     </div>
   </div>
 
-  <!-- BOTTOM NAVIGATION (masquée par défaut) -->
+  <!-- BOTTOM NAVIGATION -->
   <div class="bottom-nav hidden" id="bottomNav">
     <div class="nav-item" data-nav="dashboard"><i class="fas fa-home"></i><span>Accueil</span></div>
     <div class="nav-item" data-nav="earn"><i class="fas fa-coins"></i><span>Gagner</span></div>
@@ -379,7 +391,7 @@
         div.innerHTML = `
           <div><strong>${name}</strong><br><span class="exam-cost">${EXAM_COST[currentLevel]} pts</span>
           ${!unlocked ? '<div style="font-size:0.7rem; color:#9CA3B8;">🔒 À débloquer</div>' : '<div style="font-size:0.7rem;" id="timer_' + examId + '">⏳...</div>'}</div>
-          <button class="${unlocked ? 'btn-secondary' : 'btn'}" style="width:120px; padding:8px;" data-id="${examId}" data-cost="${EXAM_COST[currentLevel]}" ${unlocked ? 'disabled' : ''}>
+          <button class="${unlocked ? 'btn-secondary' : 'btn'}" style="width:100px; padding:8px;" data-id="${examId}" data-cost="${EXAM_COST[currentLevel]}" ${unlocked ? 'disabled' : ''}>
             ${unlocked ? 'Débloqué' : 'Débloquer'}
           </button>
         `;
@@ -413,13 +425,13 @@
       const update = () => {
         const diff = effectiveTarget - new Date();
         if (diff <= 0) {
-          el.innerHTML = "📄 DISPONIBLE LE JOUR J À 5H";
+          el.innerHTML = "📄 DISPONIBLE";
           if (timers[examId]) clearInterval(timers[examId]);
           return;
         }
         const days = Math.floor(diff / 86400000);
         const hours = Math.floor((diff % 86400000) / 3600000);
-        el.innerHTML = `⏳ ${days}j ${hours}h avant l'examen (5h)`;
+        el.innerHTML = `⏳ ${days}j ${hours}h`;
       };
       update();
       if (timers[examId]) clearInterval(timers[examId]);
@@ -436,7 +448,7 @@
       }
       if (type === 'share') {
         const url = window.location.href;
-        if (navigator.share) navigator.share({ title: 'EXAMBREAKER HT', text: `Rejoins-moi sur EXAMBREAKER HT : ${url}` });
+        if (navigator.share) navigator.share({ title: 'EXAMBREAKER HT', text: `Rejoins-moi sur EXAMBREAKER HT !` });
         else window.open(`https://wa.me/?text=${encodeURIComponent(url)}`);
       }
       await db.collection('users').doc(currentUser.uid).update({
@@ -492,7 +504,7 @@
         const cred = await auth.signInWithEmailAndPassword(email, pwd);
         currentUser = cred.user;
         const doc = await db.collection('users').doc(currentUser.uid).get();
-        if (doc.exists && doc.data().firstLogin === false && doc.data().serie) {
+        if (doc.exists && doc.data().serie && doc.data().firstLogin === false) {
           showLoader(false);
           navigateTo('dashboard');
         } else {
@@ -534,43 +546,33 @@
       } catch(e) { showLoader(false); showToast(e.message, true); }
     }
 
-    // ========== SÉRIE CORRIGÉE ==========
     async function setSerie(serie) {
-      if (!currentUser) {
-        showToast("Vous devez être connecté", true);
-        return;
-      }
+      if (!currentUser) return;
       showLoader(true);
       try {
-        await db.collection('users').doc(currentUser.uid).update({ 
-          serie: serie, 
-          firstLogin: false 
-        });
+        await db.collection('users').doc(currentUser.uid).update({ serie: serie, firstLogin: false });
         userData.serie = serie;
         userData.firstLogin = false;
         showLoader(false);
-        showToast(`Série ${serie} enregistrée !`, false);
+        showToast(`Série ${serie} enregistrée !`);
         navigateTo('dashboard');
-      } catch (error) {
-        showLoader(false);
-        showToast("Erreur d'enregistrement", true);
-      }
+      } catch(e) { showLoader(false); showToast("Erreur", true); }
     }
 
-    function logout() { 
-      auth.signOut(); 
-      window.location.reload(); 
-    }
+    function logout() { auth.signOut(); window.location.reload(); }
     
     function navigateTo(screen) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(screen + 'Screen').classList.add('active');
+      const targetScreen = document.getElementById(screen + 'Screen');
+      if (targetScreen) targetScreen.classList.add('active');
       if (screen === 'dashboard') renderExams();
+      updateBottomNav();
     }
     
-    function updateBottomNavVisibility() {
+    function updateBottomNav() {
       const bottomNav = document.getElementById('bottomNav');
-      if (currentUser) {
+      const currentScreen = document.querySelector('.screen.active')?.id;
+      if (currentUser && (currentScreen === 'dashboardScreen' || currentScreen === 'earnScreen' || currentScreen === 'profileScreen')) {
         bottomNav.classList.remove('hidden');
       } else {
         bottomNav.classList.add('hidden');
@@ -621,11 +623,8 @@
     document.getElementById('adTaskBtn')?.addEventListener('click', () => performMission('ad', 5, '#'));
     document.getElementById('visitTaskBtn')?.addEventListener('click', () => performMission('visit', 3, '#'));
     
-    document.querySelectorAll('.serie-option').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const selectedSerie = btn.getAttribute('data-serie');
-        if (selectedSerie) setSerie(selectedSerie);
-      });
+    document.querySelectorAll('.serie-btn').forEach(btn => {
+      btn.addEventListener('click', () => setSerie(btn.getAttribute('data-serie')));
     });
     
     document.querySelectorAll('.tab').forEach(t => {
@@ -639,9 +638,9 @@
     
     document.querySelectorAll('.nav-item').forEach(n => {
       n.addEventListener('click', () => {
-        if (!currentUser) return;
-        navigateTo(n.getAttribute('data-nav'));
-        updateBottomNavVisibility();
+        if (currentUser) {
+          navigateTo(n.getAttribute('data-nav'));
+        }
       });
     });
     
@@ -658,16 +657,12 @@
       document.getElementById('loginTabBtn').classList.remove('active');
     };
 
-    // ========== AUTH STATE CORRIGÉ ==========
     auth.onAuthStateChanged(async (user) => {
       if (user) {
         currentUser = user;
         await refreshUser();
         const doc = await db.collection('users').doc(currentUser.uid).get();
-        const userSerie = doc.data()?.serie;
-        const hasFirstLogin = doc.data()?.firstLogin;
-        
-        if (!userSerie || hasFirstLogin === true) {
+        if (!doc.data()?.serie) {
           navigateTo('serie');
         } else {
           navigateTo('dashboard');
@@ -676,8 +671,8 @@
         currentUser = null;
         navigateTo('auth');
       }
-      updateBottomNavVisibility();
+      updateBottomNav();
     });
   </script>
 </body>
-          </html>
+</html>
