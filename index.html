@@ -88,7 +88,12 @@
       width: 100%; cursor: pointer; margin-bottom: 10px;
     }
     .btn-secondary { background: transparent; border: 1px solid #8B5CF6; color: #8B5CF6; }
-    input {
+    .task-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 12px; background: rgba(16, 19, 32, 0.6); border-radius: 20px; margin-bottom: 10px;
+    }
+    .task-item button { width: auto; padding: 8px 20px; margin: 0; }
+    input, select {
       width: 100%; padding: 14px; background: rgba(16, 19, 32, 0.9);
       border: 1px solid var(--border-soft); border-radius: 40px; color: white; margin-bottom: 12px;
     }
@@ -121,6 +126,16 @@
       border-radius: 40px; color: #9CA3B8; font-weight: 600; cursor: pointer;
     }
     .tab.active { background: linear-gradient(135deg, #8B5CF6, #06B6D4); color: white; }
+    .auth-tabs { display: flex; gap: 0; margin-bottom: 20px; background: rgba(16, 19, 32, 0.6); border-radius: 60px; padding: 4px; }
+    .auth-tab { flex: 1; padding: 12px; border: none; background: transparent; color: #9CA3B8; font-weight: 600; border-radius: 60px; cursor: pointer; }
+    .auth-tab.active { background: linear-gradient(135deg, #8B5CF6, #06B6D4); color: white; }
+    .loader-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); z-index: 10000;
+      display: flex; align-items: center; justify-content: center; flex-direction: column;
+    }
+    .spinner { width: 50px; height: 50px; border: 3px solid #2D3748; border-top-color: #8B5CF6; border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -148,30 +163,49 @@
       </div>
     </div>
 
-    <!-- AUTHENTIFICATION -->
+    <!-- AUTHENTIFICATION (avec onglets) -->
     <div id="authScreen" class="screen">
-      <div style="height: 20vh;"></div>
+      <div style="height: 10vh;"></div>
       <div class="card" style="text-align: center;">
         <h2 style="margin-bottom: 20px;">ACCÈS RÉSEAU</h2>
-        <input type="email" id="loginEmail" placeholder="Email">
-        <input type="password" id="loginPass" placeholder="Mot de passe">
-        <button class="btn" id="doLoginBtn">SE CONNECTER</button>
-        <p style="margin: 16px 0;">ou</p>
-        <button class="btn btn-secondary" id="showSignupBtn">CRÉER UN COMPTE</button>
-      </div>
-      <div id="signupPanel" style="display: none;">
-        <div class="card" style="text-align: center;">
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="loginTabBtn">CONNEXION</button>
+          <button class="auth-tab" id="signupTabBtn">INSCRIPTION</button>
+        </div>
+        
+        <!-- Formulaire Connexion -->
+        <div id="loginForm">
+          <input type="email" id="loginEmail" placeholder="Email">
+          <input type="password" id="loginPass" placeholder="Mot de passe">
+          <button class="btn" id="doLoginBtn">SE CONNECTER</button>
+        </div>
+        
+        <!-- Formulaire Inscription -->
+        <div id="signupForm" style="display: none;">
           <input type="text" id="signupPseudo" placeholder="Pseudo">
           <input type="email" id="signupEmail" placeholder="Email">
           <input type="password" id="signupPass" placeholder="Mot de passe">
           <input type="text" id="signupReferral" placeholder="Code parrainage (optionnel)">
           <button class="btn" id="doSignupBtn">S'INSCRIRE</button>
-          <button class="btn btn-secondary" id="backToLoginBtn">← RETOUR</button>
         </div>
       </div>
     </div>
 
-    <!-- TABLEAU DE BORD -->
+    <!-- SÉLECTION SÉRIE (première connexion) -->
+    <div id="serieScreen" class="screen">
+      <div class="card" style="text-align: center;">
+        <h2 style="margin-bottom: 20px;">🎓 CHOISIS TA SÉRIE</h2>
+        <p style="margin-bottom: 20px; color: #9CA3B8;">Sélectionne ta filière pour personnaliser ton parcours</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <button class="btn serie-option" data-serie="SMP">📊 SMP</button>
+          <button class="btn serie-option" data-serie="SES">📈 SES</button>
+          <button class="btn serie-option" data-serie="SVT">🔬 SVT</button>
+          <button class="btn serie-option" data-serie="LLA">📖 LLA</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLEAU DE BORD (Accueil) -->
     <div id="dashboardScreen" class="screen">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2>Bonjour, <span id="dashboardUsername">Agent</span> <span id="vipBadge" style="color:#FBBF24; font-size:0.8rem;"></span></h2>
@@ -180,12 +214,6 @@
       <div class="stats-grid">
         <div class="stat-card"><div class="stat-value" id="streakValue">0</div><div>🔥 Série jours</div></div>
         <div class="stat-card"><div class="stat-value" id="unlockedCount">0</div><div>📘 Examens débloqués</div></div>
-      </div>
-      <div class="card">
-        <h3>⚡ MISSIONS QUOTIDIENNES</h3>
-        <button class="btn" id="dailyMissionBtn"><i class="fas fa-calendar-day"></i> +5 pts</button>
-        <button class="btn" id="shareMissionBtn"><i class="fab fa-whatsapp"></i> Partager l'app (+10 pts)</button>
-        <button class="btn btn-secondary" id="showReferralCodeBtn"><i class="fas fa-link"></i> Mon code parrainage</button>
       </div>
       <div class="card">
         <h3>👑 PASSER VIP (500 pts)</h3>
@@ -199,21 +227,71 @@
       <div id="examsContainer"></div>
     </div>
 
+    <!-- ÉCRAN GAGNER DES POINTS (missions + tâches) -->
+    <div id="earnScreen" class="screen">
+      <h2 style="margin-bottom: 20px;">⚡ GAGNER DES POINTS</h2>
+      
+      <div class="card">
+        <h3 style="margin-bottom: 12px;">📋 MISSIONS QUOTIDIENNES</h3>
+        <div class="task-item">
+          <span><i class="fas fa-calendar-day"></i> Check-in quotidien</span>
+          <button class="btn-secondary" id="dailyMissionBtn" style="padding: 8px 16px;">+5 pts</button>
+        </div>
+        <div class="task-item">
+          <span><i class="fab fa-whatsapp"></i> Partager l'application</span>
+          <button class="btn-secondary" id="shareMissionBtn" style="padding: 8px 16px;">+15 pts</button>
+        </div>
+        <div class="task-item">
+          <span><i class="fas fa-link"></i> Parrainer un ami (code)</span>
+          <button class="btn-secondary" id="showReferralCodeBtn" style="padding: 8px 16px;">Copier</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom: 12px;">🎯 TÂCHES RÉCOMPENSÉES</h3>
+        <div class="task-item">
+          <span><i class="fab fa-instagram"></i> Suivre Instagram</span>
+          <button class="btn-secondary" id="instaTaskBtn" data-url="https://instagram.com/exambreaker" style="padding: 8px 16px;">+10 pts</button>
+        </div>
+        <div class="task-item">
+          <span><i class="fab fa-youtube"></i> S'abonner YouTube</span>
+          <button class="btn-secondary" id="youtubeTaskBtn" data-url="https://youtube.com/@exambreaker" style="padding: 8px 16px;">+10 pts</button>
+        </div>
+        <div class="task-item">
+          <span><i class="fas fa-eye"></i> Regarder une pub</span>
+          <button class="btn-secondary" id="adTaskBtn" data-url="#" style="padding: 8px 16px;">+5 pts</button>
+        </div>
+        <div class="task-item">
+          <span><i class="fas fa-globe"></i> Visiter un partenaire</span>
+          <button class="btn-secondary" id="visitTaskBtn" data-url="#" style="padding: 8px 16px;">+3 pts</button>
+        </div>
+      </div>
+    </div>
+
     <!-- PROFIL -->
     <div id="profileScreen" class="screen">
       <div class="card">
         <h3>👤 MON PROFIL</h3>
         <p>Email : <span id="profileEmail"></span></p>
+        <p>Série : <span id="profileSerie">Non définie</span></p>
         <label>Pseudo</label>
         <input type="text" id="profilePseudoInput" placeholder="Nouveau pseudo">
         <button class="btn" id="updatePseudoBtn">MODIFIER</button>
-        <button class="btn btn-secondary" id="logoutBtn">DÉCONNEXION</button>
       </div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-value" id="profilePoints">0</div><div>🏆 Points gagnés</div></div>
+        <div class="stat-card"><div class="stat-value" id="profileReferrals">0</div><div>👥 Amis parrainés</div></div>
+        <div class="stat-card"><div class="stat-value" id="profileUnlockedExams">0</div><div>📘 Examens débloqués</div></div>
+        <div class="stat-card"><div class="stat-value" id="profileStreak">0</div><div>🔥 Série actuelle</div></div>
+      </div>
+      <button class="btn btn-secondary" id="logoutBtn">DÉCONNEXION</button>
     </div>
   </div>
 
+  <!-- BOTTOM NAVIGATION (3 onglets) -->
   <div class="bottom-nav">
-    <div class="nav-item active" data-nav="dashboard"><i class="fas fa-home"></i><span>Accueil</span></div>
+    <div class="nav-item" data-nav="dashboard"><i class="fas fa-home"></i><span>Accueil</span></div>
+    <div class="nav-item" data-nav="earn"><i class="fas fa-coins"></i><span>Gagner</span></div>
     <div class="nav-item" data-nav="profile"><i class="fas fa-user"></i><span>Profil</span></div>
   </div>
 
@@ -223,7 +301,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
 
   <script>
-    // ========== FIREBASE CONFIG (À REMPLACER PAR TES VRAIES CLÉS) ==========
+    // ========== FIREBASE CONFIG ==========
     const firebaseConfig = {
       apiKey: "AIzaSyC81oECS6HWNhNQY0wkp5yEuKDjkD5w_uE",
       authDomain: "exambreaker-ht.firebaseapp.com",
@@ -237,7 +315,7 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // ========== DONNÉES EXAMENS ==========
+    // ========== DONNÉES ==========
     const EXAMS_DATA = {
       "9af": ["Anglais", "Kreyòl", "Espagnol", "Français", "Mathématiques", "Sciences Sociales", "Sciences Expérimentales"],
       "ns4": ["Physiques", "Mathématiques", "Chimie", "Kreyòl", "Anglais", "Sciences Sociales", "Philosophie", "Informatiques", "Biologie/Géologie", "Economie", "Espagnol", "Art/Musique"]
@@ -245,12 +323,23 @@
     const EXAM_COST = { "9af": 10, "ns4": 15 };
     const EXAM_DATE = new Date(2026, 6, 1, 5, 0, 0);
 
-    // ========== ÉTAT ==========
     let currentUser = null;
-    let userData = { points: 0, streak: 0, unlockedExams: [], pseudo: "Agent", referralCode: "", referralCount: 0, isVip: false };
+    let userData = { points: 0, streak: 0, unlockedExams: [], pseudo: "Agent", referralCode: "", referralCount: 0, isVip: false, serie: "", firstLogin: true };
     let currentLevel = "9af";
     let timers = {};
 
+    function showLoader(show) {
+      let loader = document.getElementById('globalLoader');
+      if (!loader && show) {
+        loader = document.createElement('div');
+        loader.id = 'globalLoader';
+        loader.className = 'loader-overlay';
+        loader.innerHTML = '<div class="spinner"></div><p style="margin-top:20px;">Chargement...</p>';
+        document.body.appendChild(loader);
+      } else if (loader && !show) {
+        loader.remove();
+      }
+    }
     function showToast(msg, isErr = false) {
       const t = document.createElement('div');
       t.className = 'toast';
@@ -265,20 +354,17 @@
       const doc = await db.collection('users').doc(currentUser.uid).get();
       if (doc.exists) {
         userData = doc.data();
-      } else {
-        userData = { points: 0, streak: 0, unlockedExams: [], pseudo: "Agent", referralCode: currentUser.uid.slice(0,8), referralCount: 0, isVip: false };
-        await db.collection('users').doc(currentUser.uid).set(userData);
-        // Créer son code de parrainage dans la collection dédiée
-        await db.collection('referralCodes').doc(userData.referralCode).set({
-          ownerId: currentUser.uid,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
       }
-      document.getElementById('dashboardPoints').innerText = userData.points;
+      document.getElementById('dashboardPoints').innerText = userData.points || 0;
       document.getElementById('streakValue').innerText = userData.streak || 0;
       document.getElementById('unlockedCount').innerText = userData.unlockedExams?.length || 0;
-      document.getElementById('dashboardUsername').innerText = userData.pseudo;
+      document.getElementById('dashboardUsername').innerText = userData.pseudo || "Agent";
       document.getElementById('profileEmail').innerText = currentUser.email;
+      document.getElementById('profileSerie').innerText = userData.serie || "Non définie";
+      document.getElementById('profilePoints').innerText = userData.points || 0;
+      document.getElementById('profileReferrals').innerText = userData.referralCount || 0;
+      document.getElementById('profileUnlockedExams').innerText = userData.unlockedExams?.length || 0;
+      document.getElementById('profileStreak').innerText = userData.streak || 0;
       if (userData.isVip) document.getElementById('vipBadge').innerHTML = '👑 VIP';
       else document.getElementById('vipBadge').innerHTML = '';
       renderExams();
@@ -304,7 +390,6 @@
         container.appendChild(div);
         if (unlocked) startCountdown(examId);
       });
-
       document.querySelectorAll('[data-id]').forEach(btn => {
         btn.addEventListener('click', (e) => {
           const id = btn.getAttribute('data-id');
@@ -322,7 +407,6 @@
       });
       await refreshUser();
       showToast(`✅ ${examId} débloqué !`);
-      renderExams();
     }
 
     function startCountdown(examId) {
@@ -339,17 +423,21 @@
         }
         const days = Math.floor(diff / 86400000);
         const hours = Math.floor((diff % 86400000) / 3600000);
-        el.innerHTML = `⏳ ${days}j ${hours}h avant l'examen officiel (5h)`;
+        el.innerHTML = `⏳ ${days}j ${hours}h avant l'examen (5h)`;
       };
       update();
       if (timers[examId]) clearInterval(timers[examId]);
       timers[examId] = setInterval(update, 3600000);
     }
 
-    async function performMission(type, reward) {
+    async function performMission(type, reward, taskUrl = null) {
       const today = new Date().toISOString().slice(0,10);
       const missionKey = `mission_${type}_${today}`;
       if (localStorage.getItem(missionKey)) return showToast("Mission déjà effectuée aujourd'hui", true);
+      if (taskUrl) {
+        window.open(taskUrl, '_blank');
+        setTimeout(() => showToast("N'oubliez pas de compléter l'action !"), 1000);
+      }
       if (type === 'share') {
         const url = window.location.href;
         if (navigator.share) navigator.share({ title: 'EXAMBREAKER HT', text: `Rejoins-moi sur EXAMBREAKER HT : ${url}` });
@@ -373,7 +461,6 @@
       });
       await refreshUser();
       showToast("🎉 VIP activé ! Accès anticipé 3 jours avant !");
-      renderExams();
     }
 
     async function showReferralCode() {
@@ -397,17 +484,29 @@
 
     function finishTutorial() {
       localStorage.setItem('tutoSeen', 'true');
-      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-      document.getElementById('authScreen').classList.add('active');
+      navigateTo('auth');
     }
 
     // ========== AUTH ==========
     async function handleLogin() {
       const email = document.getElementById('loginEmail').value;
       const pwd = document.getElementById('loginPass').value;
+      showLoader(true);
       try {
-        await auth.signInWithEmailAndPassword(email, pwd);
-      } catch(e) { showToast(e.message, true); }
+        const cred = await auth.signInWithEmailAndPassword(email, pwd);
+        currentUser = cred.user;
+        const doc = await db.collection('users').doc(currentUser.uid).get();
+        if (doc.exists && doc.data().firstLogin === false) {
+          showLoader(false);
+          navigateTo('dashboard');
+        } else if (doc.exists && !doc.data().serie) {
+          showLoader(false);
+          navigateTo('serie');
+        } else {
+          showLoader(false);
+          navigateTo('dashboard');
+        }
+      } catch(e) { showLoader(false); showToast(e.message, true); }
     }
 
     async function handleSignup() {
@@ -416,17 +515,15 @@
       const pwd = document.getElementById('signupPass').value;
       const ref = document.getElementById('signupReferral').value;
       if (!pseudo || !email || !pwd) return showToast("Tous les champs requis", true);
+      showLoader(true);
       try {
         const cred = await auth.createUserWithEmailAndPassword(email, pwd);
         const uid = cred.user.uid;
         const refCode = uid.slice(0,8);
         await db.collection('users').doc(uid).set({
-          pseudo, points: 0, streak: 0, unlockedExams: [], referralCode: refCode, referralCount: 0, isVip: false
+          pseudo, points: 0, streak: 0, unlockedExams: [], referralCode: refCode, referralCount: 0, isVip: false, serie: "", firstLogin: true
         });
-        await db.collection('referralCodes').doc(refCode).set({
-          ownerId: uid,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
+        await db.collection('referralCodes').doc(refCode).set({ ownerId: uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
         if (ref) {
           const codeDoc = await db.collection('referralCodes').doc(ref).get();
           if (codeDoc.exists) {
@@ -436,27 +533,32 @@
               referralCount: firebase.firestore.FieldValue.increment(1)
             });
             showToast("Code parrainage validé ! +10 pts pour votre parrain");
-          } else {
-            showToast("Code de parrainage invalide", true);
           }
         }
-        showToast("Compte créé ! Connectez-vous.");
-        document.getElementById('signupPanel').style.display = 'none';
-      } catch(e) { showToast(e.message, true); }
+        currentUser = cred.user;
+        showLoader(false);
+        navigateTo('serie');
+      } catch(e) { showLoader(false); showToast(e.message, true); }
+    }
+
+    async function setSerie(serie) {
+      if (!currentUser) return;
+      await db.collection('users').doc(currentUser.uid).update({ serie: serie, firstLogin: false });
+      await refreshUser();
+      navigateTo('dashboard');
     }
 
     function logout() { auth.signOut(); window.location.reload(); }
-
     function navigateTo(screen) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(screen + 'Screen').classList.add('active');
       document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-      if (screen === 'dashboard') document.querySelector('.nav-item[data-nav="dashboard"]').classList.add('active');
-      if (screen === 'profile') document.querySelector('.nav-item[data-nav="profile"]').classList.add('active');
+      const navMap = { dashboard: 'dashboard', earn: 'earn', profile: 'profile' };
+      if (navMap[screen]) document.querySelector(`.nav-item[data-nav="${navMap[screen]}"]`)?.classList.add('active');
       if (screen === 'dashboard') renderExams();
     }
 
-    // ========== MONOLOGUE TAPETAPETAPE ==========
+    // ========== MONOLOGUE ==========
     const story = `> Année 2024. Bac Haïti.
 > J'ai tout donné. Nuits blanches. Cafés froids. Sacrifices.
 > Je croyais au mérite. À la justice du système.
@@ -473,34 +575,32 @@
     let i = 0;
     function typeStory() {
       const el = document.getElementById('storyText');
-      if (i < story.length) {
-        el.innerHTML += story.charAt(i);
-        i++;
-        setTimeout(typeStory, 35);
-      }
+      if (i < story.length) { el.innerHTML += story.charAt(i); i++; setTimeout(typeStory, 35); }
     }
     typeStory();
 
     // ========== ÉVÉNEMENTS ==========
     document.getElementById('nextStoryBtn').onclick = () => {
       document.getElementById('splashScreen').classList.add('hidden');
-      if (localStorage.getItem('tutoSeen') === 'true') {
-        document.getElementById('authScreen').classList.add('active');
-      } else {
-        document.getElementById('tutoScreen').classList.add('active');
-      }
+      if (localStorage.getItem('tutoSeen') === 'true') navigateTo('auth');
+      else document.getElementById('tutoScreen').classList.add('active');
     };
     document.getElementById('finishTutoBtn').onclick = finishTutorial;
     document.getElementById('doLoginBtn').onclick = handleLogin;
-    document.getElementById('showSignupBtn').onclick = () => document.getElementById('signupPanel').style.display = 'block';
     document.getElementById('doSignupBtn').onclick = handleSignup;
-    document.getElementById('backToLoginBtn').onclick = () => document.getElementById('signupPanel').style.display = 'none';
     document.getElementById('dailyMissionBtn').onclick = () => performMission('daily', 5);
-    document.getElementById('shareMissionBtn').onclick = () => performMission('share', 10);
+    document.getElementById('shareMissionBtn').onclick = () => performMission('share', 15);
     document.getElementById('showReferralCodeBtn').onclick = showReferralCode;
     document.getElementById('upgradeVipBtn').onclick = upgradeToVip;
     document.getElementById('updatePseudoBtn').onclick = updatePseudo;
     document.getElementById('logoutBtn').onclick = logout;
+    document.getElementById('instaTaskBtn')?.addEventListener('click', () => performMission('instagram', 10, 'https://instagram.com/exambreaker'));
+    document.getElementById('youtubeTaskBtn')?.addEventListener('click', () => performMission('youtube', 10, 'https://youtube.com/@exambreaker'));
+    document.getElementById('adTaskBtn')?.addEventListener('click', () => performMission('ad', 5, '#'));
+    document.getElementById('visitTaskBtn')?.addEventListener('click', () => performMission('visit', 3, '#'));
+    document.querySelectorAll('.serie-option').forEach(btn => {
+      btn.addEventListener('click', () => setSerie(btn.dataset.serie));
+    });
     document.querySelectorAll('.tab').forEach(t => {
       t.addEventListener('click', () => {
         document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
@@ -512,12 +612,26 @@
     document.querySelectorAll('.nav-item').forEach(n => {
       n.addEventListener('click', () => navigateTo(n.getAttribute('data-nav')));
     });
+    document.getElementById('loginTabBtn').onclick = () => {
+      document.getElementById('loginForm').style.display = 'block';
+      document.getElementById('signupForm').style.display = 'none';
+      document.getElementById('loginTabBtn').classList.add('active');
+      document.getElementById('signupTabBtn').classList.remove('active');
+    };
+    document.getElementById('signupTabBtn').onclick = () => {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('signupForm').style.display = 'block';
+      document.getElementById('signupTabBtn').classList.add('active');
+      document.getElementById('loginTabBtn').classList.remove('active');
+    };
 
     auth.onAuthStateChanged(async (user) => {
       if (user) {
         currentUser = user;
         await refreshUser();
-        navigateTo('dashboard');
+        const doc = await db.collection('users').doc(currentUser.uid).get();
+        if (!doc.exists || !doc.data().serie) navigateTo('serie');
+        else navigateTo('dashboard');
       } else {
         navigateTo('auth');
       }
